@@ -3,8 +3,6 @@ import 'package:ink_test2/database_con.dart';
 import 'package:ink_test2/new_words.dart';
 import 'package:ink_test2/workout.dart';
 
-//void main() => runApp(MyApp());
-
 void main() async {
   DatabaseCon().openCon();
   runApp(const MyApp());

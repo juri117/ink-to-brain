@@ -20,9 +20,9 @@ class DatabaseCon {
   Future<void> openCon() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    io.Directory directory = await getApplicationDocumentsDirectory();
-    if (io.Platform.isWindows) {
-      directory = io.Directory.current;
+    io.Directory directory = io.Directory.current;
+    if (io.Platform.isAndroid) {
+      directory = await getApplicationDocumentsDirectory();
     }
     io.Directory(path.join(directory.path, "db")).create();
 

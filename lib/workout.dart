@@ -3,7 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:ink_test2/database_con.dart';
 import 'package:ink_test2/models/word.dart';
-import 'package:painter/painter.dart';
+import 'package:ink_test2/widgets/write_widget.dart';
+import 'package:ink_test2/widgets/painter.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({Key? key}) : super(key: key);
@@ -88,7 +89,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         Row(
           children: [
             leftSide,
-            _drawInput("hint", _controller),
+            WriteWidget("hint", _controller, pen: true),
           ],
         ),
         _showSolution
@@ -120,37 +121,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
               ),
       ]);
     }
-
     return out;
-  }
-
-  Widget _drawInput(String title, PainterController controller) {
-    return Expanded(
-        flex: 1,
-        child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                    color: Theme.of(context).primaryColor, width: 1.5),
-                borderRadius: const BorderRadius.all(Radius.circular(3))),
-            child: Column(children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Padding(
-                  child: Text(title),
-                  padding: const EdgeInsets.all(5.0),
-                ),
-                IconButton(
-                    icon: const Icon(Icons.delete),
-                    tooltip: 'Clear',
-                    onPressed: controller.clear),
-              ]),
-              // DrawBar(_controller),
-              const Divider(height: 5.0, thickness: 1.0),
-              AspectRatio(
-                aspectRatio: 3.0,
-                child: Painter(controller),
-              ),
-              const Divider(height: 5.0, thickness: 1.0),
-            ])));
   }
 }

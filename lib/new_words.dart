@@ -3,7 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:ink_test2/database_con.dart';
 import 'package:ink_test2/models/word.dart';
-import 'package:painter/painter.dart';
+import 'package:ink_test2/widgets/painter.dart';
+import 'package:ink_test2/widgets/write_widget.dart';
 
 class NewWordPage extends StatefulWidget {
   const NewWordPage({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _NewWordPageState extends State<NewWordPage> {
 
   static PainterController _newController() {
     PainterController controller = PainterController();
-    controller.thickness = 1.5;
+    controller.thickness = 2.0;
     controller.drawColor = Colors.blue[900]!;
     controller.backgroundColor = Colors.transparent;
     return controller;
@@ -53,8 +54,8 @@ class _NewWordPageState extends State<NewWordPage> {
     return Column(children: [
       Row(
         children: [
-          _drawInput("word to learn", _controller),
-          _drawInput("hint", _controllerTrans),
+          WriteWidget("word to learn", _controller, pen: true),
+          WriteWidget("hint", _controllerTrans, pen: true),
         ],
       ),
       ElevatedButton(
@@ -64,35 +65,5 @@ class _NewWordPageState extends State<NewWordPage> {
         },
       ),
     ]);
-  }
-
-  Widget _drawInput(String title, PainterController controller) {
-    return Expanded(
-        flex: 1,
-        child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                    color: Theme.of(context).primaryColor, width: 1.5),
-                borderRadius: const BorderRadius.all(Radius.circular(3))),
-            child: Column(children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Padding(
-                  child: Text(title),
-                  padding: const EdgeInsets.all(5.0),
-                ),
-                IconButton(
-                    icon: const Icon(Icons.delete),
-                    tooltip: 'Clear',
-                    onPressed: controller.clear),
-              ]),
-              // DrawBar(_controller),
-              const Divider(height: 5.0, thickness: 1.0),
-              AspectRatio(
-                aspectRatio: 3.0,
-                child: Painter(controller),
-              ),
-              const Divider(height: 5.0, thickness: 1.0),
-            ])));
   }
 }
