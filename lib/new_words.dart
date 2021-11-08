@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:ink_test2/database_con.dart';
-import 'package:ink_test2/models/word.dart';
-import 'package:ink_test2/widgets/painter.dart';
-import 'package:ink_test2/widgets/write_widget.dart';
+import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/models/word.dart';
+import 'package:ink2brain/widgets/painter.dart';
+import 'package:ink2brain/widgets/write_widget.dart';
 
 class NewWordPage extends StatefulWidget {
   const NewWordPage({Key? key}) : super(key: key);

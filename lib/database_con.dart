@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ink_test2/models/word.dart';
+import 'package:ink2brain/models/word.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,14 +18,77 @@ class DatabaseCon {
 
   Database? con;
 
+  Future<void> _requestWritePermission() async {
+    if (io.Platform.isAndroid || io.Platform.isIOS) {
+      var status = await Permission.storage.status;
+      if (status.isDenied) {
+        // You can request multiple permissions at once.
+        Map<Permission, PermissionStatus> statuses = await [
+          Permission.storage,
+        ].request();
+        print(statuses[Permission.storage]);
+      }
+    }
+  }
+
   Future<void> openCon() async {
     WidgetsFlutterBinding.ensureInitialized();
 
+    await _requestWritePermission();
+
+    if (io.Platform.isAndroid) {
+      final io.Directory? dir = await getExternalStorageDirectory();
+      if (dir == null) {
+        print("storage could not be accessed");
+        return;
+      }
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+      sqfliteFfiInit();
+      var databaseFactory = databaseFactoryFfi;
+      con = await databaseFactory.openDatabase(path.join(dir.path, 'words.db'),
+          options: OpenDatabaseOptions(
+            onCreate: (db, version) {
+              return db.execute(
+                'CREATE TABLE words(id INTEGER PRIMARY KEY, foreignPix BLOB, foreignWord TEXT, motherTounghePix BLOB, motherToungheWord TEXT, correctCount INTEGER)',
+              );
+            },
+            version: 1,
+          ));
+    }
+    if (io.Platform.isWindows) {
+      final dir = io.Directory.current;
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+      sqfliteFfiInit();
+      // var databaseFactory = databaseFactoryFfi;
+      con =
+          await databaseFactoryFfi.openDatabase(path.join(dir.path, 'words.db'),
+              options: OpenDatabaseOptions(
+                onCreate: (db, version) {
+                  return db.execute(
+                    'CREATE TABLE words(id INTEGER PRIMARY KEY, foreignPix BLOB, foreignWord TEXT, motherTounghePix BLOB, motherToungheWord TEXT, correctCount INTEGER)',
+                  );
+                },
+                version: 1,
+              ));
+    }
+
+    /*
     io.Directory directory = io.Directory.current;
     if (io.Platform.isAndroid) {
       directory = await getApplicationDocumentsDirectory();
     }
-    io.Directory(path.join(directory.path, "db")).create();
+
+    io.Directory(path.join(directory.path, 'db'))
+        .create(recursive: true)
+        .then((io.Directory directory) {
+      print('Path of New Dir: ' + directory.path);
+    });
+
+    //io.Directory(path.join(directory.path, "db")).create();
 
     String dbPath = path.join(directory.path, 'db', 'words.db');
 
@@ -42,6 +106,7 @@ class DatabaseCon {
           },
           version: 1,
         ));
+        */
   }
 
   Future<void> insertWord(Word word) async {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ink_test2/database_con.dart';
-import 'package:ink_test2/new_words.dart';
-import 'package:ink_test2/workout.dart';
+import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/new_words.dart';
+import 'package:ink2brain/workout.dart';
 
 void main() async {
   DatabaseCon().openCon();

@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ink_test2">
+    package="com.juri117.ink2brain">
+        <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Permissions options for the `storage` group -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
    <application
-        android:label="ink_test2"
+        android:label="ink2brain"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

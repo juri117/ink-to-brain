@@ -92,10 +92,10 @@ BEGIN
             VALUE "CompanyName", "com.example" "\0"
             VALUE "FileDescription", "ink to brain" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "ink_test2" "\0"
+            VALUE "InternalName", "ink2brain" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2021 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "ink_test2.exe" "\0"
-            VALUE "ProductName", "ink_test2" "\0"
+            VALUE "OriginalFilename", "ink2brain.exe" "\0"
+            VALUE "ProductName", "ink2brain" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(ink_test2 LANGUAGES CXX)
+project(ink2brain LANGUAGES CXX)
 
-set(BINARY_NAME "ink_test2")
+set(BINARY_NAME "ink2brain")
 
 cmake_policy(SET CMP0063 NEW)
 

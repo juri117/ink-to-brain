@@ -1,4 +1,4 @@
-name: ink_test2
+name: ink2brain
 description: ink to brain
 
 # The following line prevents the package from being accidentally published to
@@ -41,6 +41,7 @@ dependencies:
   permission_handler: ^8.2.6
   path: ^1.8.0
   sqflite_common_ffi: ^2.1.0
+  sqlite3_flutter_libs: ^0.5.1
 
 dev_dependencies:
   flutter_test:

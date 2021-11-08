@@ -1,16 +1,15 @@
-# ink_test2
+# ink 2 brain
 
-ink to brain
+this is the result of major procrastination... A app that stores vocabulary or question answer flashcards. The special thing is: it is stored in your handwriting. So you can add drawings or character sets that are unusual. There is also a workout, where you are asked the questions and can see if you are able to reproduce the solution from your memory. If answered correct for a number of times you wont be bothered with the same question anymore.
 
-## Getting Started
+## supported devices
 
-This project is a starting point for a Flutter application.
+* windows
+* android
 
-A few resources to get you started if this is your first Flutter project:
+## transfer/backup database
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* windows
+  * the database is located in the same directory as the executable: *words.db*
+* android
+  * the database is stored in Android/data/com.

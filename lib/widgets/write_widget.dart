@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ink_test2/widgets/painter.dart';
+import 'package:ink2brain/widgets/painter.dart';
 
 class WriteWidget extends StatelessWidget {
   final String title;

@@ -8,9 +8,9 @@ echo "-$VERSION-"
 mkdir release
 rm release/* -rf
 
-# echo "build for Android"
-# flutter build apk
-# cp build/app/outputs/flutter-apk/app-release.apk release/ink-to-brain-app-$VERSION.apk
+echo "build for Android"
+flutter build apk
+cp build/app/outputs/flutter-apk/app-release.apk release/ink-to-brain-app-$VERSION.apk
 
 echo "build for Windows"
 flutter build windows

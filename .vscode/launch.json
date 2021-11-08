@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ink_test2",
+            "name": "ink2brain",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "ink_test2 (profile mode)",
+            "name": "ink2brain (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
