@@ -61,75 +61,78 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Scrollbar(
+    return Scrollbar(
+        controller: _scrollController,
+        isAlwaysShown:
+            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+        child: SingleChildScrollView(
             controller: _scrollController,
-            isAlwaysShown:
-                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-            child: SingleChildScrollView(
-                controller: _scrollController,
-                child: LayoutBuilder(
-                    builder: (context, constraints) => ConstrainedBox(
-                        constraints:
-                            BoxConstraints(minWidth: constraints.maxWidth),
-                        child: DataTable(
-                            columnSpacing: 5.0,
-                            sortColumnIndex: _currentSortColumn,
-                            sortAscending: _isAscending,
-                            columns: <DataColumn>[
-                              DataColumn(
-                                  label: const Text('added'),
-                                  onSort: (columnIndex, ascending) {
-                                    _sort(columnIndex, ascending);
+            child: LayoutBuilder(
+                builder: (context, constraints) => ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                    child: DataTable(
+                        columnSpacing: 5.0,
+                        sortColumnIndex: _currentSortColumn,
+                        sortAscending: _isAscending,
+                        columns: <DataColumn>[
+                          DataColumn(
+                              label: const Text('added'),
+                              onSort: (columnIndex, ascending) {
+                                _sort(columnIndex, ascending);
+                              }),
+                          const DataColumn(label: Text('question')),
+                          const DataColumn(label: Text('answer')),
+                          DataColumn(
+                              label: const Text('correct'),
+                              onSort: (columnIndex, ascending) {
+                                _sort(columnIndex, ascending);
+                              }),
+                          DataColumn(
+                              label: const Text('last asked'),
+                              onSort: (columnIndex, ascending) {
+                                _sort(columnIndex, ascending);
+                              })
+                        ],
+                        rows: List<DataRow>.generate(
+                            words.length,
+                            (int index) => DataRow(
+                                  color:
+                                      MaterialStateProperty.resolveWith<Color?>(
+                                          (Set<MaterialState> states) {
+                                    if (states
+                                        .contains(MaterialState.selected)) {
+                                      return Theme.of(context)
+                                          .colorScheme
+                                          .primary
+                                          .withOpacity(0.08);
+                                    }
+                                    if (index.isEven) {
+                                      return Colors.grey.withOpacity(0.1);
+                                    }
+                                    return null;
                                   }),
-                              const DataColumn(label: Text('question')),
-                              const DataColumn(label: Text('answer')),
-                              DataColumn(
-                                  label: const Text('correct'),
-                                  onSort: (columnIndex, ascending) {
-                                    _sort(columnIndex, ascending);
-                                  }),
-                              DataColumn(
-                                  label: const Text('last asked'),
-                                  onSort: (columnIndex, ascending) {
-                                    _sort(columnIndex, ascending);
-                                  })
-                            ],
-                            rows: List<DataRow>.generate(
-                                words.length,
-                                (int index) => DataRow(
-                                      color: MaterialStateProperty.resolveWith<
-                                          Color?>((Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.selected)) {
-                                          return Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withOpacity(0.08);
-                                        }
-                                        if (index.isEven) {
-                                          return Colors.grey.withOpacity(0.1);
-                                        }
-                                        return null;
-                                      }),
-                                      cells: <DataCell>[
-                                        DataCell(AspectRatio(
-                                            aspectRatio: 3.0,
-                                            child: Text(words[index]
-                                                .getInsertDateStr()))),
-                                        DataCell(AspectRatio(
+                                  cells: <DataCell>[
+                                    DataCell(AspectRatio(
+                                        aspectRatio: 3.0,
+                                        child: Text(
+                                            words[index].getInsertDateStr()))),
+                                    DataCell(SizedBox(
+                                        width: 120,
+                                        child: AspectRatio(
                                             aspectRatio: 3.0,
                                             child: Image.memory(
-                                                words[index].foreignPix))),
-                                        DataCell(AspectRatio(
+                                                words[index].foreignPix)))),
+                                    DataCell(SizedBox(
+                                        width: 120,
+                                        child: AspectRatio(
                                             aspectRatio: 3.0,
                                             child: Image.memory(words[index]
-                                                .motherTounghePix))),
-                                        DataCell(Text(
-                                            "${words[index].correctCount}")),
-                                        DataCell(Text(words[index]
-                                            .getlastAskedDateStr())),
-                                      ],
-                                    ))))))));
+                                                .motherTounghePix)))),
+                                    DataCell(
+                                        Text("${words[index].correctCount}")),
+                                    DataCell(Text(
+                                        words[index].getlastAskedDateStr())),
+                                  ],
+                                )))))));
   }
 }
