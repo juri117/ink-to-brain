@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/list.dart';
@@ -51,31 +53,46 @@ class _MainFrameState extends State<MainFrame> {
           ),
         ]),
         body: content ??
-            Column(children: [
-              ElevatedButton(
-                child: const Text('new words'),
-                onPressed: () {
-                  setState(() {
-                    content = const NewWordPage();
-                  });
-                },
-              ),
-              ElevatedButton(
-                child: const Text('list'),
-                onPressed: () {
-                  setState(() {
-                    content = const ListPage();
-                  });
-                },
-              ),
-              ElevatedButton(
-                child: const Text('workout'),
-                onPressed: () {
-                  setState(() {
-                    content = const WorkoutPage();
-                  });
-                },
-              ),
-            ]));
+            Center(
+                child: ListView(
+                    padding: const EdgeInsets.only(
+                        top: 10.0, bottom: 10, left: 50, right: 50),
+                    children: [
+                  OutlinedButton(
+                    child: const Padding(
+                        padding: EdgeInsets.all(20), child: Text('new words')),
+                    onPressed: () {
+                      setState(() {
+                        content = const NewWordPage();
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  OutlinedButton(
+                    child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text('list of words')),
+                    onPressed: () {
+                      setState(() {
+                        content = const ListPage();
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  OutlinedButton(
+                    child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text('start workout')),
+                    onPressed: () {
+                      setState(() {
+                        content = const WorkoutPage();
+                      });
+                    },
+                  ),
+                ])));
   }
 }
