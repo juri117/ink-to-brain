@@ -18,6 +18,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   List<Word> words = [];
   Word currentWord = Word(
       id: -1,
+      insertTs: DateTime.fromMicrosecondsSinceEpoch(0),
       foreignPix: Uint8List(0),
       foreignWord: "",
       motherTounghePix: Uint8List(0),
@@ -33,7 +34,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   Future<void> _loadWords() async {
-    List<Word> newWords = await DatabaseCon().words();
+    List<Word> newWords = await DatabaseCon().words(where: "correctCount < 3");
     setState(() {
       newWords.shuffle();
       words = newWords;

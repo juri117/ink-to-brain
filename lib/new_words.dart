@@ -37,6 +37,7 @@ class _NewWordPageState extends State<NewWordPage> {
 
     DatabaseCon().insertWord(Word(
         id: -1,
+        insertTs: DateTime.now(),
         foreignPix: foreignPix,
         foreignWord: "",
         motherTounghePix: motherTounghePix,

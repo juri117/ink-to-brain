@@ -8,12 +8,12 @@
   * [ ] quiz, match words
 * [ ] create db backup
 * [ ] compress image files
-* [ ] word list
+* [x] word list
 * learning statistics
   * [ ] show learned words vs. all words etc.
   * [ ] db: log learning sessions
-* [ ] automated release script for windows
-
+* [x] automated release script for windows + android
+* [x] add created date to word and last learnedData fields to words table
 
 **bug-fixes**
 

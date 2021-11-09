@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/list.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/workout.dart';
 
@@ -56,6 +57,14 @@ class _MainFrameState extends State<MainFrame> {
                 onPressed: () {
                   setState(() {
                     content = const NewWordPage();
+                  });
+                },
+              ),
+              ElevatedButton(
+                child: const Text('list'),
+                onPressed: () {
+                  setState(() {
+                    content = const ListPage();
                   });
                 },
               ),
