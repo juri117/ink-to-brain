@@ -58,9 +58,12 @@ class _MainFrameState extends State<MainFrame> {
                     padding: const EdgeInsets.only(
                         top: 10.0, bottom: 10, left: 50, right: 50),
                     children: [
-                  OutlinedButton(
-                    child: const Padding(
-                        padding: EdgeInsets.all(20), child: Text('new words')),
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.library_add_outlined),
+                    label: Container(
+                        width: 150,
+                        padding: EdgeInsets.all(20),
+                        child: Text('new words')),
                     onPressed: () {
                       setState(() {
                         content = const NewWordPage();
@@ -70,9 +73,11 @@ class _MainFrameState extends State<MainFrame> {
                   const SizedBox(
                     height: 20,
                   ),
-                  OutlinedButton(
-                    child: const Padding(
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.list),
+                    label: Container(
                         padding: EdgeInsets.all(20),
+                        width: 150,
                         child: Text('list of words')),
                     onPressed: () {
                       setState(() {
@@ -83,8 +88,10 @@ class _MainFrameState extends State<MainFrame> {
                   SizedBox(
                     height: 20,
                   ),
-                  OutlinedButton(
-                    child: const Padding(
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.fitness_center),
+                    label: Container(
+                        width: 150,
                         padding: EdgeInsets.all(20),
                         child: Text('start workout')),
                     onPressed: () {
