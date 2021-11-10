@@ -11,40 +11,40 @@ class WriteWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        flex: 1,
-        child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                    color: Theme.of(context).primaryColor, width: 1.5),
-                borderRadius: const BorderRadius.all(Radius.circular(3))),
-            child: Column(children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Padding(
-                  child: Text(title),
-                  padding: const EdgeInsets.all(5.0),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                        icon: const Icon(Icons.undo),
-                        tooltip: 'Undo',
-                        onPressed: controller.undo),
-                    IconButton(
-                        icon: const Icon(Icons.delete),
-                        tooltip: 'Clear',
-                        onPressed: controller.clear)
-                  ],
-                )
-              ]),
-              // DrawBar(_controller),
-              const Divider(height: 5.0, thickness: 1.0),
-              AspectRatio(
-                aspectRatio: 3.0,
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border:
+                Border.all(color: Theme.of(context).primaryColor, width: 1.5),
+            borderRadius: const BorderRadius.all(Radius.circular(3))),
+        child: Column(children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Padding(
+              child: Text(title),
+              padding: const EdgeInsets.all(5.0),
+            ),
+            Row(
+              children: [
+                IconButton(
+                    icon: const Icon(Icons.undo),
+                    tooltip: 'Undo',
+                    onPressed: controller.undo),
+                IconButton(
+                    icon: const Icon(Icons.delete),
+                    tooltip: 'Clear',
+                    onPressed: controller.clear)
+              ],
+            )
+          ]),
+          // DrawBar(_controller),
+          const Divider(height: 5.0, thickness: 1.0),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: AspectRatio(
+                aspectRatio: 3,
                 child: Painter(controller, usePen: pen),
-              ),
-              const Divider(height: 5.0, thickness: 1.0),
-            ])));
+              )),
+          const Divider(height: 5.0, thickness: 1.0),
+        ]));
   }
 }

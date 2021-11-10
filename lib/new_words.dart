@@ -55,8 +55,11 @@ class _NewWordPageState extends State<NewWordPage> {
     return Column(children: [
       Row(
         children: [
-          WriteWidget("word to learn", _controller, pen: true),
-          WriteWidget("hint", _controllerTrans, pen: true),
+          Expanded(
+              flex: 1,
+              child: WriteWidget("word to learn", _controller, pen: true)),
+          Expanded(
+              flex: 1, child: WriteWidget("hint", _controllerTrans, pen: true)),
         ],
       ),
       ElevatedButton(
