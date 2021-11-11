@@ -11,6 +11,43 @@ class WriteWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: AspectRatio(
+              aspectRatio: 3, //3,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                      color: Theme.of(context).primaryColor, width: 1.5),
+                  //borderRadius: const BorderRadius.all(Radius.circular(3))
+                ),
+                child: Stack(alignment: Alignment.topRight, children: [
+                  Painter(controller, usePen: pen),
+                  Positioned(
+                      //alignment: Alignment.topRight,
+                      right: 0,
+                      // height: 100,
+                      child: Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Row(children: [
+                            IconButton(
+                                splashRadius: 10.0,
+                                icon: const Icon(Icons.undo),
+                                tooltip: 'Undo',
+                                onPressed: controller.undo),
+                            IconButton(
+                                splashRadius: 10.0,
+                                icon: const Icon(Icons.delete),
+                                tooltip: 'Clear',
+                                onPressed: controller.clear)
+                          ])))
+                ]),
+              )),
+        ));
+    /*
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -46,5 +83,6 @@ class WriteWidget extends StatelessWidget {
               )),
           const Divider(height: 5.0, thickness: 1.0),
         ]));
+        */
   }
 }
