@@ -1,10 +1,13 @@
 import 'dart:typed_data';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/widgets/write_widget.dart';
 import 'package:ink2brain/widgets/painter.dart';
+
+enum WorkoutState { ask, answer, done }
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({Key? key}) : super(key: key);
@@ -16,6 +19,7 @@ class WorkoutPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutPage> {
   PainterController _controller = _newController();
   List<Word> words = [];
+  WorkoutState _state = WorkoutState.ask;
   Word currentWord = Word(
       id: -1,
       insertTs: DateTime.fromMicrosecondsSinceEpoch(0),
@@ -25,7 +29,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
       motherToungheWord: "",
       correctCount: 0);
   int index = 0;
-  bool _showSolution = false;
 
   @override
   void initState() {
@@ -55,13 +58,22 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   Future<void> _save(Word word, bool suc) async {
     if (suc) {
-      DatabaseCon().incrementCorrect(word);
+      word.correctCount = max(1, word.correctCount + 1);
     } else {
-      DatabaseCon().resetCorrect(word);
+      word.correctCount = min(-1, word.correctCount - 1);
     }
+    word.lastAskedTs = DateTime.now();
+    DatabaseCon().updateWord(word);
 
     setState(() {
-      _showSolution = false;
+      currentWord = word;
+      _state = WorkoutState.done;
+    });
+
+    await Future.delayed(const Duration(seconds: 2), () {});
+
+    setState(() {
+      _state = WorkoutState.ask;
       _controller = _newController();
       index++;
       if (words.length > index) {
@@ -80,42 +92,75 @@ class _WorkoutPageState extends State<WorkoutPage> {
         Expanded(
             flex: 2,
             child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEEF7FF),
+                padding: const EdgeInsets.all(20),
+                child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColorLight,
                         border: Border.all(
                             color: Theme.of(context).primaryColor, width: 1.5),
-                        //borderRadius: const BorderRadius.all(Radius.circular(3))
-                      ),
-                      child: AspectRatio(
-                          aspectRatio: 3,
-                          child: currentWord.id <= 0
-                              ? const Center(child: Text("loading..."))
-                              : Image.memory(currentWord.motherTounghePix)),
-                    ),
-                    Icon(Icons.compare_arrows_outlined,
-                        size: 40, color: Theme.of(context).primaryColor),
-                    Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE4FFE6),
-                          border: Border.all(
-                              color: Theme.of(context).primaryColor,
-                              width: 1.5),
-                          //borderRadius: const BorderRadius.all(Radius.circular(3))
-                        ),
-                        child: AspectRatio(
-                            aspectRatio: 3,
-                            child: currentWord.id <= 0 || !_showSolution
-                                ? Center(
-                                    child: Text(
-                                        "current score: ${currentWord.correctCount}"))
-                                : Image.memory(currentWord.foreignPix)))
-                  ],
-                ))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(3))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                            flex: 3,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEEF7FF),
+                                //border: Border.all(
+                                //    color: Theme.of(context).primaryColor,
+                                //    width: 1.5),
+                                //borderRadius: const BorderRadius.all(Radius.circular(3))
+                              ),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: AspectRatio(
+                                      aspectRatio: 3,
+                                      child: currentWord.id <= 0
+                                          ? const Center(
+                                              child: Text("loading..."))
+                                          : Image.memory(
+                                              currentWord.motherTounghePix))),
+                            )),
+                        const SizedBox(width: 10),
+                        Icon(Icons.compare_arrows_outlined,
+                            size: 40, color: Theme.of(context).primaryColor),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            flex: 3,
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  //color: const Color(0xFFE4FFE6),
+                                  color: const Color(0xFFEEF7FF),
+                                  //border: Border.all(
+                                  //    color: Theme.of(context).primaryColor,
+                                  //    width: 1.5),
+                                  //borderRadius: const BorderRadius.all(Radius.circular(3))
+                                ),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: AspectRatio(
+                                        aspectRatio: 3,
+                                        child: currentWord.id <= 0 ||
+                                                _state == WorkoutState.ask
+                                            ? Center(
+                                                child: Icon(
+                                                    Icons.visibility_off,
+                                                    size: 40,
+                                                    color: Theme.of(context)
+                                                        .primaryColor))
+                                            : Image.memory(
+                                                currentWord.foreignPix))))),
+                        const SizedBox(width: 10),
+                        Container(
+                            child: Text(
+                          "current score\n${currentWord.correctCount}",
+                          textAlign: TextAlign.center,
+                        ))
+                      ],
+                    )))),
         Expanded(
           flex: 4,
           child: WriteWidget(
@@ -127,62 +172,72 @@ class _WorkoutPageState extends State<WorkoutPage> {
         Expanded(
             flex: 1,
             child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: _showSolution
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                            width: 200.0,
-                            height: 100.0,
-                            child: OutlinedButton.icon(
-                              icon: const Icon(Icons.sentiment_satisfied),
-                              label: const Text('wrong :('),
-                              style: OutlinedButton.styleFrom(
-                                  primary: Colors.red,
-                                  backgroundColor: const Color(0xFFFFE4E4)),
-                              onPressed: () {
-                                _save(currentWord, false);
-                              },
-                            )),
-                        SizedBox(
-                            width: 200.0,
-                            height: 100.0,
-                            child: OutlinedButton.icon(
-                              icon: const Icon(Icons.emoji_emotions_outlined),
-                              label: const Text('correct'),
-                              style: OutlinedButton.styleFrom(
-                                  primary: Colors.green,
-                                  backgroundColor: const Color(0xFFE4FFE6)),
-                              onPressed: () {
-                                _save(currentWord, false);
-                              },
-                            )),
-                      ],
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                          SizedBox(
-                              width: 200.0,
-                              height: 100.0,
-                              child: OutlinedButton.icon(
-                                icon: const Icon(Icons.help_outline),
-                                label: const Text('solution'),
-                                //style: OutlinedButton.styleFrom(
-                                //primary: Colors.green,
-                                //backgroundColor: const Color(0xFFE4FFE6)),
-                                onPressed: () {
-                                  setState(() {
-                                    _showSolution = true;
-                                  });
-                                },
-                              ))
-                        ]),
-            )),
+                padding: const EdgeInsets.all(20),
+                child: generateButtonBar(_state))),
       ],
     );
 
     // return out;
+  }
+
+  Widget generateButtonBar(WorkoutState state) {
+    switch (state) {
+      case WorkoutState.ask:
+        return Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          SizedBox(
+              width: 200.0,
+              height: 100.0,
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.help_outline),
+                label: const Text('solution'),
+                //style: OutlinedButton.styleFrom(
+                //primary: Colors.green,
+                //backgroundColor: const Color(0xFFE4FFE6)),
+                onPressed: () {
+                  setState(() {
+                    _state = WorkoutState.answer;
+                  });
+                },
+              ))
+        ]);
+      case WorkoutState.answer:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(
+                width: 200.0,
+                height: 100.0,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.sentiment_satisfied),
+                  label: const Text('wrong :('),
+                  style: OutlinedButton.styleFrom(
+                      primary: Colors.red,
+                      backgroundColor: const Color(0xFFFFE4E4)),
+                  onPressed: () {
+                    _save(currentWord, false);
+                  },
+                )),
+            SizedBox(
+                width: 200.0,
+                height: 100.0,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.emoji_emotions_outlined),
+                  label: const Text('correct'),
+                  style: OutlinedButton.styleFrom(
+                      primary: Colors.green,
+                      backgroundColor: const Color(0xFFE4FFE6)),
+                  onPressed: () {
+                    _save(currentWord, true);
+                  },
+                )),
+          ],
+        );
+      default:
+        return Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          CircularProgressIndicator(
+            color: Theme.of(context).colorScheme.primary,
+          )
+        ]);
+    }
   }
 }

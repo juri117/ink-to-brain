@@ -6,6 +6,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io' as io;
+import 'dart:math';
 
 class DatabaseCon {
   static final DatabaseCon _dbCon = DatabaseCon._internal();
@@ -164,13 +165,13 @@ class DatabaseCon {
   }
 
   Future<void> incrementCorrect(Word word) async {
-    word.correctCount++;
+    word.correctCount = max(1, word.correctCount + 1);
     word.lastAskedTs = DateTime.now();
     updateWord(word);
   }
 
   Future<void> resetCorrect(Word word) async {
-    word.correctCount = 0;
+    word.correctCount = min(-1, word.correctCount - 1);
     word.lastAskedTs = DateTime.now();
     updateWord(word);
   }

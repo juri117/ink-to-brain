@@ -14,7 +14,7 @@ class WriteWidget extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.all(20),
         child: Align(
-          alignment: Alignment.bottomCenter,
+          alignment: Alignment.center,
           child: AspectRatio(
               aspectRatio: 3, //3,
               child: Container(

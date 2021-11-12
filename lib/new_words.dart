@@ -57,17 +57,37 @@ class _NewWordPageState extends State<NewWordPage> {
         children: [
           Expanded(
               flex: 1,
-              child: WriteWidget("word to learn", _controller, pen: true)),
+              child: Column(children: [
+                const Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Text("Question", style: TextStyle(fontSize: 20))),
+                WriteWidget("word to learn", _controller, pen: true)
+              ])),
           Expanded(
-              flex: 1, child: WriteWidget("hint", _controllerTrans, pen: true)),
+              flex: 1,
+              child: Column(children: [
+                const Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Text("Answer", style: TextStyle(fontSize: 20))),
+                WriteWidget("hint", _controllerTrans, pen: true)
+              ])),
         ],
       ),
-      ElevatedButton(
-        child: const Text('save'),
-        onPressed: () {
-          _save();
-        },
-      ),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+        SizedBox(
+            width: 200.0,
+            height: 100.0,
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.save),
+              label: const Text('save'),
+              //style: OutlinedButton.styleFrom(
+              //primary: Colors.green,
+              //backgroundColor: const Color(0xFFE4FFE6)),
+              onPressed: () {
+                _save();
+              },
+            ))
+      ])
     ]);
   }
 }
