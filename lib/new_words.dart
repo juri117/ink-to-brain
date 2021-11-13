@@ -61,35 +61,17 @@ class _NewWordPageState extends State<NewWordPage> {
 
   Future<void> _scanQuest() async {
     await requestWritePermission();
-
     Uint8List pix = await _questPaintControl.generateRendering().toPNG();
-
-    final Directory? directory = await getExternalStorageDirectory();
+    Directory? directory;
+    if (Platform.isWindows) {
+      directory = Directory.current;
+    } else {
+      directory = await getExternalStorageDirectory();
+    }
     final String fOutPath = join(directory!.path, "tmpQuestImg.png");
     final File fOut = File(fOutPath);
     fOut.writeAsBytes(pix);
-
     String langName = "deu";
-
-    /*
-    HttpClient httpClient = HttpClient();
-    HttpClientRequest request = await httpClient.getUrl(Uri.parse(
-        'https://github.com/tesseract-ocr/tessdata/raw/main/${langName}.traineddata'));
-
-    HttpClientResponse response = await request.close();
-    Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-    String dir = await FlutterTesseractOcr.getTessdataPath();
-
-    Directory storageDir = Directory(dir);
-    if (!await storageDir.exists()) {
-      print("create dir: $dir");
-      await storageDir.create(recursive: true);
-    }
-    print('$dir/$langName.traineddata');
-    File file = File('$dir/$langName.traineddata');
-    await file.writeAsBytes(bytes);
-    */
-
     String text = await FlutterTesseractOcr.extractText(fOutPath,
         language: langName,
         args: {
@@ -161,9 +143,11 @@ class _NewWordPageState extends State<NewWordPage> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.lightbulb_outline),
-                        onPressed: () {
-                          _scanQuest();
-                        },
+                        onPressed: Platform.isWindows
+                            ? null
+                            : () {
+                                _scanQuest();
+                              },
                       )
                     ])),
               ])),
@@ -197,9 +181,11 @@ class _NewWordPageState extends State<NewWordPage> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.lightbulb_outline),
-                        onPressed: () {
-                          _scanAnsw();
-                        },
+                        onPressed: Platform.isWindows
+                            ? null
+                            : () {
+                                _scanAnsw();
+                              },
                       )
                     ])),
               ])),

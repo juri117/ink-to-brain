@@ -8,10 +8,6 @@ echo "-$VERSION-"
 mkdir release
 rm release/* -rf
 
-echo "build for Android"
-flutter build apk
-cp build/app/outputs/flutter-apk/app-release.apk release/ink-to-brain-app-$VERSION.apk
-
 echo "build for Windows"
 flutter build windows
 
@@ -34,3 +30,6 @@ powershell Compress-Archive ink-to-brain-win-$VERSION ink-to-brain-win-$VERSION.
 # tar -a -c -f ink-to-brain-win-$VERSION.zip ink-to-brain-win-$VERSION
 # rm ink-to-brain-win-$VERSION -rf
 
+echo "build for Android"
+flutter build apk
+cp build/app/outputs/flutter-apk/app-release.apk release/ink-to-brain-app-$VERSION.apk
