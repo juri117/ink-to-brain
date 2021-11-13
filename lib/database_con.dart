@@ -12,6 +12,17 @@ import 'dart:math';
 class DatabaseCon {
   static final DatabaseCon _dbCon = DatabaseCon._internal();
 
+  final String dbCreateQue = ("CREATE TABLE words (" +
+      "id	INTEGER UNIQUE NOT NULL,	" +
+      "insertTs DATETIME DEFAULT (CURRENT_TIMESTAMP), " +
+      "questionPix	BLOB, " +
+      "questionTxt	TEXT, " +
+      "answerPix	BLOB, " +
+      "answerTxt	TEXT, " +
+      "correctCount	NUMERIC, " +
+      "lastAskedTs DATETIME, " +
+      "PRIMARY KEY(id AUTOINCREMENT));");
+
   factory DatabaseCon() {
     return _dbCon;
   }
@@ -39,18 +50,7 @@ class DatabaseCon {
       con = await databaseFactory.openDatabase(path.join(dir.path, 'words.db'),
           options: OpenDatabaseOptions(
             onCreate: (db, version) {
-              return db.execute("CREATE TABLE words (" +
-                      "id	INTEGER UNIQUE NOT NULL,	" +
-                      "insertTs DATETIME DEFAULT (CURRENT_TIMESTAMP), " +
-                      "foreignPix	BLOB, " +
-                      "foreignWord	TEXT, " +
-                      "motherTounghePix	BLOB, " +
-                      "motherToungheWord	TEXT, " +
-                      "correctCount	NUMERIC, " +
-                      "lastAskedTs DATETIME, " +
-                      "PRIMARY KEY(id AUTOINCREMENT));"
-                  //'CREATE TABLE words(id INTEGER PRIMARY KEY, foreignPix BLOB, foreignWord TEXT, motherTounghePix BLOB, motherToungheWord TEXT, correctCount INTEGER)',
-                  );
+              return db.execute(dbCreateQue);
             },
             version: 1,
           ));
@@ -66,45 +66,11 @@ class DatabaseCon {
           await databaseFactoryFfi.openDatabase(path.join(dir.path, 'words.db'),
               options: OpenDatabaseOptions(
                 onCreate: (db, version) {
-                  return db.execute(
-                    'CREATE TABLE words(id INTEGER PRIMARY KEY, foreignPix BLOB, foreignWord TEXT, motherTounghePix BLOB, motherToungheWord TEXT, correctCount INTEGER)',
-                  );
+                  return db.execute(dbCreateQue);
                 },
                 version: 1,
               ));
     }
-
-    /*
-    io.Directory directory = io.Directory.current;
-    if (io.Platform.isAndroid) {
-      directory = await getApplicationDocumentsDirectory();
-    }
-
-    io.Directory(path.join(directory.path, 'db'))
-        .create(recursive: true)
-        .then((io.Directory directory) {
-      print('Path of New Dir: ' + directory.path);
-    });
-
-    //io.Directory(path.join(directory.path, "db")).create();
-
-    String dbPath = path.join(directory.path, 'db', 'words.db');
-
-    sqfliteFfiInit();
-
-    var databaseFactory = databaseFactoryFfi;
-    //con = await databaseFactory.openDatabase(inMemoryDatabasePath);
-
-    con = await databaseFactory.openDatabase(dbPath,
-        options: OpenDatabaseOptions(
-          onCreate: (db, version) {
-            return db.execute(
-              'CREATE TABLE words(id INTEGER PRIMARY KEY, foreignPix BLOB, foreignWord TEXT, motherTounghePix BLOB, motherToungheWord TEXT, correctCount INTEGER)',
-            );
-          },
-          version: 1,
-        ));
-        */
   }
 
   Future<void> insertWord(Word word) async {
@@ -133,10 +99,10 @@ class DatabaseCon {
       return Word(
         id: maps[i]['id'],
         insertTs: DateTime.parse(maps[i]['insertTs']),
-        foreignPix: maps[i]['foreignPix'],
-        foreignWord: maps[i]['foreignWord'],
-        motherTounghePix: maps[i]['motherTounghePix'],
-        motherToungheWord: maps[i]['motherToungheWord'],
+        questionPix: maps[i]['questionPix'],
+        questionTxt: maps[i]['questionTxt'],
+        answerPix: maps[i]['answerPix'],
+        answerTxt: maps[i]['answerTxt'],
         correctCount: maps[i]['correctCount'],
         lastAskedTs: lastAskedTs,
       );
@@ -145,8 +111,8 @@ class DatabaseCon {
 
   Future<void> updateWord(Word word) async {
     Map<String, dynamic> map = word.toMap();
-    map.remove("foreignPix");
-    map.remove("motherTounghePix");
+    map.remove("questionPix");
+    map.remove("answerPix");
     await con?.update(
       'words',
       map,
@@ -154,18 +120,4 @@ class DatabaseCon {
       whereArgs: [word.id],
     );
   }
-
-/*
-  Future<void> incrementCorrect(Word word) async {
-    word.correctCount = max(1, word.correctCount + 1);
-    word.lastAskedTs = DateTime.now();
-    updateWord(word);
-  }
-
-  Future<void> resetCorrect(Word word) async {
-    word.correctCount = min(-1, word.correctCount - 1);
-    word.lastAskedTs = DateTime.now();
-    updateWord(word);
-  }
-*/
 }

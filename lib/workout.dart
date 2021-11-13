@@ -23,10 +23,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Word currentWord = Word(
       id: -1,
       insertTs: DateTime.fromMicrosecondsSinceEpoch(0),
-      foreignPix: Uint8List(0),
-      foreignWord: "",
-      motherTounghePix: Uint8List(0),
-      motherToungheWord: "",
+      questionPix: Uint8List(0),
+      questionTxt: "",
+      answerPix: Uint8List(0),
+      answerTxt: "",
       correctCount: 0);
   int index = 0;
 
@@ -122,7 +122,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                           ? const Center(
                                               child: Text("loading..."))
                                           : Image.memory(
-                                              currentWord.motherTounghePix))),
+                                              currentWord.questionPix))),
                             )),
                         const SizedBox(width: 10),
                         Icon(Icons.compare_arrows_outlined,
@@ -152,7 +152,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                                     color: Theme.of(context)
                                                         .primaryColor))
                                             : Image.memory(
-                                                currentWord.foreignPix))))),
+                                                currentWord.answerPix))))),
                         const SizedBox(width: 10),
                         Container(
                             child: Column(children: [

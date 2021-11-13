@@ -4,20 +4,20 @@ import 'package:intl/intl.dart';
 class Word {
   final int id;
   final DateTime insertTs;
-  final Uint8List foreignPix;
-  final String foreignWord;
-  final Uint8List motherTounghePix;
-  final String motherToungheWord;
+  final Uint8List questionPix;
+  final String questionTxt;
+  final Uint8List answerPix;
+  final String answerTxt;
   int correctCount;
   DateTime? lastAskedTs;
 
   Word(
       {required this.id,
       required this.insertTs,
-      required this.foreignPix,
-      required this.foreignWord,
-      required this.motherTounghePix,
-      required this.motherToungheWord,
+      required this.questionPix,
+      required this.questionTxt,
+      required this.answerPix,
+      required this.answerTxt,
       required this.correctCount,
       this.lastAskedTs});
 
@@ -25,10 +25,10 @@ class Word {
     return {
       'id': id,
       'insertTs': insertTs.toString(),
-      'foreignPix': foreignPix,
-      'foreignWord': foreignWord,
-      'motherTounghePix': motherTounghePix,
-      'motherToungheWord': motherToungheWord,
+      'questionPix': questionPix,
+      'questionTxt': questionTxt,
+      'answerPix': answerPix,
+      'answerTxt': answerTxt,
       'correctCount': correctCount,
       'lastAskedTs': lastAskedTs?.toString()
     };

@@ -121,13 +121,13 @@ class _ListPageState extends State<ListPage> {
                                         child: AspectRatio(
                                             aspectRatio: 3.0,
                                             child: Image.memory(
-                                                words[index].foreignPix)))),
+                                                words[index].questionPix)))),
                                     DataCell(SizedBox(
                                         width: 120,
                                         child: AspectRatio(
                                             aspectRatio: 3.0,
-                                            child: Image.memory(words[index]
-                                                .motherTounghePix)))),
+                                            child: Image.memory(
+                                                words[index].answerPix)))),
                                     DataCell(
                                         Text("${words[index].correctCount}")),
                                     DataCell(Text(
