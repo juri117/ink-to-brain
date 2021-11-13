@@ -153,25 +153,39 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                                         .primaryColor))
                                             : Image.memory(
                                                 currentWord.answerPix))))),
-                        const SizedBox(width: 10),
+                        //const SizedBox(width: 10),
                         Container(
+                            padding: const EdgeInsets.all(20),
                             child: Column(children: [
-                          Text(
-                            "score: ${currentWord.correctCount}",
-                            textAlign: TextAlign.center,
-                          ),
-                          Wrap(
-                            children: List.generate(
-                                min(5, currentWord.correctCount.abs()),
-                                (index) {
-                              return Center(
-                                child: Icon(Icons.star,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 12),
-                              );
-                            }),
-                          )
-                        ]))
+                              Text("score: ${currentWord.correctCount}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: currentWord.correctCount < 0
+                                          ? Theme.of(context).errorColor
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .primary)),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Wrap(
+                                children: List.generate(
+                                    min(5, currentWord.correctCount.abs()),
+                                    (index) {
+                                  return Center(
+                                    child: Icon(
+                                        currentWord.correctCount >= 0
+                                            ? Icons.star
+                                            : Icons.block_outlined,
+                                        color: currentWord.correctCount >= 0
+                                            ? Theme.of(context).primaryColor
+                                            : Theme.of(context).errorColor,
+                                        size: 18),
+                                  );
+                                }),
+                              )
+                            ]))
                       ],
                     )))),
         Expanded(

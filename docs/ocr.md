@@ -18,3 +18,10 @@ self made with python:
 * run: `./tesseract ../pic_test.png ../out -l vie --psm 7`
 * run: `./tesseract ../pic_test.png ../out -l vie --psm 7`
 
+
+
+# ml-kit
+
+* https://developers.google.com/ml-kit/vision/digital-ink-recognition
+* Digital Ink Recognition
+* https://pub.dev/packages/google_ml_kit
