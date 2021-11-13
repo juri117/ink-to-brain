@@ -31,9 +31,9 @@ class _PainterState extends State<Painter> {
   }
 
   Size _finish() {
-    setState(() {
-      _finished = true;
-    });
+    //setState(() {
+    //  _finished = true;
+    //});
     return context.size ?? const Size(0, 0);
   }
 
@@ -348,6 +348,15 @@ class PainterController extends ChangeNotifier {
       }
     }
     return _cached!;
+  }
+
+  PictureDetails generateRendering() {
+    if (_widgetFinish != null) {
+      return _render(_widgetFinish!());
+    } else {
+      throw StateError(
+          'Called finish on a PainterController that was not connected to a widget yet!');
+    }
   }
 
   PictureDetails _render(Size size) {

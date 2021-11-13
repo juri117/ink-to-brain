@@ -1,10 +1,16 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
+import 'package:ink2brain/utils/file_utils.dart';
 import 'package:ink2brain/widgets/painter.dart';
 import 'package:ink2brain/widgets/write_widget.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 class NewWordPage extends StatefulWidget {
   const NewWordPage({Key? key}) : super(key: key);
@@ -15,8 +21,11 @@ class NewWordPage extends StatefulWidget {
 
 class _NewWordPageState extends State<NewWordPage> {
   //bool _finished = false;
-  PainterController _controller = _newController();
-  PainterController _controllerTrans = _newController();
+  PainterController _questPaintControl = _newController();
+  PainterController _answPaintControl = _newController();
+
+  final TextEditingController _questTxtControl = TextEditingController();
+  final TextEditingController _answTxtControl = TextEditingController();
 
   @override
   void initState() {
@@ -32,21 +41,86 @@ class _NewWordPageState extends State<NewWordPage> {
   }
 
   Future<void> _save() async {
-    Uint8List foreignPix = await _controller.finish().toPNG();
-    Uint8List motherTounghePix = await _controllerTrans.finish().toPNG();
+    Uint8List questPix = await _questPaintControl.finish().toPNG();
+    Uint8List answPix = await _answPaintControl.finish().toPNG();
 
     DatabaseCon().insertWord(Word(
         id: -1,
         insertTs: DateTime.now(),
-        foreignPix: foreignPix,
+        foreignPix: questPix,
         foreignWord: "",
-        motherTounghePix: motherTounghePix,
+        motherTounghePix: answPix,
         motherToungheWord: "",
         correctCount: 0));
 
     setState(() {
-      _controller = _newController();
-      _controllerTrans = _newController();
+      _questPaintControl = _newController();
+      _answPaintControl = _newController();
+    });
+  }
+
+  Future<void> _scanQuest() async {
+    await requestWritePermission();
+
+    Uint8List pix = await _questPaintControl.generateRendering().toPNG();
+
+    final Directory? directory = await getExternalStorageDirectory();
+    final String fOutPath = join(directory!.path, "tmpQuestImg.png");
+    final File fOut = File(fOutPath);
+    fOut.writeAsBytes(pix);
+
+    String langName = "deu";
+
+    /*
+    HttpClient httpClient = HttpClient();
+    HttpClientRequest request = await httpClient.getUrl(Uri.parse(
+        'https://github.com/tesseract-ocr/tessdata/raw/main/${langName}.traineddata'));
+
+    HttpClientResponse response = await request.close();
+    Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+    String dir = await FlutterTesseractOcr.getTessdataPath();
+
+    Directory storageDir = Directory(dir);
+    if (!await storageDir.exists()) {
+      print("create dir: $dir");
+      await storageDir.create(recursive: true);
+    }
+    print('$dir/$langName.traineddata');
+    File file = File('$dir/$langName.traineddata');
+    await file.writeAsBytes(bytes);
+    */
+
+    String text = await FlutterTesseractOcr.extractText(fOutPath,
+        language: langName,
+        args: {
+          "psm": "7",
+          //"preserve_interword_spaces": "1",
+        });
+
+    setState(() {
+      _questTxtControl.text = text;
+    });
+  }
+
+  Future<void> _scanAnsw() async {
+    await requestWritePermission();
+    Uint8List pix = await _answPaintControl.generateRendering().toPNG();
+    final Directory? directory = await getExternalStorageDirectory();
+    final String fOutPath = join(directory!.path, "tmpAnswImg.png");
+    final File fOut = File(fOutPath);
+    fOut.writeAsBytes(pix);
+
+    String langName = "vie";
+
+    String text = await FlutterTesseractOcr.extractText(fOutPath,
+        language: langName,
+        args: {
+          "psm": "7",
+          //"preserve_interword_spaces": "1",
+        });
+
+    setState(() {
+      _answTxtControl.text = text;
     });
   }
 
@@ -61,7 +135,37 @@ class _NewWordPageState extends State<NewWordPage> {
                 const Padding(
                     padding: EdgeInsets.only(top: 5),
                     child: Text("Question", style: TextStyle(fontSize: 20))),
-                WriteWidget("word to learn", _controller, pen: true)
+                WriteWidget("word to learn", _questPaintControl, pen: true),
+                Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(children: [
+                      Expanded(
+                          flex: 1,
+                          child: TextField(
+                              controller: _questTxtControl,
+                              minLines:
+                                  1, //Normal textInputField will be displayed
+                              maxLines:
+                                  1, // when user presses enter it will adapt to it
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary)),
+                                hintText: '...',
+                                labelText: 'Question Note',
+                              ))),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.lightbulb_outline),
+                        onPressed: () {
+                          _scanQuest();
+                        },
+                      )
+                    ])),
               ])),
           Expanded(
               flex: 1,
@@ -69,7 +173,35 @@ class _NewWordPageState extends State<NewWordPage> {
                 const Padding(
                     padding: EdgeInsets.only(top: 5),
                     child: Text("Answer", style: TextStyle(fontSize: 20))),
-                WriteWidget("hint", _controllerTrans, pen: true)
+                WriteWidget("hint", _answPaintControl, pen: true),
+                Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(children: [
+                      Expanded(
+                          flex: 1,
+                          child: TextField(
+                              controller: _answTxtControl,
+                              minLines: 1,
+                              maxLines: 1,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary)),
+                                hintText: '...',
+                                labelText: 'Answer Note',
+                              ))),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.lightbulb_outline),
+                        onPressed: () {
+                          _scanAnsw();
+                        },
+                      )
+                    ])),
               ])),
         ],
       ),

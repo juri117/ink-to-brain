@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ink2brain/models/word.dart';
+import 'package:ink2brain/utils/file_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -19,23 +20,10 @@ class DatabaseCon {
 
   Database? con;
 
-  Future<void> _requestWritePermission() async {
-    if (io.Platform.isAndroid || io.Platform.isIOS) {
-      var status = await Permission.storage.status;
-      if (status.isDenied) {
-        // You can request multiple permissions at once.
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.storage,
-        ].request();
-        // print(statuses[Permission.storage]);
-      }
-    }
-  }
-
   Future<void> openCon() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    await _requestWritePermission();
+    await requestWritePermission();
 
     if (io.Platform.isAndroid) {
       final io.Directory? dir = await getExternalStorageDirectory();
@@ -156,14 +144,18 @@ class DatabaseCon {
   }
 
   Future<void> updateWord(Word word) async {
+    Map<String, dynamic> map = word.toMap();
+    map.remove("foreignPix");
+    map.remove("motherTounghePix");
     await con?.update(
       'words',
-      word.toMap(),
+      map,
       where: 'id = ?',
       whereArgs: [word.id],
     );
   }
 
+/*
   Future<void> incrementCorrect(Word word) async {
     word.correctCount = max(1, word.correctCount + 1);
     word.lastAskedTs = DateTime.now();
@@ -175,4 +167,5 @@ class DatabaseCon {
     word.lastAskedTs = DateTime.now();
     updateWord(word);
   }
+*/
 }

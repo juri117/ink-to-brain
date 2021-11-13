@@ -76,6 +76,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  flutter_tesseract_ocr:
+    dependency: "direct main"
+    description:
+      name: flutter_tesseract_ocr
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.18"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -88,6 +95,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.0"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.3"
   lints:
     dependency: transitive
     description:

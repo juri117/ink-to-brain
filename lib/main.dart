@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/list.dart';
 import 'package:ink2brain/new_words.dart';
+import 'package:ink2brain/theme.dart';
 import 'package:ink2brain/workout.dart';
 
 void main() async {
@@ -16,10 +17,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'ink to brain',
-      home: MainFrame(),
-    );
+    return MaterialApp(
+        title: 'ink to brain', home: MainFrame(), theme: myTheme);
   }
 }
 

@@ -16,3 +16,5 @@ self made with python:
 * copy language to *tessdata*-folder from: https://github.com/tesseract-ocr/tessdata
   * or other: https://tesseract-ocr.github.io/tessdoc/Home.html#traineddata-files-1
 * run: `./tesseract ../pic_test.png ../out -l vie --psm 7`
+* run: `./tesseract ../pic_test.png ../out -l vie --psm 7`
+

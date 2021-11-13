@@ -96,9 +96,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 child: Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColorLight,
-                        border: Border.all(
-                            color: Theme.of(context).primaryColor, width: 1.5),
+                        color: Theme.of(context).colorScheme.surface,
+                        border:
+                            Border.all(color: Colors.transparent, width: 1.5),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(3))),
                     child: Row(
@@ -108,7 +108,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                             flex: 3,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: const Color(0xFFEEF7FF),
+                                color: Theme.of(context).primaryColorLight,
                                 //border: Border.all(
                                 //    color: Theme.of(context).primaryColor,
                                 //    width: 1.5),
@@ -133,7 +133,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                             child: Container(
                                 decoration: BoxDecoration(
                                   //color: const Color(0xFFE4FFE6),
-                                  color: const Color(0xFFEEF7FF),
+                                  color: Theme.of(context).primaryColorLight,
                                   //border: Border.all(
                                   //    color: Theme.of(context).primaryColor,
                                   //    width: 1.5),
@@ -155,10 +155,23 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                                 currentWord.foreignPix))))),
                         const SizedBox(width: 10),
                         Container(
-                            child: Text(
-                          "current score\n${currentWord.correctCount}",
-                          textAlign: TextAlign.center,
-                        ))
+                            child: Column(children: [
+                          Text(
+                            "score: ${currentWord.correctCount}",
+                            textAlign: TextAlign.center,
+                          ),
+                          Wrap(
+                            children: List.generate(
+                                min(5, currentWord.correctCount.abs()),
+                                (index) {
+                              return Center(
+                                child: Icon(Icons.star,
+                                    color: Theme.of(context).primaryColor,
+                                    size: 12),
+                              );
+                            }),
+                          )
+                        ]))
                       ],
                     )))),
         Expanded(
