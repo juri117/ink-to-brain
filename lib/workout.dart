@@ -37,7 +37,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   Future<void> _loadWords() async {
-    List<Word> newWords = await DatabaseCon().words(where: "correctCount < 3");
+    List<Word> newWords = await DatabaseCon().words(
+        where:
+            "correctCount < 3 OR (correctCount == 3 AND lastAskedTs >= date('now', '-3 day'))");
     setState(() {
       newWords.shuffle();
       words = newWords;

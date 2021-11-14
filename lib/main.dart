@@ -3,12 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/list.dart';
+import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/theme.dart';
 import 'package:ink2brain/workout.dart';
 
 void main() async {
-  DatabaseCon().openCon();
+  await DatabaseCon().openCon();
   runApp(const MyApp());
 }
 
@@ -32,9 +33,20 @@ class MainFrame extends StatefulWidget {
 class _MainFrameState extends State<MainFrame> {
   Widget? content;
 
+  Stat stat =
+      Stat(totalCount: -1, activeCount: -1, learnedCount: -1, todayCount: -1);
+
   @override
   void initState() {
     super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    Stat newStat = await DatabaseCon().statistic();
+    setState(() {
+      stat = newStat;
+    });
   }
 
   @override
@@ -57,33 +69,51 @@ class _MainFrameState extends State<MainFrame> {
                     padding: const EdgeInsets.only(
                         top: 10.0, bottom: 10, left: 50, right: 50),
                     children: [
-                  OutlinedButton.icon(
-                    icon: Icon(Icons.library_add_outlined),
-                    label: Container(
-                        width: 150,
-                        padding: EdgeInsets.all(20),
-                        child: Text('new words')),
-                    onPressed: () {
-                      setState(() {
-                        content = const NewWordPage();
-                      });
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  OutlinedButton.icon(
-                    icon: Icon(Icons.list),
-                    label: Container(
-                        padding: EdgeInsets.all(20),
-                        width: 150,
-                        child: Text('list of words')),
-                    onPressed: () {
-                      setState(() {
-                        content = const ListPage();
-                      });
-                    },
-                  ),
+                  Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          border:
+                              Border.all(color: Colors.transparent, width: 1.5),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(3))),
+                      child: Column(
+                        children: [
+                          //Text(
+                          //  "Questions:",
+                          //  style: TextStyle(fontWeight: FontWeight.bold),
+                          //),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(children: [
+                                Text("total"),
+                                Text("${stat.totalCount}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold))
+                              ]),
+                              Column(children: [
+                                Text("mastered"),
+                                Text("${stat.learnedCount}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold))
+                              ]),
+                              Column(children: [
+                                Text("almost mastered"),
+                                Text("${stat.activeCount}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold))
+                              ]),
+                              Column(children: [
+                                Text("practiced today"),
+                                Text("${stat.todayCount}",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold))
+                              ]),
+                            ],
+                          )
+                        ],
+                      )),
                   SizedBox(
                     height: 20,
                   ),
@@ -96,6 +126,36 @@ class _MainFrameState extends State<MainFrame> {
                     onPressed: () {
                       setState(() {
                         content = const WorkoutPage();
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.list),
+                    label: Container(
+                        padding: EdgeInsets.all(20),
+                        width: 150,
+                        child: Text('list of questions')),
+                    onPressed: () {
+                      setState(() {
+                        content = const ListPage();
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.library_add_outlined),
+                    label: Container(
+                        width: 150,
+                        padding: EdgeInsets.all(20),
+                        child: Text('add questions')),
+                    onPressed: () {
+                      setState(() {
+                        content = const NewWordPage();
                       });
                     },
                   ),

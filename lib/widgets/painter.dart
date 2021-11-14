@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/widgets.dart' hide Image;
 
@@ -98,6 +99,15 @@ class _PainterState extends State<Painter> {
   }
 
   void _onPenDown(PointerEvent start) {
+    print("k:${start.kind}, b:${start.buttons}");
+    /*
+    if (start.buttons & kSecondaryButton == kSecondaryButton ||
+        start.kind == PointerDeviceKind.invertedStylus) {
+      widget.painterController.eraseMode = true;
+    } else {
+      widget.painterController.eraseMode = false;
+    }
+    */
     Offset pos =
         (context.findRenderObject() as RenderBox).globalToLocal(start.position);
     widget.painterController._pathHistory.add(pos);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -107,6 +108,26 @@ class DatabaseCon {
         lastAskedTs: lastAskedTs,
       );
     });
+  }
+
+  Future<Stat> statistic() async {
+    final List<Map<String, dynamic>> maps = await con?.rawQuery(
+            "SELECT COUNT(1) AS totalCount, "
+            "COUNT(CASE WHEN correctCount > 0 AND correctCount < 4 THEN 1 END) AS activeCount, "
+            "COUNT(CASE WHEN correctCount >= 4 THEN 1 END) AS learnedCount, "
+            "COUNT(CASE WHEN lastAskedTs >= DATE('now', 'start of day') THEN 1 END) AS todayCount "
+            "FROM words;") ??
+        [];
+    if (maps.isNotEmpty) {
+      return Stat(
+        totalCount: maps[0]['totalCount'],
+        activeCount: maps[0]['activeCount'],
+        learnedCount: maps[0]['learnedCount'],
+        todayCount: maps[0]['todayCount'],
+      );
+    }
+    return Stat(
+        totalCount: -1, activeCount: -1, learnedCount: -1, todayCount: -1);
   }
 
   Future<void> updateWord(Word word) async {
