@@ -10,6 +10,8 @@
   * [ ] db: log learning sessions
 
 **bug-fixes**
+* [] reload stats on main page on return from workout
+* [] place back to home icon on left side
 
 ## 0.00.001
 
