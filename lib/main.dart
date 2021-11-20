@@ -31,7 +31,7 @@ class MainFrame extends StatefulWidget {
 }
 
 class _MainFrameState extends State<MainFrame> {
-  Widget? content;
+  // Widget? content;
 
   Stat stat =
       Stat(totalCount: -1, activeCount: -1, learnedCount: -1, todayCount: -1);
@@ -52,7 +52,9 @@ class _MainFrameState extends State<MainFrame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('ink to brain'), actions: [
+        appBar: AppBar(title: const Text('ink to brain')
+            /*
+        , actions: [
           IconButton(
             icon: const Icon(Icons.home),
             tooltip: 'Home',
@@ -62,103 +64,115 @@ class _MainFrameState extends State<MainFrame> {
               });
             },
           ),
-        ]),
-        body: content ??
+        ]
+        */
+            ),
+        body: //content ??
             Center(
                 child: ListView(
                     padding: const EdgeInsets.only(
                         top: 10.0, bottom: 10, left: 50, right: 50),
                     children: [
-                  Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          border:
-                              Border.all(color: Colors.transparent, width: 1.5),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3))),
-                      child: Column(
+              Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      border: Border.all(color: Colors.transparent, width: 1.5),
+                      borderRadius: const BorderRadius.all(Radius.circular(3))),
+                  child: Column(
+                    children: [
+                      //Text(
+                      //  "Questions:",
+                      //  style: TextStyle(fontWeight: FontWeight.bold),
+                      //),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          //Text(
-                          //  "Questions:",
-                          //  style: TextStyle(fontWeight: FontWeight.bold),
-                          //),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(children: [
-                                Text("total"),
-                                Text("${stat.totalCount}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold))
-                              ]),
-                              Column(children: [
-                                Text("mastered"),
-                                Text("${stat.learnedCount}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold))
-                              ]),
-                              Column(children: [
-                                Text("almost mastered"),
-                                Text("${stat.activeCount}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold))
-                              ]),
-                              Column(children: [
-                                Text("practiced today"),
-                                Text("${stat.todayCount}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold))
-                              ]),
-                            ],
-                          )
+                          Column(children: [
+                            Text("total"),
+                            Text("${stat.totalCount}",
+                                style: TextStyle(fontWeight: FontWeight.bold))
+                          ]),
+                          Column(children: [
+                            Text("mastered"),
+                            Text("${stat.learnedCount}",
+                                style: TextStyle(fontWeight: FontWeight.bold))
+                          ]),
+                          Column(children: [
+                            Text("almost mastered"),
+                            Text("${stat.activeCount}",
+                                style: TextStyle(fontWeight: FontWeight.bold))
+                          ]),
+                          Column(children: [
+                            Text("practiced today"),
+                            Text("${stat.todayCount}",
+                                style: TextStyle(fontWeight: FontWeight.bold))
+                          ]),
                         ],
-                      )),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  OutlinedButton.icon(
-                    icon: Icon(Icons.fitness_center),
-                    label: Container(
-                        width: 150,
-                        padding: EdgeInsets.all(20),
-                        child: Text('start workout')),
-                    onPressed: () {
-                      setState(() {
-                        content = const WorkoutPage();
-                      });
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  OutlinedButton.icon(
-                    icon: Icon(Icons.list),
-                    label: Container(
-                        padding: EdgeInsets.all(20),
-                        width: 150,
-                        child: Text('list of questions')),
-                    onPressed: () {
-                      setState(() {
-                        content = const ListPage();
-                      });
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  OutlinedButton.icon(
-                    icon: Icon(Icons.library_add_outlined),
-                    label: Container(
-                        width: 150,
-                        padding: EdgeInsets.all(20),
-                        child: Text('add questions')),
-                    onPressed: () {
-                      setState(() {
-                        content = const NewWordPage();
-                      });
-                    },
-                  ),
-                ])));
+                      )
+                    ],
+                  )),
+              SizedBox(
+                height: 20,
+              ),
+              OutlinedButton.icon(
+                icon: Icon(Icons.fitness_center),
+                label: Container(
+                    width: 150,
+                    padding: EdgeInsets.all(20),
+                    child: Text('start workout')),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WorkoutPage()),
+                  ).then((value) => _loadData());
+                  //setState(() {
+                  //  content = const WorkoutPage();
+                  //});
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              OutlinedButton.icon(
+                icon: Icon(Icons.list),
+                label: Container(
+                    padding: EdgeInsets.all(20),
+                    width: 150,
+                    child: Text('list of questions')),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ListPage()),
+                  ).then((value) => _loadData());
+                  /*
+                  setState(() {
+                    content = const ListPage();
+                  });
+                  */
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              OutlinedButton.icon(
+                icon: Icon(Icons.library_add_outlined),
+                label: Container(
+                    width: 150,
+                    padding: EdgeInsets.all(20),
+                    child: Text('add questions')),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NewWordPage()),
+                  ).then((value) => _loadData());
+                  /*
+                  setState(() {
+                    content = const NewWordPage();
+                  });
+                  */
+                },
+              ),
+            ])));
   }
 }

@@ -22,8 +22,7 @@
             "program": "lib/main.dart",
             "args": [
                 "-d",
-                "windows",
-                "--verbose"
+                "windows"
             ],
         },
         {

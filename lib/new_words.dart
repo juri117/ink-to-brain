@@ -124,113 +124,119 @@ class _NewWordPageState extends State<NewWordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-        controller: _scrollControl,
-        isAlwaysShown:
-            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-        child: SingleChildScrollView(
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("add questions"),
+        ),
+        body: Scrollbar(
             controller: _scrollControl,
-            child: Column(children: [
-              Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: Column(children: [
-                        const Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child: Text("Question",
-                                style: TextStyle(fontSize: 20))),
-                        WriteWidget("word to learn", _questPaintControl,
-                            pen: true),
-                        Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(children: [
-                              Expanded(
-                                  flex: 1,
-                                  child: TextField(
-                                      controller: _questTxtControl,
-                                      minLines:
-                                          1, //Normal textInputField will be displayed
-                                      maxLines:
-                                          1, // when user presses enter it will adapt to it
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .secondary)),
-                                        hintText: '...',
-                                        labelText: 'Question Note',
-                                      ))),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.lightbulb_outline),
-                                onPressed: Platform.isWindows
-                                    ? null
-                                    : () {
-                                        _scanQuest();
-                                      },
-                              )
-                            ])),
-                      ])),
-                  Expanded(
-                      flex: 1,
-                      child: Column(children: [
-                        const Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child:
-                                Text("Answer", style: TextStyle(fontSize: 20))),
-                        WriteWidget("hint", _answPaintControl, pen: true),
-                        Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(children: [
-                              Expanded(
-                                  flex: 1,
-                                  child: TextField(
-                                      controller: _answTxtControl,
-                                      minLines: 1,
-                                      maxLines: 1,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .secondary)),
-                                        hintText: '...',
-                                        labelText: 'Answer Note',
-                                      ))),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.lightbulb_outline),
-                                onPressed: Platform.isWindows
-                                    ? null
-                                    : () {
-                                        _scanAnsw();
-                                      },
-                              )
-                            ])),
-                      ])),
-                ],
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                SizedBox(
-                    width: 200.0,
-                    height: 100.0,
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.save),
-                      label: const Text('save'),
-                      //style: OutlinedButton.styleFrom(
-                      //primary: Colors.green,
-                      //backgroundColor: const Color(0xFFE4FFE6)),
-                      onPressed: () {
-                        _save();
-                      },
-                    ))
-              ])
-            ])));
+            isAlwaysShown:
+                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+            child: SingleChildScrollView(
+                controller: _scrollControl,
+                child: Column(children: [
+                  Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Column(children: [
+                            const Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Text("Question",
+                                    style: TextStyle(fontSize: 20))),
+                            WriteWidget("word to learn", _questPaintControl,
+                                pen: true),
+                            Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Row(children: [
+                                  Expanded(
+                                      flex: 1,
+                                      child: TextField(
+                                          controller: _questTxtControl,
+                                          minLines:
+                                              1, //Normal textInputField will be displayed
+                                          maxLines:
+                                              1, // when user presses enter it will adapt to it
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary)),
+                                            hintText: '...',
+                                            labelText: 'Question Note',
+                                          ))),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.lightbulb_outline),
+                                    onPressed: Platform.isWindows
+                                        ? null
+                                        : () {
+                                            _scanQuest();
+                                          },
+                                  )
+                                ])),
+                          ])),
+                      Expanded(
+                          flex: 1,
+                          child: Column(children: [
+                            const Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Text("Answer",
+                                    style: TextStyle(fontSize: 20))),
+                            WriteWidget("hint", _answPaintControl, pen: true),
+                            Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Row(children: [
+                                  Expanded(
+                                      flex: 1,
+                                      child: TextField(
+                                          controller: _answTxtControl,
+                                          minLines: 1,
+                                          maxLines: 1,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary)),
+                                            hintText: '...',
+                                            labelText: 'Answer Note',
+                                          ))),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.lightbulb_outline),
+                                    onPressed: Platform.isWindows
+                                        ? null
+                                        : () {
+                                            _scanAnsw();
+                                          },
+                                  )
+                                ])),
+                          ])),
+                    ],
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                            width: 200.0,
+                            height: 100.0,
+                            child: OutlinedButton.icon(
+                              icon: const Icon(Icons.save),
+                              label: const Text('save'),
+                              //style: OutlinedButton.styleFrom(
+                              //primary: Colors.green,
+                              //backgroundColor: const Color(0xFFE4FFE6)),
+                              onPressed: () {
+                                _save();
+                              },
+                            ))
+                      ])
+                ]))));
   }
 }
