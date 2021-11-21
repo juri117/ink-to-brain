@@ -35,43 +35,26 @@ class DatabaseCon {
   Future<void> openCon() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    await requestWritePermission();
+    final String? dbPath = await getDbPath();
+    if (dbPath == null) {
+      print("could not find db file path");
+      return;
+    }
 
-    if (io.Platform.isAndroid) {
-      final io.Directory? dir = await getExternalStorageDirectory();
-      if (dir == null) {
-        print("storage could not be accessed");
-        return;
-      }
-      if (!await dir.exists()) {
-        await dir.create(recursive: true);
-      }
-      sqfliteFfiInit();
-      var databaseFactory = databaseFactoryFfi;
-      con = await databaseFactory.openDatabase(path.join(dir.path, 'words.db'),
-          options: OpenDatabaseOptions(
-            onCreate: (db, version) {
-              return db.execute(dbCreateQue);
-            },
-            version: 1,
-          ));
-    }
-    if (io.Platform.isWindows) {
-      final dir = io.Directory.current;
-      if (!await dir.exists()) {
-        await dir.create(recursive: true);
-      }
-      sqfliteFfiInit();
-      // var databaseFactory = databaseFactoryFfi;
-      con =
-          await databaseFactoryFfi.openDatabase(path.join(dir.path, 'words.db'),
-              options: OpenDatabaseOptions(
-                onCreate: (db, version) {
-                  return db.execute(dbCreateQue);
-                },
-                version: 1,
-              ));
-    }
+    sqfliteFfiInit();
+    var databaseFactory = databaseFactoryFfi;
+
+    con = await databaseFactory.openDatabase(dbPath,
+        options: OpenDatabaseOptions(
+          onCreate: (db, version) {
+            return db.execute(dbCreateQue);
+          },
+          version: 1,
+        ));
+  }
+
+  Future<void> closeCon() async {
+    con?.close();
   }
 
   Future<void> insertWord(Word word) async {

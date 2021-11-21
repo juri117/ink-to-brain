@@ -5,11 +5,14 @@ import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/list.dart';
 import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/new_words.dart';
+import 'package:ink2brain/settings.dart';
 import 'package:ink2brain/theme.dart';
+import 'package:ink2brain/utils/nextcloude.dart';
 import 'package:ink2brain/workout.dart';
 
 void main() async {
   await DatabaseCon().openCon();
+  // await ncUploadFile();
   runApp(const MyApp());
 }
 
@@ -52,21 +55,32 @@ class _MainFrameState extends State<MainFrame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('ink to brain')
-            /*
-        , actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            tooltip: 'Home',
-            onPressed: () {
-              setState(() {
-                content = null;
-              });
-            },
-          ),
-        ]
-        */
+        appBar: AppBar(
+          title: const Text('ink to brain'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings),
+              tooltip: 'sync.',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Settings()),
+                ).then((value) => _loadData());
+              },
             ),
+            IconButton(
+              icon: const Icon(Icons.sync),
+              tooltip: 'settings',
+              onPressed: () {
+                showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SyncDialog();
+                    }).then((value) => _loadData());
+              },
+            ),
+          ],
+        ),
         body: //content ??
             Center(
                 child: ListView(
@@ -174,5 +188,97 @@ class _MainFrameState extends State<MainFrame> {
                 },
               ),
             ])));
+  }
+}
+
+class SyncDialog extends StatefulWidget {
+  const SyncDialog();
+
+  @override
+  _SyncDialogStat createState() => new _SyncDialogStat();
+}
+
+class _SyncDialogStat extends State<SyncDialog> {
+  String errorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _uploadDb() async {
+    setState(() {
+      errorMessage = "loading...";
+    });
+    await DatabaseCon().closeCon();
+    String res = await ncUploadFile();
+    setState(() {
+      errorMessage = "upload: $res";
+    });
+    await DatabaseCon().openCon();
+  }
+
+  Future<void> _downloadDb() async {
+    setState(() {
+      errorMessage = "loading...";
+    });
+    await DatabaseCon().closeCon();
+    String res = await ncDownloadFile();
+    setState(() {
+      errorMessage = "download: $res";
+    });
+    await DatabaseCon().openCon();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget doneButton = OutlinedButton(
+        child: Text("done"),
+        onPressed: () {
+          Navigator.pop(context);
+        });
+    return AlertDialog(
+        actions: [doneButton],
+        title: Text("sync. database with nextcloude",
+            style: TextStyle(fontSize: 14)),
+        content: Container(
+            height: 260,
+            child: SingleChildScrollView(
+                child: Column(
+              children: <Widget>[
+                OutlinedButton.icon(
+                  icon: Icon(Icons.upload),
+                  label: Container(
+                      width: 150,
+                      padding: EdgeInsets.all(20),
+                      child: Text('upload local db')),
+                  onPressed: () {
+                    _uploadDb();
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                OutlinedButton.icon(
+                  icon: Icon(Icons.download),
+                  label: Container(
+                      width: 150,
+                      padding: EdgeInsets.all(20),
+                      child: Text('download, overwrite db')),
+                  onPressed: () {
+                    _downloadDb();
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("$errorMessage",
+                    style: TextStyle(
+                        color: errorMessage.contains("OK") ||
+                                errorMessage.contains("loading...")
+                            ? Colors.black
+                            : Colors.red))
+              ],
+            ))));
   }
 }

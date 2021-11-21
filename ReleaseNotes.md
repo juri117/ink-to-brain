@@ -22,3 +22,4 @@
 * [x] automated release script for windows + android
 * [x] add created date to word and last learnedData fields to words table
 * [x] basic statistics on main screen
+* [x] next-cloud sync.
