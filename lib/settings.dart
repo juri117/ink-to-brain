@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -54,12 +56,16 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-      ),
-      body: ListView(children: [
-        Card(
-            child: Column(children: [
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(35.0), // here the desired height
+          child: AppBar(
+            title: const Text("Settings"),
+          )),
+      body:
+          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Expanded(
+            child: Card(
+                child: Column(children: [
           ListTile(
               title: const Text("nectcloud login"),
               subtitle: Column(
@@ -123,19 +129,11 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                                 hintText: 'pw',
                                 labelText: 'password',
                               ))),
-                      /*
-                      ElevatedButton(
-                          child: const Text("save"),
-                          onPressed: () {
-                            _store();
-                          }),
-                          */
                     ],
                   ),
-                  //Text(qrClusterResult)
                 ],
               )),
-        ]))
+        ])))
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: this._store,

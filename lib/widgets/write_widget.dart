@@ -22,7 +22,7 @@ class _WriteWidgetState extends State<WriteWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(5),
         child: Align(
           alignment: Alignment.center,
           child: AspectRatio(

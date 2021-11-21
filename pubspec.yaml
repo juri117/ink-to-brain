@@ -47,6 +47,7 @@ dependencies:
   google_ml_kit: ^0.7.3
   nextcloud: ^3.0.1
   shared_preferences: ^2.0.9
+  flutter_device_type: ^0.4.0
 
 dev_dependencies:
   flutter_test:

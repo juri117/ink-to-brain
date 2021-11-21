@@ -62,9 +62,12 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("list"),
-        ),
+        appBar: PreferredSize(
+            preferredSize:
+                const Size.fromHeight(35.0), // here the desired height
+            child: AppBar(
+              title: const Text("list"),
+            )),
         body: Scrollbar(
             controller: _scrollController,
             isAlwaysShown:

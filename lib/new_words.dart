@@ -125,9 +125,12 @@ class _NewWordPageState extends State<NewWordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("add questions"),
-        ),
+        appBar: PreferredSize(
+            preferredSize:
+                const Size.fromHeight(35.0), // here the desired height
+            child: AppBar(
+              title: const Text("add questions"),
+            )),
         body: Scrollbar(
             controller: _scrollControl,
             isAlwaysShown:
@@ -147,7 +150,7 @@ class _NewWordPageState extends State<NewWordPage> {
                             WriteWidget("word to learn", _questPaintControl,
                                 pen: true),
                             Padding(
-                                padding: const EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(5),
                                 child: Row(children: [
                                   Expanded(
                                       flex: 1,
@@ -179,6 +182,7 @@ class _NewWordPageState extends State<NewWordPage> {
                                   )
                                 ])),
                           ])),
+                      const VerticalDivider(width: 5, thickness: 1),
                       Expanded(
                           flex: 1,
                           child: Column(children: [
@@ -188,7 +192,7 @@ class _NewWordPageState extends State<NewWordPage> {
                                     style: TextStyle(fontSize: 20))),
                             WriteWidget("hint", _answPaintControl, pen: true),
                             Padding(
-                                padding: const EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(5),
                                 child: Row(children: [
                                   Expanded(
                                       flex: 1,
@@ -224,18 +228,18 @@ class _NewWordPageState extends State<NewWordPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SizedBox(
-                            width: 200.0,
-                            height: 100.0,
+                            //width: 200.0,
+                            //height: 100.0,
                             child: OutlinedButton.icon(
-                              icon: const Icon(Icons.save),
-                              label: const Text('save'),
-                              //style: OutlinedButton.styleFrom(
-                              //primary: Colors.green,
-                              //backgroundColor: const Color(0xFFE4FFE6)),
-                              onPressed: () {
-                                _save();
-                              },
-                            ))
+                          icon: const Icon(Icons.save),
+                          label: const Text('save'),
+                          //style: OutlinedButton.styleFrom(
+                          //primary: Colors.green,
+                          //backgroundColor: const Color(0xFFE4FFE6)),
+                          onPressed: () {
+                            _save();
+                          },
+                        ))
                       ])
                 ]))));
   }

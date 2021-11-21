@@ -54,6 +54,16 @@
                 "-d",
                 "SM G970F"
             ],
+        },
+        {
+            "name": "Flutter android",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "android"
+            ],
         }
     ]
 }

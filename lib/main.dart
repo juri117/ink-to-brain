@@ -239,36 +239,45 @@ class _SyncDialogStat extends State<SyncDialog> {
         });
     return AlertDialog(
         actions: [doneButton],
-        title: Text("sync. database with nextcloude",
-            style: TextStyle(fontSize: 14)),
-        content: Container(
-            height: 260,
+        title: Row(children: const [
+          Icon(Icons.sync),
+          SizedBox(
+            width: 10,
+          ),
+          Text("sync. database with nextcloude", style: TextStyle(fontSize: 14))
+        ]),
+        content: SizedBox(
+            height: (MediaQuery.of(context).size.height),
+            width: (MediaQuery.of(context).size.width),
             child: SingleChildScrollView(
                 child: Column(
               children: <Widget>[
-                OutlinedButton.icon(
-                  icon: Icon(Icons.upload),
-                  label: Container(
-                      width: 150,
-                      padding: EdgeInsets.all(20),
-                      child: Text('upload local db')),
-                  onPressed: () {
-                    _uploadDb();
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                OutlinedButton.icon(
-                  icon: Icon(Icons.download),
-                  label: Container(
-                      width: 150,
-                      padding: EdgeInsets.all(20),
-                      child: Text('download, overwrite db')),
-                  onPressed: () {
-                    _downloadDb();
-                  },
-                ),
+                Wrap(children: <Widget>[
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.download),
+                    label: Container(
+                        //width: 150,
+                        padding: EdgeInsets.all(5),
+                        child: Text('download, overwrite db')),
+                    onPressed: () {
+                      _downloadDb();
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                    width: 10,
+                  ),
+                  OutlinedButton.icon(
+                    icon: Icon(Icons.upload),
+                    label: Container(
+                        //width: 150,
+                        padding: EdgeInsets.all(5),
+                        child: Text('upload local db')),
+                    onPressed: () {
+                      _uploadDb();
+                    },
+                  ),
+                ]),
                 SizedBox(
                   height: 10,
                 ),
