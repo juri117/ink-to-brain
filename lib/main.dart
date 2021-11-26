@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/list.dart';
 import 'package:ink2brain/models/stat.dart';
+import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/settings.dart';
 import 'package:ink2brain/theme.dart';
@@ -36,8 +38,11 @@ class MainFrame extends StatefulWidget {
 class _MainFrameState extends State<MainFrame> {
   // Widget? content;
 
+  final ScrollController _scrollController = ScrollController();
+
   Stat stat =
       Stat(totalCount: -1, activeCount: -1, learnedCount: -1, todayCount: -1);
+  List<Word> badWords = [];
 
   @override
   void initState() {
@@ -47,147 +52,285 @@ class _MainFrameState extends State<MainFrame> {
 
   Future<void> _loadData() async {
     Stat newStat = await DatabaseCon().statistic();
+    List<Word> newBadWords =
+        await DatabaseCon().words(orderBy: "correctCount", limit: 4);
     setState(() {
       stat = newStat;
+      badWords = newBadWords;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> badWordWidgetList = [];
+    for (final w in badWords) {
+      badWordWidgetList.add(Container(
+          padding: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
+          width: MediaQuery.of(context).orientation == Orientation.landscape
+              ? MediaQuery.of(context).size.width * 0.5
+              : MediaQuery.of(context).size.width,
+          child: Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  border: Border.all(color: Colors.transparent, width: 1.5),
+                  borderRadius: const BorderRadius.all(Radius.circular(3))),
+              child: Row(
+                children: [
+                  Text("${w.correctCount}",
+                      style: TextStyle(color: w.getScoreColor(context))),
+                  const SizedBox(width: 10),
+                  Expanded(
+                      flex: 3,
+                      child: SizedBox(
+                          child: AspectRatio(
+                              aspectRatio: 3,
+                              child: Image.memory(w.questionPix)))),
+                  const SizedBox(width: 10),
+                  Icon(Icons.compare_arrows_outlined,
+                      size: 40, color: Theme.of(context).primaryColor),
+                  const SizedBox(width: 10),
+                  Expanded(
+                      flex: 3,
+                      child: SizedBox(
+                          child: AspectRatio(
+                              aspectRatio: 3,
+                              child: Image.memory(w.answerPix))))
+                ],
+              ))));
+    }
+
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('ink to brain'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.settings),
-              tooltip: 'sync.',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Settings()),
-                ).then((value) => _loadData());
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.sync),
-              tooltip: 'settings',
-              onPressed: () {
-                showDialog<bool>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SyncDialog();
-                    }).then((value) => _loadData());
-              },
-            ),
-          ],
-        ),
-        body: //content ??
-            Center(
-                child: ListView(
-                    padding: const EdgeInsets.only(
-                        top: 10.0, bottom: 10, left: 50, right: 50),
+        appBar: PreferredSize(
+            preferredSize:
+                const Size.fromHeight(35.0), // here the desired height
+            child: AppBar(
+              title: const Text('ink to brain'),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  tooltip: 'sync.',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Settings()),
+                    ).then((value) => _loadData());
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.sync),
+                  tooltip: 'settings',
+                  onPressed: () {
+                    showDialog<bool>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SyncDialog();
+                        }).then((value) => _loadData());
+                  },
+                ),
+              ],
+            )),
+        body: Scrollbar(
+          controller: _scrollController,
+          isAlwaysShown:
+              Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+          child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(children: [
+                Column(
+                    //padding: const EdgeInsets.only(
+                    //    top: 10.0, bottom: 10, left: 50, right: 50),
                     children: [
-              Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      border: Border.all(color: Colors.transparent, width: 1.5),
-                      borderRadius: const BorderRadius.all(Radius.circular(3))),
-                  child: Column(
-                    children: [
-                      //Text(
-                      //  "Questions:",
-                      //  style: TextStyle(fontWeight: FontWeight.bold),
-                      //),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(children: [
-                            Text("total"),
-                            Text("${stat.totalCount}",
-                                style: TextStyle(fontWeight: FontWeight.bold))
-                          ]),
-                          Column(children: [
-                            Text("mastered"),
-                            Text("${stat.learnedCount}",
-                                style: TextStyle(fontWeight: FontWeight.bold))
-                          ]),
-                          Column(children: [
-                            Text("almost mastered"),
-                            Text("${stat.activeCount}",
-                                style: TextStyle(fontWeight: FontWeight.bold))
-                          ]),
-                          Column(children: [
-                            Text("practiced today"),
-                            Text("${stat.todayCount}",
-                                style: TextStyle(fontWeight: FontWeight.bold))
-                          ]),
-                        ],
-                      )
-                    ],
-                  )),
-              SizedBox(
-                height: 20,
-              ),
-              OutlinedButton.icon(
-                icon: Icon(Icons.fitness_center),
-                label: Container(
-                    width: 150,
-                    padding: EdgeInsets.all(20),
-                    child: Text('start workout')),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => WorkoutPage()),
-                  ).then((value) => _loadData());
-                  //setState(() {
-                  //  content = const WorkoutPage();
-                  //});
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              OutlinedButton.icon(
-                icon: Icon(Icons.list),
-                label: Container(
-                    padding: EdgeInsets.all(20),
-                    width: 150,
-                    child: Text('list of questions')),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ListPage()),
-                  ).then((value) => _loadData());
-                  /*
+                      Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              border: Border.all(
+                                  color: Colors.transparent, width: 1.5),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(3))),
+                          child: Column(
+                            children: [
+                              //Text(
+                              //  "Questions:",
+                              //  style: TextStyle(fontWeight: FontWeight.bold),
+                              //),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(children: [
+                                    Text("total"),
+                                    Text("${stat.totalCount}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))
+                                  ]),
+                                  Column(children: [
+                                    Text("mastered"),
+                                    Text("${stat.learnedCount}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))
+                                  ]),
+                                  Column(children: [
+                                    Text("almost mastered"),
+                                    Text("${stat.activeCount}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))
+                                  ]),
+                                  Column(children: [
+                                    Text("practiced today"),
+                                    Text("${stat.todayCount}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold))
+                                  ]),
+                                ],
+                              )
+                            ],
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                            OutlinedButton.icon(
+                              icon: Icon(Icons.fitness_center),
+                              label: Container(
+                                  width: 150,
+                                  padding: EdgeInsets.all(20),
+                                  child: Text('start workout')),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WorkoutPage()),
+                                ).then((value) => _loadData());
+                                //setState(() {
+                                //  content = const WorkoutPage();
+                                //});
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            OutlinedButton.icon(
+                              icon: Icon(Icons.list),
+                              label: Container(
+                                  padding: EdgeInsets.all(20),
+                                  width: 150,
+                                  child: Text('list of questions')),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ListPage()),
+                                ).then((value) => _loadData());
+                                /*
                   setState(() {
                     content = const ListPage();
                   });
                   */
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              OutlinedButton.icon(
-                icon: Icon(Icons.library_add_outlined),
-                label: Container(
-                    width: 150,
-                    padding: EdgeInsets.all(20),
-                    child: Text('add questions')),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NewWordPage()),
-                  ).then((value) => _loadData());
-                  /*
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            OutlinedButton.icon(
+                              icon: Icon(Icons.library_add_outlined),
+                              label: Container(
+                                  width: 150,
+                                  padding: EdgeInsets.all(20),
+                                  child: Text('add questions')),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NewWordPage()),
+                                ).then((value) => _loadData());
+                                /*
                   setState(() {
                     content = const NewWordPage();
                   });
                   */
-                },
-              ),
-            ])));
+                              },
+                            )
+                          ]))
+                    ]),
+                Wrap(
+                  children: badWordWidgetList,
+                )
+                /*
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: badWords.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                        child: Row(
+                      children: [
+                        Expanded(flex: 6, child: Text("")),
+                        Text("${badWords[index].correctCount}"),
+                        Expanded(
+                            flex: 3,
+                            child: SizedBox(
+                                child: AspectRatio(
+                                    aspectRatio: 3,
+                                    child: Image.memory(
+                                        badWords[index].questionPix)))),
+                        const SizedBox(width: 10),
+                        Icon(Icons.compare_arrows_outlined,
+                            size: 40, color: Theme.of(context).primaryColor),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            flex: 3,
+                            child: SizedBox(
+                                child: AspectRatio(
+                                    aspectRatio: 3,
+                                    child: Image.memory(
+                                        badWords[index].answerPix))))
+                      ],
+                    ));
+                  },
+                )
+                */
+              ])),
+          /*
+                  Flexible(
+                      child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: badWords.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                          title: Text("${badWords[index].correctCount}"),
+                          subtitle: Row(
+                            children: [
+                              Expanded(
+                                  flex: 3,
+                                  child: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.1,
+                                      child: AspectRatio(
+                                          aspectRatio: 3,
+                                          child: Image.memory(
+                                              badWords[index].questionPix)))),
+                              const SizedBox(width: 10),
+                              Icon(Icons.compare_arrows_outlined,
+                                  size: 40,
+                                  color: Theme.of(context).primaryColor),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                  flex: 3,
+                                  child: AspectRatio(
+                                      aspectRatio: 3,
+                                      child: Image.memory(
+                                          badWords[index].questionPix)))
+                            ],
+                          ));
+                    },
+                  ))
+                  */
+        ));
   }
 }
 

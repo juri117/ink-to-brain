@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Word {
@@ -41,5 +42,11 @@ class Word {
   String getlastAskedDateStr() {
     if (lastAskedTs == null) return "never";
     return DateFormat('dd.MM.yyyy').format(lastAskedTs!);
+  }
+
+  Color getScoreColor(BuildContext context) {
+    return correctCount < 0
+        ? Theme.of(context).errorColor
+        : Theme.of(context).colorScheme.primary;
   }
 }

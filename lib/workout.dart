@@ -158,9 +158,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   // fontSize: 18,
-                                  color: currentWord.correctCount < 0
-                                      ? Theme.of(context).errorColor
-                                      : Theme.of(context).colorScheme.primary)),
+                                  color: currentWord.getScoreColor(context))),
                           const SizedBox(
                             height: 10,
                           ),
@@ -300,7 +298,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
         ];
     }
     if (Device.get().isPhone &&
-        MediaQuery.of(context).orientation == Orientation.landscape) {
+        MediaQuery.of(context).orientation == Orientation.landscape &&
+        !Platform.isWindows) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround, children: buttons);
     }

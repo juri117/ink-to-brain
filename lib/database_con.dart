@@ -69,10 +69,11 @@ class DatabaseCon {
     );
   }
 
-  Future<List<Word>> words({String? where}) async {
+  Future<List<Word>> words({String? where, String? orderBy, int? limit}) async {
     // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps =
-        await con?.query('words', where: where) ?? [];
+    final List<Map<String, dynamic>> maps = await con?.query('words',
+            where: where, orderBy: orderBy, limit: limit) ??
+        [];
 
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
