@@ -40,14 +40,25 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   Future<void> _loadWords() async {
     List<Word> newWords = await DatabaseCon().words(
-        where:
-            "correctCount < 3 OR (correctCount == 3 AND lastAskedTs >= date('now', '-3 day'))");
+        where: "correctCount < 3 " +
+            "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) " +
+            "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) " +
+            "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))");
     setState(() {
       newWords.shuffle();
       words = newWords;
       index = 0;
       if (words.length > index) {
         currentWord = words[index];
+      } else {
+        currentWord = Word(
+            id: -1,
+            insertTs: DateTime.fromMicrosecondsSinceEpoch(0),
+            questionPix: Uint8List(0),
+            questionTxt: "",
+            answerPix: Uint8List(0),
+            answerTxt: "",
+            correctCount: 0);
       }
     });
   }
