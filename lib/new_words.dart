@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tesseract_ocr/android_ios.dart';
+// import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
@@ -87,6 +87,7 @@ class _NewWordPageState extends State<NewWordPage> {
     digitalInkRecogniser.close();
     */
 
+/*
     String langName = "deu";
     String text = await FlutterTesseractOcr.extractText(fOutPath,
         language: langName,
@@ -98,9 +99,11 @@ class _NewWordPageState extends State<NewWordPage> {
     setState(() {
       _questTxtControl.text = text;
     });
+    */
   }
 
   Future<void> _scanAnsw() async {
+    /*
     await requestWritePermission();
     Uint8List pix = await _answPaintControl.generateRendering().toPNG();
     final Directory? directory = await getExternalStorageDirectory();
@@ -120,6 +123,7 @@ class _NewWordPageState extends State<NewWordPage> {
     setState(() {
       _answTxtControl.text = text;
     });
+    */
   }
 
   @override

@@ -137,7 +137,7 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: this._store,
-        tooltip: 'Increment',
+        tooltip: 'store settings',
         child: const Icon(Icons.save),
       ),
     );
