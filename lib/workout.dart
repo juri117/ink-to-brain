@@ -290,18 +290,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
     switch (state) {
       case WorkoutState.ask:
         buttons = [
-          SizedBox(
-              child: OutlinedButton.icon(
+          OutlinedButton.icon(
             icon: const Icon(Icons.skip_next_outlined),
             label: const Text('skip'),
             onPressed: () {
               _skip();
             },
-          )),
-          SizedBox(
-              //width: 200.0,
-              //height: 100.0,
-              child: OutlinedButton.icon(
+          ),
+          OutlinedButton.icon(
             icon: const Icon(Icons.help_outline),
             label: const Text('solution'),
             //style: OutlinedButton.styleFrom(
@@ -312,15 +308,24 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 _state = WorkoutState.answer;
               });
             },
-          ))
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          const SizedBox(
+            width: 5,
+          )
         ];
         break;
       case WorkoutState.answer:
         buttons = [
-          SizedBox(
-              //width: 200.0,
-              //height: 100.0,
-              child: OutlinedButton.icon(
+          const SizedBox(
+            width: 5,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          OutlinedButton.icon(
             icon: const Icon(Icons.sentiment_satisfied),
             label: const Text('wrong :('),
             style: OutlinedButton.styleFrom(
@@ -328,11 +333,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
             onPressed: () {
               _save(currentWord, false);
             },
-          )),
-          SizedBox(
-              //width: 200.0,
-              //height: 100.0,
-              child: OutlinedButton.icon(
+          ),
+          OutlinedButton.icon(
             icon: const Icon(Icons.emoji_emotions_outlined),
             label: const Text('correct'),
             style: OutlinedButton.styleFrom(
@@ -341,7 +343,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             onPressed: () {
               _save(currentWord, true);
             },
-          )),
+          ),
         ];
         break;
       default:
