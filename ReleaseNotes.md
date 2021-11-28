@@ -1,5 +1,6 @@
 
-## 0.00.002
+
+## future
 
 **new features**
 * [ ] quiz, match words
@@ -8,6 +9,14 @@
 * learning statistics
   * [ ] show learned words vs. all words etc.
   * [ ] db: log learning sessions
+
+**bug-fixes**
+
+## 0.00.002
+
+**new features**
+* [x] new workout mode, ask until correct
+  * [x] also add skip button, that drops the word from queue
 
 **bug-fixes**
 

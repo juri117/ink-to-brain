@@ -204,11 +204,11 @@ class _MainFrameState extends State<MainFrame> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => WorkoutPage()),
+                                      builder: (context) => WorkoutPage(
+                                            limit: 15,
+                                            persistent: true,
+                                          )),
                                 ).then((value) => _loadData());
-                                //setState(() {
-                                //  content = const WorkoutPage();
-                                //});
                               },
                             ),
                             const SizedBox(

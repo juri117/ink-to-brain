@@ -12,7 +12,10 @@ import 'package:ink2brain/widgets/painter.dart';
 enum WorkoutState { ask, answer, done }
 
 class WorkoutPage extends StatefulWidget {
-  const WorkoutPage({Key? key}) : super(key: key);
+  int limit;
+  bool persistent;
+  WorkoutPage({this.limit = 9999999, this.persistent = false, Key? key})
+      : super(key: key);
 
   @override
   _WorkoutPageState createState() => _WorkoutPageState();
@@ -43,7 +46,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
         where: "correctCount < 3 " +
             "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) " +
             "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) " +
-            "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))");
+            "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))",
+        orderBy: "RANDOM()",
+        limit: widget.limit);
     setState(() {
       newWords.shuffle();
       words = newWords;
@@ -71,6 +76,27 @@ class _WorkoutPageState extends State<WorkoutPage> {
     return controller;
   }
 
+  Future<void> _skip() async {
+    setState(() {
+      _state = WorkoutState.done;
+    });
+
+    await Future.delayed(const Duration(seconds: 5), () {});
+
+    words.removeAt(0);
+    setState(() {
+      _state = WorkoutState.ask;
+      _controller = _newController();
+      // index++;
+      if (words.isNotEmpty) {
+        currentWord = words[0];
+      } else {
+        print("reload words");
+        _loadWords();
+      }
+    });
+  }
+
   Future<void> _save(Word word, bool suc) async {
     if (suc) {
       word.correctCount = max(1, word.correctCount + 1);
@@ -87,12 +113,17 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
     await Future.delayed(const Duration(seconds: 2), () {});
 
+    words.removeAt(0);
+    if (!suc) {
+      words.add(currentWord);
+    }
+
     setState(() {
       _state = WorkoutState.ask;
       _controller = _newController();
-      index++;
-      if (words.length > index) {
-        currentWord = words[index];
+      // index++;
+      if (words.isNotEmpty) {
+        currentWord = words[0];
       } else {
         print("reload words");
         _loadWords();
@@ -165,6 +196,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     Container(
                         padding: const EdgeInsets.all(5),
                         child: Column(children: [
+                          Text("${words.length} left"),
+                          Divider(
+                            height: 10,
+                          ),
                           Text("score: ${currentWord.correctCount}",
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -255,6 +290,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
     switch (state) {
       case WorkoutState.ask:
         buttons = [
+          SizedBox(
+              child: OutlinedButton.icon(
+            icon: const Icon(Icons.skip_next_outlined),
+            label: const Text('skip'),
+            onPressed: () {
+              _skip();
+            },
+          )),
           SizedBox(
               //width: 200.0,
               //height: 100.0,
