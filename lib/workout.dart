@@ -44,6 +44,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Future<void> _loadWords() async {
     List<Word> newWords = await DatabaseCon().words(
         where: "correctCount < 3 " +
+            "OR (correctCount == 2 AND lastAskedTs <= date('now', '-1 hours')) " +
             "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) " +
             "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) " +
             "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))",
@@ -189,7 +190,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         child: Column(children: [
                           Text("${words.length} left"),
                           const Divider(
-                            height: 10,
+                            height: 5,
                           ),
                           Text("score: ${currentWord.correctCount}",
                               textAlign: TextAlign.center,
@@ -197,7 +198,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                   // fontSize: 18,
                                   color: currentWord.getScoreColor(context))),
                           const SizedBox(
-                            height: 10,
+                            height: 2,
                           ),
                           Wrap(
                             children: List.generate(
