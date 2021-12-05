@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
+import 'package:ink2brain/new_words.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -26,10 +27,11 @@ class _ListPageState extends State<ListPage> {
   }
 
   Future<void> _loadWords() async {
-    List<Word> newWords = await DatabaseCon().words();
+    List<Word> newWords = await DatabaseCon().words(orderBy: "insertTs");
     setState(() {
       newWords.shuffle();
       words = newWords;
+      _sort(_currentSortColumn, _isAscending);
     });
   }
 
@@ -42,11 +44,19 @@ class _ListPageState extends State<ListPage> {
           words
               .sort((dataA, dataB) => dataB.insertTs.compareTo(dataA.insertTs));
           break;
-        case 3:
+        case 2:
           words.sort((dataA, dataB) =>
               dataB.correctCount.compareTo(dataA.correctCount));
           break;
         case 4:
+          words.sort((dataA, dataB) =>
+              dataB.correctCount.compareTo(dataA.correctCount));
+          break;
+        case 5:
+          words.sort((dataA, dataB) =>
+              dataB.correctCount.compareTo(dataA.correctCount));
+          break;
+        case 6:
           words.sort((dataA, dataB) => (dataB.lastAskedTs ??
                   DateTime.fromMicrosecondsSinceEpoch(0))
               .compareTo(
@@ -89,7 +99,17 @@ class _ListPageState extends State<ListPage> {
                                     _sort(columnIndex, ascending);
                                   }),
                               const DataColumn(label: Text('question')),
+                              DataColumn(
+                                  label: const Text('note'),
+                                  onSort: (columnIndex, ascending) {
+                                    _sort(columnIndex, ascending);
+                                  }),
                               const DataColumn(label: Text('answer')),
+                              DataColumn(
+                                  label: const Text('note'),
+                                  onSort: (columnIndex, ascending) {
+                                    _sort(columnIndex, ascending);
+                                  }),
                               DataColumn(
                                   label: const Text('correct'),
                                   onSort: (columnIndex, ascending) {
@@ -99,7 +119,8 @@ class _ListPageState extends State<ListPage> {
                                   label: const Text('last asked'),
                                   onSort: (columnIndex, ascending) {
                                     _sort(columnIndex, ascending);
-                                  })
+                                  }),
+                              const DataColumn(label: Text(''))
                             ],
                             rows: List<DataRow>.generate(
                                 words.length,
@@ -129,16 +150,35 @@ class _ListPageState extends State<ListPage> {
                                                 aspectRatio: 3.0,
                                                 child: Image.memory(words[index]
                                                     .questionPix)))),
+                                        DataCell(
+                                            Text(words[index].questionTxt)),
                                         DataCell(SizedBox(
                                             width: 120,
                                             child: AspectRatio(
                                                 aspectRatio: 3.0,
                                                 child: Image.memory(
                                                     words[index].answerPix)))),
+                                        DataCell(Text(words[index].answerTxt)),
                                         DataCell(Text(
                                             "${words[index].correctCount}")),
                                         DataCell(Text(words[index]
                                             .getlastAskedDateStr())),
+                                        DataCell(
+                                          IconButton(
+                                            icon: const Icon(Icons.edit),
+                                            tooltip: 'edit',
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        NewWordPage(
+                                                            editId: words[index]
+                                                                .id)),
+                                              ).then((value) => _loadWords());
+                                            },
+                                          ),
+                                        ),
                                       ],
                                     ))))))));
   }

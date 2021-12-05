@@ -151,10 +151,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColorLight,
-                            //border: Border.all(
-                            //    color: Theme.of(context).primaryColor,
-                            //    width: 1.5),
-                            //borderRadius: const BorderRadius.all(Radius.circular(3))
                           ),
                           child: Align(
                               alignment: Alignment.center,
@@ -172,12 +168,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         flex: 3,
                         child: Container(
                             decoration: BoxDecoration(
-                              //color: const Color(0xFFE4FFE6),
                               color: Theme.of(context).primaryColorLight,
-                              //border: Border.all(
-                              //    color: Theme.of(context).primaryColor,
-                              //    width: 1.5),
-                              //borderRadius: const BorderRadius.all(Radius.circular(3))
                             ),
                             child: Align(
                                 alignment: Alignment.center,
@@ -197,7 +188,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         padding: const EdgeInsets.all(5),
                         child: Column(children: [
                           Text("${words.length} left"),
-                          Divider(
+                          const Divider(
                             height: 10,
                           ),
                           Text("score: ${currentWord.correctCount}",
@@ -233,7 +224,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
       Expanded(
         flex: 4,
         child: WriteWidget(
-          "dummy",
           _controller,
           pen: true,
         ),
@@ -256,7 +246,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 WriteWidget(
-                  "dummy",
                   _controller,
                   pen: true,
                 ),

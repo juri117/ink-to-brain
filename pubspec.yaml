@@ -44,11 +44,12 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.1
   intl: ^0.17.0
   #flutter_tesseract_ocr: ^0.4.18
-  google_ml_kit: ^0.7.3
+  #google_ml_kit: ^0.7.3
   nextcloud: ^3.0.1
   shared_preferences: ^2.0.9
   flutter_device_type: ^0.4.0
   flutter_launcher_icons: ^0.9.2
+  flutter_tesseract_ocr: ^0.4.18
 
 flutter_icons:
   android: true
@@ -80,10 +81,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/launch_icon.png
-  #- assets/tessdata_config.json
-  #- assets/tessdata/deu.traineddata
-  #- assets/tessdata/eng.traineddata
-  #- assets/tessdata/vie.traineddata
+    - assets/tessdata_config.json
+    - assets/tessdata/deu.traineddata
+    - assets/tessdata/eng.traineddata
+    - assets/tessdata/vie.traineddata
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:ink2brain/widgets/painter.dart';
 
 class WriteWidget extends StatefulWidget {
-  final String title;
   final PainterController controller;
   final bool pen;
 
-  const WriteWidget(this.title, this.controller, {this.pen = false, Key? key})
+  const WriteWidget(this.controller, {this.pen = false, Key? key})
       : super(key: key);
 
   @override
@@ -14,11 +13,6 @@ class WriteWidget extends StatefulWidget {
 }
 
 class _WriteWidgetState extends State<WriteWidget> {
-//class WriteWidget extends StatelessWidget {
-
-  //const WriteWidget(this.title, this.controller, {this.pen = false, Key? key})
-  //    : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,7 +26,6 @@ class _WriteWidgetState extends State<WriteWidget> {
                   color: Colors.white,
                   border: Border.all(
                       color: Theme.of(context).primaryColor, width: 1.5),
-                  //borderRadius: const BorderRadius.all(Radius.circular(3))
                 ),
                 child: Stack(alignment: Alignment.topRight, children: [
                   Painter(widget.controller, usePen: widget.pen),

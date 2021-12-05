@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_tesseract_ocr/android_ios.dart';
+import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
@@ -11,10 +11,12 @@ import 'package:ink2brain/widgets/painter.dart';
 import 'package:ink2brain/widgets/write_widget.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+// import 'package:google_ml_kit/google_ml_kit.dart';
 
 class NewWordPage extends StatefulWidget {
-  const NewWordPage({Key? key}) : super(key: key);
+  final int? editId;
+
+  const NewWordPage({this.editId, Key? key}) : super(key: key);
 
   @override
   _NewWordPageState createState() => _NewWordPageState();
@@ -30,9 +32,19 @@ class _NewWordPageState extends State<NewWordPage> {
 
   final ScrollController _scrollControl = ScrollController();
 
+  Word editWord = Word(
+      id: -1,
+      insertTs: DateTime.fromMicrosecondsSinceEpoch(0),
+      questionPix: Uint8List(0),
+      questionTxt: "",
+      answerPix: Uint8List(0),
+      answerTxt: "",
+      correctCount: 0);
+
   @override
   void initState() {
     super.initState();
+    _loadData();
   }
 
   static PainterController _newController() {
@@ -43,18 +55,44 @@ class _NewWordPageState extends State<NewWordPage> {
     return controller;
   }
 
-  Future<void> _save() async {
+  Future<void> _loadData() async {
+    if (widget.editId != null) {
+      List<Word> newWords =
+          await DatabaseCon().words(where: "id = ${widget.editId}");
+      if (newWords.isNotEmpty) {
+        setState(() {
+          editWord = newWords[0];
+          _questTxtControl.text = editWord.questionTxt;
+          _answTxtControl.text = editWord.answerTxt;
+        });
+      }
+    }
+  }
+
+  Future<void> _save(BuildContext context) async {
     Uint8List questPix = await _questPaintControl.finish().toPNG();
     Uint8List answPix = await _answPaintControl.finish().toPNG();
-
-    DatabaseCon().insertWord(Word(
-        id: -1,
-        insertTs: DateTime.now(),
-        questionPix: questPix,
-        questionTxt: "",
-        answerPix: answPix,
-        answerTxt: "",
-        correctCount: 0));
+    if (widget.editId == null) {
+      DatabaseCon().insertWord(Word(
+          id: -1,
+          insertTs: DateTime.now(),
+          questionPix: questPix,
+          questionTxt: _questTxtControl.text,
+          answerPix: answPix,
+          answerTxt: _answTxtControl.text,
+          correctCount: 0));
+    } else {
+      DatabaseCon().updateWord(Word(
+          id: widget.editId!,
+          insertTs: editWord.insertTs,
+          questionPix:
+              _questPaintControl.isEmpty ? editWord.questionPix : questPix,
+          questionTxt: _questTxtControl.text,
+          answerPix: _answPaintControl.isEmpty ? editWord.answerPix : answPix,
+          answerTxt: _answTxtControl.text,
+          correctCount: editWord.correctCount));
+      Navigator.pop(context);
+    }
 
     setState(() {
       _questPaintControl = _newController();
@@ -64,7 +102,10 @@ class _NewWordPageState extends State<NewWordPage> {
 
   Future<void> _scanQuest() async {
     await requestWritePermission();
-    Uint8List pix = await _questPaintControl.generateRendering().toPNG();
+
+    Uint8List pix = (editWord.id > 0 && _questPaintControl.isEmpty)
+        ? editWord.questionPix
+        : await _questPaintControl.generateRendering().toPNG();
     Directory? directory;
     if (Platform.isWindows) {
       directory = Directory.current;
@@ -87,7 +128,6 @@ class _NewWordPageState extends State<NewWordPage> {
     digitalInkRecogniser.close();
     */
 
-/*
     String langName = "deu";
     String text = await FlutterTesseractOcr.extractText(fOutPath,
         language: langName,
@@ -99,13 +139,16 @@ class _NewWordPageState extends State<NewWordPage> {
     setState(() {
       _questTxtControl.text = text;
     });
-    */
   }
 
   Future<void> _scanAnsw() async {
-    /*
     await requestWritePermission();
-    Uint8List pix = await _answPaintControl.generateRendering().toPNG();
+
+    Uint8List pix = (editWord.id > 0 && _answPaintControl.isEmpty)
+        ? editWord.answerPix
+        : await _answPaintControl.generateRendering().toPNG();
+
+    // Uint8List pix = await _answPaintControl.generateRendering().toPNG();
     final Directory? directory = await getExternalStorageDirectory();
     final String fOutPath = join(directory!.path, "tmpAnswImg.png");
     final File fOut = File(fOutPath);
@@ -123,15 +166,13 @@ class _NewWordPageState extends State<NewWordPage> {
     setState(() {
       _answTxtControl.text = text;
     });
-    */
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize:
-                const Size.fromHeight(35.0), // here the desired height
+            preferredSize: const Size.fromHeight(35.0),
             child: AppBar(
               title: const Text("add questions"),
             )),
@@ -151,8 +192,22 @@ class _NewWordPageState extends State<NewWordPage> {
                                 padding: EdgeInsets.only(top: 5),
                                 child: Text("Question",
                                     style: TextStyle(fontSize: 20))),
-                            WriteWidget("word to learn", _questPaintControl,
-                                pen: true),
+                            editWord.id <= 0
+                                ? const Text("")
+                                : Container(
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).primaryColorLight,
+                                    ),
+                                    child: Align(
+                                        alignment: Alignment.center,
+                                        child: AspectRatio(
+                                            aspectRatio: 3,
+                                            child: Image.memory(
+                                                editWord.questionPix))),
+                                  ),
+                            WriteWidget(_questPaintControl, pen: true),
                             Padding(
                                 padding: const EdgeInsets.all(5),
                                 child: Row(children: [
@@ -194,7 +249,22 @@ class _NewWordPageState extends State<NewWordPage> {
                                 padding: EdgeInsets.only(top: 5),
                                 child: Text("Answer",
                                     style: TextStyle(fontSize: 20))),
-                            WriteWidget("hint", _answPaintControl, pen: true),
+                            editWord.id <= 0
+                                ? const Text("")
+                                : Container(
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).primaryColorLight,
+                                    ),
+                                    child: Align(
+                                        alignment: Alignment.center,
+                                        child: AspectRatio(
+                                            aspectRatio: 3,
+                                            child: Image.memory(
+                                                editWord.answerPix))),
+                                  ),
+                            WriteWidget(_answPaintControl, pen: true),
                             Padding(
                                 padding: const EdgeInsets.all(5),
                                 child: Row(children: [
@@ -232,16 +302,11 @@ class _NewWordPageState extends State<NewWordPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SizedBox(
-                            //width: 200.0,
-                            //height: 100.0,
                             child: OutlinedButton.icon(
                           icon: const Icon(Icons.save),
-                          label: const Text('save'),
-                          //style: OutlinedButton.styleFrom(
-                          //primary: Colors.green,
-                          //backgroundColor: const Color(0xFFE4FFE6)),
+                          label: Text(widget.editId == null ? 'save' : 'edit'),
                           onPressed: () {
-                            _save();
+                            _save(context);
                           },
                         ))
                       ])
