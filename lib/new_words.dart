@@ -90,7 +90,8 @@ class _NewWordPageState extends State<NewWordPage> {
           questionTxt: _questTxtControl.text,
           answerPix: _answPaintControl.isEmpty ? editWord.answerPix : answPix,
           answerTxt: _answTxtControl.text,
-          correctCount: editWord.correctCount));
+          correctCount: editWord.correctCount,
+          lastAskedTs: editWord.lastAskedTs));
       Navigator.pop(context);
     }
 
@@ -98,6 +99,11 @@ class _NewWordPageState extends State<NewWordPage> {
       _questPaintControl = _newController();
       _answPaintControl = _newController();
     });
+  }
+
+  Future<void> _delete(BuildContext context) async {
+    DatabaseCon().deleteWord(widget.editId ?? -1);
+    Navigator.pop(context);
   }
 
   Future<void> _scanQuest() async {
@@ -301,14 +307,25 @@ class _NewWordPageState extends State<NewWordPage> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        SizedBox(
-                            child: OutlinedButton.icon(
+                        widget.editId == null
+                            ? const Text('')
+                            : OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                    primary: Colors.red,
+                                    backgroundColor: const Color(0xFFFFE4E4)),
+                                icon: const Icon(Icons.delete),
+                                label: const Text('delete'),
+                                onPressed: () {
+                                  _delete(context);
+                                },
+                              ),
+                        OutlinedButton.icon(
                           icon: const Icon(Icons.save),
                           label: Text(widget.editId == null ? 'save' : 'edit'),
                           onPressed: () {
                             _save(context);
                           },
-                        ))
+                        )
                       ])
                 ]))));
   }

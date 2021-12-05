@@ -116,7 +116,7 @@ class _ListPageState extends State<ListPage> {
                                     _sort(columnIndex, ascending);
                                   }),
                               DataColumn(
-                                  label: const Text('last asked'),
+                                  label: const Text('asked'),
                                   onSort: (columnIndex, ascending) {
                                     _sort(columnIndex, ascending);
                                   }),

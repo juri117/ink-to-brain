@@ -125,4 +125,8 @@ class DatabaseCon {
       whereArgs: [word.id],
     );
   }
+
+  Future<void> deleteWord(int id) async {
+    await con?.delete('words', where: 'id = $id');
+  }
 }

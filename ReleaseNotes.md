@@ -17,6 +17,9 @@
 **new features**
 * [x] new workout mode, ask until correct
   * [x] also add skip button, that drops the word from queue
+* [x] edit questions dialog
+  * [x] also add delete function
+* [x] use tesseract (on android) for ink to text
 
 **bug-fixes**
 
