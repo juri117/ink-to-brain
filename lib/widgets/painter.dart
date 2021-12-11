@@ -23,7 +23,7 @@ class Painter extends StatefulWidget {
 }
 
 class _PainterState extends State<Painter> {
-  bool _finished = false;
+  final bool _finished = false;
 
   @override
   void initState() {
@@ -72,7 +72,7 @@ class _PainterState extends State<Painter> {
         );
       }
     }
-    return Container(
+    return SizedBox(
       child: child,
       width: double.infinity,
       height: double.infinity,
@@ -153,9 +153,9 @@ class _PainterPainter extends CustomPainter {
 }
 
 class _PathHistory {
-  List<MapEntry<Path, Paint>> _paths;
+  final List<MapEntry<Path, Paint>> _paths;
   Paint currentPaint;
-  Paint _backgroundPaint;
+  final Paint _backgroundPaint;
   bool _inDrag;
 
   bool get isEmpty => _paths.isEmpty || (_paths.length == 1 && _inDrag);
@@ -251,13 +251,13 @@ class PictureDetails {
 
 /// Used with a [Painter] widget to control drawing.
 class PainterController extends ChangeNotifier {
-  Color _drawColor = Color.fromARGB(255, 0, 0, 0);
-  Color _backgroundColor = Color.fromARGB(255, 255, 255, 255);
+  Color _drawColor = const Color.fromARGB(255, 0, 0, 0);
+  Color _backgroundColor = const Color.fromARGB(255, 255, 255, 255);
   bool _eraseMode = false;
 
   double _thickness = 1.0;
   PictureDetails? _cached;
-  _PathHistory _pathHistory;
+  final _PathHistory _pathHistory;
   ValueGetter<Size>? _widgetFinish;
 
   /// Creates a instance for the use in a [Painter] widget.
@@ -308,7 +308,7 @@ class PainterController extends ChangeNotifier {
     Paint paint = Paint();
     if (_eraseMode) {
       paint.blendMode = BlendMode.clear;
-      paint.color = Color.fromARGB(0, 255, 0, 0);
+      paint.color = const Color.fromARGB(0, 255, 0, 0);
     } else {
       paint.color = drawColor;
       paint.blendMode = BlendMode.srcOver;

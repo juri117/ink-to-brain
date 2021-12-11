@@ -1,6 +1,3 @@
-import 'dart:typed_data';
-import 'package:intl/intl.dart';
-
 class Stat {
   final int totalCount;
   final int activeCount;

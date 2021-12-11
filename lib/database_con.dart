@@ -2,26 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
-import 'dart:io' as io;
-import 'dart:math';
 
 class DatabaseCon {
   static final DatabaseCon _dbCon = DatabaseCon._internal();
 
-  final String dbCreateQue = ("CREATE TABLE words (" +
-      "id	INTEGER UNIQUE NOT NULL,	" +
-      "insertTs DATETIME DEFAULT (CURRENT_TIMESTAMP), " +
-      "questionPix	BLOB, " +
-      "questionTxt	TEXT, " +
-      "answerPix	BLOB, " +
-      "answerTxt	TEXT, " +
-      "correctCount	NUMERIC, " +
-      "lastAskedTs DATETIME, " +
+  final String dbCreateQue = ("CREATE TABLE words ("
+      "id	INTEGER UNIQUE NOT NULL,	"
+      "insertTs DATETIME DEFAULT (CURRENT_TIMESTAMP), "
+      "questionPix	BLOB, "
+      "questionTxt	TEXT, "
+      "answerPix	BLOB, "
+      "answerTxt	TEXT, "
+      "correctCount	NUMERIC, "
+      "lastAskedTs DATETIME, "
       "PRIMARY KEY(id AUTOINCREMENT));");
 
   factory DatabaseCon() {

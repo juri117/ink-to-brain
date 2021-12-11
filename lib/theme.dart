@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 /// ----  Green Theme  ----
-final myColorLighter = Color(0xFFFFE19D);
-final myColorLight = Color(0xFFFFCD59);
-final myColorPrimary = Color(0xFF70BA71);
-final myColorAccent = Color(0xFF336633);
-final myColorBackground = Color(0xFFFFFFFF);
-final myColorText = Color(0xFF000000);
+const myColorLighter = Color(0xFFFFE19D);
+const myColorLight = Color(0xFFFFCD59);
+const myColorPrimary = Color(0xFF70BA71);
+const myColorAccent = Color(0xFF336633);
+const myColorBackground = Color(0xFFFFFFFF);
+const myColorText = Color(0xFF000000);
 
 final ThemeData base = ThemeData.light();
 
@@ -15,7 +15,7 @@ ThemeData myTheme = ThemeData.light().copyWith(
   primaryColorDark: myColorAccent,
   primaryColorLight: myColorLighter,
   primaryColorBrightness: Brightness.dark,
-  errorColor: Color(0xFFcc0000),
+  errorColor: const Color(0xFFcc0000),
   colorScheme: base.colorScheme.copyWith(
       primary: myColorPrimary,
       secondary: myColorAccent,
@@ -27,7 +27,7 @@ ThemeData myTheme = ThemeData.light().copyWith(
       secondaryVariant: myColorAccent,
       background: myColorBackground,
       onBackground: Colors.black,
-      error: Color(0xFFcc0000),
+      error: const Color(0xFFcc0000),
       onError: Colors.white),
   buttonTheme: base.buttonTheme.copyWith(
     buttonColor: myColorAccent,
@@ -37,7 +37,7 @@ ThemeData myTheme = ThemeData.light().copyWith(
     style:
         ButtonStyle(backgroundColor: MaterialStateProperty.all(myColorAccent)),
   ),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: myColorAccent, foregroundColor: Colors.white),
   radioTheme:
       RadioThemeData(fillColor: MaterialStateProperty.all(myColorPrimary)),
@@ -49,7 +49,8 @@ ThemeData myTheme = ThemeData.light().copyWith(
 
       indicator: BoxDecoration(
           color: Colors.white.withOpacity(0.1),
-          border: Border(bottom: BorderSide(color: myColorAccent, width: 3)))),
+          border: const Border(
+              bottom: BorderSide(color: myColorAccent, width: 3)))),
   scaffoldBackgroundColor: myColorBackground,
   cardColor: myColorBackground,
   //textSelectionColor: PrimaryColorLight,

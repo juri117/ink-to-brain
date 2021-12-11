@@ -1,19 +1,18 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatelessWidget {
+  const Settings({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return SharedPreferencesScreen();
+    return const SharedPreferencesScreen();
   }
 }
 
 class SharedPreferencesScreen extends StatefulWidget {
-  SharedPreferencesScreen({Key? key}) : super(key: key);
+  const SharedPreferencesScreen({Key? key}) : super(key: key);
 
   @override
   _SharedPreferencesScreenState createState() =>
@@ -136,7 +135,7 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
         ])))
       ]),
       floatingActionButton: FloatingActionButton(
-        onPressed: this._store,
+        onPressed: _store,
         tooltip: 'store settings',
         child: const Icon(Icons.save),
       ),

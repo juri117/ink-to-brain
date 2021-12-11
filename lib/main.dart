@@ -190,10 +190,9 @@ class _MainFrameState extends State<MainFrame> {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
                             OutlinedButton.icon(
                               icon: Icon(Icons.fitness_center),
                               label: Container(
@@ -226,11 +225,6 @@ class _MainFrameState extends State<MainFrame> {
                                   MaterialPageRoute(
                                       builder: (context) => ListPage()),
                                 ).then((value) => _loadData());
-                                /*
-                  setState(() {
-                    content = const ListPage();
-                  });
-                  */
                               },
                             ),
                             const SizedBox(
@@ -248,97 +242,23 @@ class _MainFrameState extends State<MainFrame> {
                                   MaterialPageRoute(
                                       builder: (context) => NewWordPage()),
                                 ).then((value) => _loadData());
-                                /*
-                  setState(() {
-                    content = const NewWordPage();
-                  });
-                  */
                               },
                             )
-                          ]))
+                          ])
                     ]),
                 Wrap(
                   children: badWordWidgetList,
                 )
-                /*
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: badWords.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                        child: Row(
-                      children: [
-                        Expanded(flex: 6, child: Text("")),
-                        Text("${badWords[index].correctCount}"),
-                        Expanded(
-                            flex: 3,
-                            child: SizedBox(
-                                child: AspectRatio(
-                                    aspectRatio: 3,
-                                    child: Image.memory(
-                                        badWords[index].questionPix)))),
-                        const SizedBox(width: 10),
-                        Icon(Icons.compare_arrows_outlined,
-                            size: 40, color: Theme.of(context).primaryColor),
-                        const SizedBox(width: 10),
-                        Expanded(
-                            flex: 3,
-                            child: SizedBox(
-                                child: AspectRatio(
-                                    aspectRatio: 3,
-                                    child: Image.memory(
-                                        badWords[index].answerPix))))
-                      ],
-                    ));
-                  },
-                )
-                */
               ])),
-          /*
-                  Flexible(
-                      child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: badWords.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                          title: Text("${badWords[index].correctCount}"),
-                          subtitle: Row(
-                            children: [
-                              Expanded(
-                                  flex: 3,
-                                  child: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
-                                      child: AspectRatio(
-                                          aspectRatio: 3,
-                                          child: Image.memory(
-                                              badWords[index].questionPix)))),
-                              const SizedBox(width: 10),
-                              Icon(Icons.compare_arrows_outlined,
-                                  size: 40,
-                                  color: Theme.of(context).primaryColor),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                  flex: 3,
-                                  child: AspectRatio(
-                                      aspectRatio: 3,
-                                      child: Image.memory(
-                                          badWords[index].questionPix)))
-                            ],
-                          ));
-                    },
-                  ))
-                  */
         ));
   }
 }
 
 class SyncDialog extends StatefulWidget {
-  const SyncDialog();
+  const SyncDialog({Key? key}) : super(key: key);
 
   @override
-  _SyncDialogStat createState() => new _SyncDialogStat();
+  _SyncDialogStat createState() => _SyncDialogStat();
 }
 
 class _SyncDialogStat extends State<SyncDialog> {
@@ -424,7 +344,7 @@ class _SyncDialogStat extends State<SyncDialog> {
                 SizedBox(
                   height: 10,
                 ),
-                Text("$errorMessage",
+                Text(errorMessage,
                     style: TextStyle(
                         color: errorMessage.contains("OK") ||
                                 errorMessage.contains("loading...")

@@ -12,9 +12,9 @@ import 'package:ink2brain/widgets/painter.dart';
 enum WorkoutState { ask, answer, done }
 
 class WorkoutPage extends StatefulWidget {
-  int limit;
-  bool persistent;
-  WorkoutPage({this.limit = 9999999, this.persistent = false, Key? key})
+  final int limit;
+  final bool persistent;
+  const WorkoutPage({this.limit = 9999999, this.persistent = false, Key? key})
       : super(key: key);
 
   @override
@@ -43,11 +43,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   Future<void> _loadWords() async {
     List<Word> newWords = await DatabaseCon().words(
-        where: "correctCount < 3 " +
-            "OR (correctCount == 2 AND lastAskedTs <= date('now', '-1 hours')) " +
-            "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) " +
-            "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) " +
-            "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))",
+        where: ("correctCount < 3 "
+            "OR (correctCount == 2 AND lastAskedTs <= date('now', '-1 hours')) "
+            "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) "
+            "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) "
+            "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))"),
         orderBy: "RANDOM()",
         limit: widget.limit);
     setState(() {
