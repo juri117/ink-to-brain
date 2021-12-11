@@ -116,8 +116,8 @@ class DatabaseCon {
 
   Future<void> updateWord(Word word) async {
     Map<String, dynamic> map = word.toMap();
-    map.remove("questionPix");
-    map.remove("answerPix");
+    //map.remove("questionPix");
+    //map.remove("answerPix");
     await con?.update(
       'words',
       map,

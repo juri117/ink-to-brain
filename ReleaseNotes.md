@@ -9,6 +9,7 @@
 * learning statistics
   * [ ] show learned words vs. all words etc.
   * [ ] db: log learning sessions
+* [ ] just in time download of tesseract tesserdata
 
 **bug-fixes**
 
