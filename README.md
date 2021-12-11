@@ -15,6 +15,12 @@ this is the result of major procrastination... A app that stores vocabulary or q
 
 * windows
 * android
+* linux, mac, ios, should be possible as well since its flutter
+
+## install
+
+the latest pre-build binaries are here: [releases](https://github.com/juri117/ink-to-brain/releases)
+
 
 ## transfer/backup database
 
