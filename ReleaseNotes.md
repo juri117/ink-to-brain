@@ -17,7 +17,7 @@
 
 **new features**
 * [x] force landscape mode on android
-* [ ] search field in word-list-view
+* [x] search field in word-list-view
 * [] workout overview after finished
 * [] select different workouts
   * [] size: 5, 10, 15, 20, all
