@@ -5,7 +5,7 @@ this is the result of major procrastination... A app that stores vocabulary or q
 ## features
 
 * word database in e-ink: question -> answer
-* basic tesseract ink to text for new questions
+* basic tesseract ink to text for new questions (only android and ios)
 * workout, train questions
   * ask 15 questions, repeat until all are correct
   * correct answers are stored, if correct for a specific number of times over a specific number of days its marked as learned, wont be asked again

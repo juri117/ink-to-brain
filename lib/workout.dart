@@ -9,7 +9,7 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/widgets/write_widget.dart';
 import 'package:ink2brain/widgets/painter.dart';
 
-enum WorkoutState { ask, answer, done }
+enum WorkoutState { ask, answer, done, overview }
 
 class WorkoutPage extends StatefulWidget {
   final int limit;
@@ -34,6 +34,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
       answerTxt: "",
       correctCount: 0);
   int index = 0;
+
+  int wrongCount = 0;
+  int correctCount = 0;
+  int skipCount = 0;
 
   @override
   void initState() {
@@ -78,6 +82,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   Future<void> _skip() async {
+    skipCount++;
     setState(() {
       _state = WorkoutState.done;
     });
@@ -101,8 +106,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Future<void> _save(Word word, bool suc) async {
     if (suc) {
       word.correctCount = max(1, word.correctCount + 1);
+      correctCount++;
     } else {
       word.correctCount = min(-1, word.correctCount - 1);
+      wrongCount++;
     }
     word.lastAskedTs = DateTime.now();
     DatabaseCon().updateWord(word);
