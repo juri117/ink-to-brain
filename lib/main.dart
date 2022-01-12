@@ -60,6 +60,95 @@ class _MainFrameState extends State<MainFrame> {
     });
   }
 
+  Future<void> _startWorkout() async {
+    bool legacyVal = false;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('start workout...'),
+            content: Container(
+                height: 200,
+                child: Column(children: [
+                  Container(
+                      width: 220,
+                      padding: EdgeInsets.all(5),
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.baby_changing_station),
+                        label: const Text('5 questions'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _navigateToWorkout(5, false);
+                        },
+                      )),
+                  Container(
+                      width: 220,
+                      padding: EdgeInsets.all(5),
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.school),
+                        label: const Text('10 questions'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _navigateToWorkout(10, false);
+                        },
+                      )),
+                  Container(
+                      width: 220,
+                      padding: EdgeInsets.all(5),
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.fitness_center),
+                        label: const Text('15 questions'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _navigateToWorkout(15, false);
+                        },
+                      )),
+                  Container(
+                      width: 220,
+                      padding: EdgeInsets.all(5),
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.airplanemode_on),
+                        label: const Text('all questions'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _navigateToWorkout(99999, false);
+                        },
+                      )),
+                  Container(
+                      width: 220,
+                      padding: EdgeInsets.all(5),
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.bolt_rounded),
+                        label: const Text('all questions (legacy)'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _navigateToWorkout(99999, true);
+                        },
+                      )),
+                ])),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('cancel'),
+              )
+            ],
+          );
+        });
+  }
+
+  Future<void> _navigateToWorkout(int limit, bool legacy) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => WorkoutPage(
+                limit: limit,
+                legacy: legacy,
+              )),
+    ).then((value) => _loadData());
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> badWordWidgetList = [];
@@ -200,14 +289,7 @@ class _MainFrameState extends State<MainFrame> {
                                   padding: EdgeInsets.all(20),
                                   child: Text('start workout')),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WorkoutPage(
-                                            limit: 15,
-                                            persistent: true,
-                                          )),
-                                ).then((value) => _loadData());
+                                _startWorkout();
                               },
                             ),
                             const SizedBox(

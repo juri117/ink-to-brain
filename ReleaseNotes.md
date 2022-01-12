@@ -13,15 +13,15 @@
 
 **bug-fixes**
 
-## 0.00.003 next
+## 0.00.003
 
 **new features**
 * [x] force landscape mode on android
 * [x] search field in word-list-view
-* [] workout overview after finished
-* [] select different workouts
-  * [] size: 5, 10, 15, 20, all
-  * [] legacy mode: also ask mastered words
+* [x] workout overview after finished
+* [x] select different workouts
+  * [x] size: 5, 10, 15, all
+  * [x] legacy mode: also ask mastered words
 
 ## 0.00.002
 

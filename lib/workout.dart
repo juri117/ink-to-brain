@@ -13,8 +13,8 @@ enum WorkoutState { ask, answer, done, overview }
 
 class WorkoutPage extends StatefulWidget {
   final int limit;
-  final bool persistent;
-  const WorkoutPage({this.limit = 9999999, this.persistent = false, Key? key})
+  final bool legacy;
+  const WorkoutPage({this.limit = 9999999, this.legacy = false, Key? key})
       : super(key: key);
 
   @override
@@ -46,14 +46,19 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   Future<void> _loadWords() async {
-    List<Word> newWords = await DatabaseCon().words(
-        where: ("correctCount < 3 "
-            "OR (correctCount == 2 AND lastAskedTs <= date('now', '-1 hours')) "
-            "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) "
-            "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) "
-            "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))"),
-        orderBy: "RANDOM()",
-        limit: widget.limit);
+    wrongCount = 0;
+    correctCount = 0;
+    skipCount = 0;
+    String? where;
+    if (!widget.legacy) {
+      where = ("correctCount < 3 "
+          "OR (correctCount == 2 AND lastAskedTs <= date('now', '-1 hours')) "
+          "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) "
+          "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) "
+          "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))");
+    }
+    List<Word> newWords = await DatabaseCon()
+        .words(where: where, orderBy: "RANDOM()", limit: widget.limit);
     setState(() {
       newWords.shuffle();
       words = newWords;
@@ -97,8 +102,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
       if (words.isNotEmpty) {
         currentWord = words[0];
       } else {
-        print("reload words");
-        _loadWords();
+        //print("reload words");
+        //_loadWords();
+        _showCompletedDialog();
       }
     });
   }
@@ -133,10 +139,43 @@ class _WorkoutPageState extends State<WorkoutPage> {
       if (words.isNotEmpty) {
         currentWord = words[0];
       } else {
-        print("reload words");
-        _loadWords();
+        //print("reload words");
+        //_loadWords();
+        _showCompletedDialog();
       }
     });
+  }
+
+  void _showCompletedDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Yeah, you are done!'),
+            content: Container(
+                height: 150,
+                child: Column(children: [
+                  Text('correct: $correctCount'),
+                  Text("mistakes: $wrongCount"),
+                  Text("skipped: $skipCount")
+                ])),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _loadWords();
+                  },
+                  child: const Text('another round')),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: const Text('I am done'),
+              )
+            ],
+          );
+        });
   }
 
   @override
