@@ -10,6 +10,7 @@
   * [ ] show learned words vs. all words etc.
   * [ ] db: log learning sessions
 * [ ] just in time download of tesseract tesserdata
+* [ ] auto next-cloud sync on startup and after session
 
 **bug-fixes**
 

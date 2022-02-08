@@ -51,14 +51,16 @@ class _WorkoutPageState extends State<WorkoutPage> {
     skipCount = 0;
     String? where;
     if (!widget.legacy) {
-      where = ("correctCount < 3 "
+      where = ("correctCount < 2 "
           "OR (correctCount == 2 AND lastAskedTs <= date('now', '-1 hours')) "
           "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) "
           "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) "
           "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))");
     }
+    String orderBy = "lastAskedTs NULLS FIRST";
+    // String orderBy = "RANDOM()";
     List<Word> newWords = await DatabaseCon()
-        .words(where: where, orderBy: "RANDOM()", limit: widget.limit);
+        .words(where: where, orderBy: orderBy, limit: widget.limit);
     setState(() {
       newWords.shuffle();
       words = newWords;
@@ -86,11 +88,17 @@ class _WorkoutPageState extends State<WorkoutPage> {
     return controller;
   }
 
-  Future<void> _skip() async {
+  Future<void> _skip(Word word) async {
     skipCount++;
     setState(() {
       _state = WorkoutState.done;
     });
+    // update timestamp
+    word.lastAskedTs = DateTime.now();
+    if (word.correctCount > 2) {
+      word.correctCount = max(0, word.correctCount - 1);
+    }
+    DatabaseCon().updateWord(word);
 
     await Future.delayed(const Duration(seconds: 5), () {});
 
@@ -114,7 +122,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       word.correctCount = max(1, word.correctCount + 1);
       correctCount++;
     } else {
-      word.correctCount = min(-1, word.correctCount - 1);
+      word.correctCount = min(3, word.correctCount - 1);
       wrongCount++;
     }
     word.lastAskedTs = DateTime.now();
@@ -129,7 +137,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
     words.removeAt(0);
     if (!suc) {
-      words.add(currentWord);
+      if (words.length > 10) {
+        words.insert(10, currentWord);
+      } else {
+        words.add(currentWord);
+      }
     }
 
     setState(() {
@@ -330,7 +342,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             icon: const Icon(Icons.skip_next_outlined),
             label: const Text('skip'),
             onPressed: () {
-              _skip();
+              _skip(currentWord);
             },
           ),
           OutlinedButton.icon(

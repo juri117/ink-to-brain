@@ -261,7 +261,7 @@ class _MainFrameState extends State<MainFrame> {
                                             fontWeight: FontWeight.bold))
                                   ]),
                                   Column(children: [
-                                    Text("almost mastered"),
+                                    Text("new"),
                                     Text("${stat.activeCount}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold))
