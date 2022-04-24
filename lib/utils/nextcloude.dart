@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ink2brain/utils/file_utils.dart';
 import 'package:nextcloud/nextcloud.dart';
 
+const nextCloudDir = "ink2brain";
+
 Future<NextCloudClient?> ncGetClient() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // final SharedPreferences prefs = await _prefs;
@@ -27,24 +29,36 @@ Future<String> ncUploadFile() async {
   try {
     final String? dbPath = await getDbPath();
     if (dbPath == null) {
-      print("could not find db file path");
+      //print("could not find db file path");
       return "could not find db file path";
     }
 
     final client = await ncGetClient();
     if (client == null) {
-      print("no nextcloude host defined");
+      //print("no nextcloude host defined");
       return "no nextcloude host defined";
     }
+    try {
+      await client.webDav.mkdir('/$nextCloudDir');
+    } catch (e, stacktrace) {
+      print(stacktrace);
+      //return "failed";
+    }
 
-    String date = DateFormat("yyyy-MM-dd_HH-mm-ss").format(DateTime.now());
-    await client.webDav.copy('/words.db', '/words_old_$date.db');
-    await client.webDav.upload(File(dbPath).readAsBytesSync(), '/words.db');
+    try {
+      String date = DateFormat("yyyy-MM-dd_HH-mm-ss").format(DateTime.now());
+      await client.webDav
+          .copy('/$nextCloudDir/words.db', '/$nextCloudDir/words_old_$date.db');
+    } catch (e, stacktrace) {
+      print(stacktrace);
+    }
+    await client.webDav
+        .upload(File(dbPath).readAsBytesSync(), '/$nextCloudDir/words.db');
   } on RequestException catch (e, stacktrace) {
     print(e.statusCode);
     print(e.body);
     print(stacktrace);
-    return "failed";
+    return "failed: ${e.body}";
   }
   return "OK";
 }
@@ -63,7 +77,8 @@ Future<String> ncDownloadFile() async {
       return "no nextcloude host defined";
     }
 
-    File(dbPath).writeAsBytesSync(await client.webDav.download('/words.db'));
+    File(dbPath).writeAsBytesSync(
+        await client.webDav.download('/$nextCloudDir/words.db'));
   } on RequestException catch (e, stacktrace) {
     print(e.statusCode);
     print(e.body);

@@ -18,6 +18,7 @@
 
 **new features**
 * [x] open with expanded window on windows
+* [x] use subfolder on nextcloud
 
 **bug-fixes**
 * [x] clear text fields after saving new question
