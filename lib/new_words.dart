@@ -98,6 +98,8 @@ class _NewWordPageState extends State<NewWordPage> {
     setState(() {
       _questPaintControl = _newController();
       _answPaintControl = _newController();
+      _questTxtControl.clear();
+      _answTxtControl.clear();
     });
   }
 

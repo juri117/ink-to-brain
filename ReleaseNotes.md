@@ -14,6 +14,14 @@
 
 **bug-fixes**
 
+## 0.00.004
+
+**new features**
+* [x] open with expanded window on windows
+
+**bug-fixes**
+* [x] clear text fields after saving new question
+
 ## 0.00.003
 
 **new features**

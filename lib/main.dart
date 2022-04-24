@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'dart:io';
+import 'package:desktop_window/desktop_window.dart';
 
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
@@ -15,6 +16,9 @@ import 'package:ink2brain/workout.dart';
 void main() async {
   await DatabaseCon().openCon();
   // await ncUploadFile();
+
+  DesktopWindow.setFullScreen(true);
+
   runApp(const MyApp());
 }
 
