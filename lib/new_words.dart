@@ -22,8 +22,14 @@ class NewWordPage extends StatefulWidget {
   _NewWordPageState createState() => _NewWordPageState();
 }
 
-class _NewWordPageState extends State<NewWordPage> {
+class _NewWordPageState extends State<NewWordPage>
+    with SingleTickerProviderStateMixin {
   //bool _finished = false;
+
+  late TabController _tabController;
+
+  int tabIndex = 0;
+
   PainterController _questPaintControl = _newController();
   PainterController _answPaintControl = _newController();
 
@@ -44,6 +50,7 @@ class _NewWordPageState extends State<NewWordPage> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
     _loadData();
   }
 
@@ -178,157 +185,440 @@ class _NewWordPageState extends State<NewWordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(35.0),
-            child: AppBar(
-              title: const Text("add questions"),
-            )),
-        body: Scrollbar(
-            controller: _scrollControl,
-            isAlwaysShown:
-                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-            child: SingleChildScrollView(
-                controller: _scrollControl,
-                child: Column(children: [
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 1,
-                          child: Column(children: [
-                            const Padding(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Text("Question",
-                                    style: TextStyle(fontSize: 20))),
-                            editWord.id <= 0
-                                ? const Text("")
-                                : Container(
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                    ),
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: AspectRatio(
-                                            aspectRatio: 3,
-                                            child: Image.memory(
-                                                editWord.questionPix))),
-                                  ),
-                            WriteWidget(_questPaintControl, pen: true),
-                            Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Row(children: [
-                                  Expanded(
-                                      flex: 1,
-                                      child: TextField(
-                                          controller: _questTxtControl,
-                                          minLines:
-                                              1, //Normal textInputField will be displayed
-                                          maxLines:
-                                              1, // when user presses enter it will adapt to it
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary)),
-                                            hintText: '...',
-                                            labelText: 'Question Note',
-                                          ))),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.lightbulb_outline),
-                                    onPressed: Platform.isWindows
-                                        ? null
-                                        : () {
-                                            _scanQuest();
-                                          },
-                                  )
-                                ])),
-                          ])),
-                      const VerticalDivider(width: 5, thickness: 1),
-                      Expanded(
-                          flex: 1,
-                          child: Column(children: [
-                            const Padding(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Text("Answer",
-                                    style: TextStyle(fontSize: 20))),
-                            editWord.id <= 0
-                                ? const Text("")
-                                : Container(
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                    ),
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: AspectRatio(
-                                            aspectRatio: 3,
-                                            child: Image.memory(
-                                                editWord.answerPix))),
-                                  ),
-                            WriteWidget(_answPaintControl, pen: true),
-                            Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Row(children: [
-                                  Expanded(
-                                      flex: 1,
-                                      child: TextField(
-                                          controller: _answTxtControl,
-                                          minLines: 1,
-                                          maxLines: 1,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary)),
-                                            hintText: '...',
-                                            labelText: 'Answer Note',
-                                          ))),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.lightbulb_outline),
-                                    onPressed: Platform.isWindows
-                                        ? null
-                                        : () {
-                                            _scanAnsw();
-                                          },
-                                  )
-                                ])),
-                          ])),
-                    ],
+    Widget buttons =
+        Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+      editWord.id <= 0
+          ? const Text("")
+          : tabIndex == 0
+              ? Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorLight,
                   ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        widget.editId == null
-                            ? const Text('')
-                            : OutlinedButton.icon(
-                                style: OutlinedButton.styleFrom(
-                                    primary: Colors.red,
-                                    backgroundColor: const Color(0xFFFFE4E4)),
-                                icon: const Icon(Icons.delete),
-                                label: const Text('delete'),
-                                onPressed: () {
-                                  _delete(context);
-                                },
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: AspectRatio(
+                          aspectRatio: 3,
+                          child: Image.memory(editWord.questionPix))),
+                )
+              : Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorLight,
+                  ),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: AspectRatio(
+                          aspectRatio: 3,
+                          child: Image.memory(editWord.answerPix))),
+                ),
+      tabIndex == 0
+          ? OutlinedButton.icon(
+              icon: const Icon(Icons.school),
+              label: const Text('next'),
+              onPressed: () {
+                setState(() {
+                  tabIndex = 1;
+                });
+              },
+            )
+          : OutlinedButton.icon(
+              icon: const Icon(Icons.question_mark),
+              label: const Text('back'),
+              onPressed: () {
+                setState(() {
+                  tabIndex = 0;
+                });
+              },
+            ),
+      widget.editId == null
+          ? const Text('')
+          : OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                  primary: Colors.red,
+                  backgroundColor: const Color(0xFFFFE4E4)),
+              icon: const Icon(Icons.delete),
+              label: const Text('delete'),
+              onPressed: () {
+                _delete(context);
+              },
+            ),
+      OutlinedButton.icon(
+        icon: const Icon(Icons.save),
+        label: Text(widget.editId == null ? 'save' : 'edit'),
+        onPressed: () {
+          _save(context);
+        },
+      )
+    ]);
+
+    return Scaffold(
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(35.0),
+          child: AppBar(
+            title: const Text("add questions"),
+            /*
+                bottom: const TabBar(
+                  //indicatorWeight: 0,
+                  //indicator: UnderlineTabIndicator(
+                  //    borderSide: BorderSide(width: 5.0),
+                  //    insets: EdgeInsets.symmetric(horizontal: 5.0)),
+                  
+                  tabs: [
+                    Tab(
+                        height: 30,
+                        icon: Icon(
+                          Icons.question_mark,
+                          size: 25,
+                        )),
+                    Tab(
+                        height: 30,
+                        icon: Icon(
+                          Icons.school,
+                          size: 20,
+                        )),
+                  ],
+                ),
+                */
+          )),
+      /*
+      bottomNavigationBar: Container(
+          padding: EdgeInsets.all(0.0),
+          height: 30,
+          child: BottomNavigationBar(
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: SizedBox(
+                    height: 20,
+                    child: Icon(
+                      Icons.question_mark,
+                      size: 20,
+                    )),
+                label: 'Question',
+                //backgroundColor: Colors.red,
+              ),
+              BottomNavigationBarItem(
+                icon: SizedBox(
+                    height: 20,
+                    child: Icon(
+                      Icons.school,
+                      size: 20,
+                    )),
+                label: 'Answer',
+                //backgroundColor: Colors.green,
+              ),
+            ],
+            currentIndex: tabIndex,
+            //selectedItemColor: Colors.amber[800],
+            onTap: (index) {
+              setState(() {
+                tabIndex = index;
+                _tabController.animateTo(index,
+                    duration: Duration(microseconds: 300),
+                    curve: Curves.bounceIn);
+              });
+            },
+            //onTap: (index) {
+            //  setState(() {
+            //    tabIndex = index;
+            //  });
+            //}
+          )),
+          */
+      body: IndexedStack(
+        //controller: _tabController,
+        //physics: const NeverScrollableScrollPhysics(),
+        index: tabIndex,
+        children: [
+          Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                    flex: 4,
+                    child: Scrollbar(
+                        controller: _scrollControl,
+                        thumbVisibility: Platform.isWindows ||
+                            Platform.isLinux ||
+                            Platform.isMacOS,
+                        child: SingleChildScrollView(
+                            controller: _scrollControl,
+                            child: Column(children: [
+                              //const Padding(
+                              //    padding: EdgeInsets.only(top: 5),
+                              //    child: Text("Question",
+                              //        style: TextStyle(fontSize: 20))),
+                              /*
+                              editWord.id <= 0
+                                  ? const Text("")
+                                  : Container(
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                      ),
+                                      child: Align(
+                                          alignment: Alignment.center,
+                                          child: AspectRatio(
+                                              aspectRatio: 3,
+                                              child: Image.memory(
+                                                  editWord.questionPix))),
+                                    ),
+                                    */
+                              WriteWidget(_questPaintControl, pen: true),
+                              Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: TextField(
+                                            controller: _questTxtControl,
+                                            minLines:
+                                                1, //Normal textInputField will be displayed
+                                            maxLines:
+                                                1, // when user presses enter it will adapt to it
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary)),
+                                              hintText: '...',
+                                              labelText: 'Question Note',
+                                            ))),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.lightbulb_outline),
+                                      onPressed: Platform.isWindows
+                                          ? null
+                                          : () {
+                                              _scanQuest();
+                                            },
+                                    )
+                                  ])),
+                            ])))),
+                Expanded(flex: 1, child: buttons)
+              ]),
+          Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                    flex: 4,
+                    child: Scrollbar(
+                        controller: _scrollControl,
+                        thumbVisibility: Platform.isWindows ||
+                            Platform.isLinux ||
+                            Platform.isMacOS,
+                        child: SingleChildScrollView(
+                            controller: _scrollControl,
+                            child: Column(children: [
+                              //const Padding(
+                              //    padding: EdgeInsets.only(top: 5),
+                              //    child: Text("Answer",
+                              //        style: TextStyle(fontSize: 20))),
+                              /*
+                              editWord.id <= 0
+                                  ? const Text("")
+                                  : Container(
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                      ),
+                                      child: Align(
+                                          alignment: Alignment.center,
+                                          child: AspectRatio(
+                                              aspectRatio: 3,
+                                              child: Image.memory(
+                                                  editWord.answerPix))),
+                                    ),
+                                    */
+                              WriteWidget(_answPaintControl, pen: true),
+                              Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: TextField(
+                                            controller: _answTxtControl,
+                                            minLines: 1,
+                                            maxLines: 1,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary)),
+                                              hintText: '...',
+                                              labelText: 'Answer Note',
+                                            ))),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.lightbulb_outline),
+                                      onPressed: Platform.isWindows
+                                          ? null
+                                          : () {
+                                              _scanAnsw();
+                                            },
+                                    )
+                                  ])),
+                            ])))),
+                Expanded(flex: 1, child: buttons)
+              ]),
+        ],
+      ),
+    );
+
+    Widget test = Scrollbar(
+        controller: _scrollControl,
+        thumbVisibility:
+            Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+        child: SingleChildScrollView(
+            controller: _scrollControl,
+            child: Column(children: [
+              Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Column(children: [
+                        const Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text("Question",
+                                style: TextStyle(fontSize: 20))),
+                        editWord.id <= 0
+                            ? const Text("")
+                            : Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColorLight,
+                                ),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: AspectRatio(
+                                        aspectRatio: 3,
+                                        child: Image.memory(
+                                            editWord.questionPix))),
                               ),
-                        OutlinedButton.icon(
-                          icon: const Icon(Icons.save),
-                          label: Text(widget.editId == null ? 'save' : 'edit'),
-                          onPressed: () {
-                            _save(context);
-                          },
-                        )
-                      ])
-                ]))));
+                        WriteWidget(_questPaintControl, pen: true),
+                        Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Row(children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: TextField(
+                                      controller: _questTxtControl,
+                                      minLines:
+                                          1, //Normal textInputField will be displayed
+                                      maxLines:
+                                          1, // when user presses enter it will adapt to it
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary)),
+                                        hintText: '...',
+                                        labelText: 'Question Note',
+                                      ))),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.lightbulb_outline),
+                                onPressed: Platform.isWindows
+                                    ? null
+                                    : () {
+                                        _scanQuest();
+                                      },
+                              )
+                            ])),
+                      ])),
+                  const VerticalDivider(width: 5, thickness: 1),
+                  Expanded(
+                      flex: 1,
+                      child: Column(children: [
+                        const Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child:
+                                Text("Answer", style: TextStyle(fontSize: 20))),
+                        editWord.id <= 0
+                            ? const Text("")
+                            : Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColorLight,
+                                ),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: AspectRatio(
+                                        aspectRatio: 3,
+                                        child:
+                                            Image.memory(editWord.answerPix))),
+                              ),
+                        WriteWidget(_answPaintControl, pen: true),
+                        Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Row(children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: TextField(
+                                      controller: _answTxtControl,
+                                      minLines: 1,
+                                      maxLines: 1,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary)),
+                                        hintText: '...',
+                                        labelText: 'Answer Note',
+                                      ))),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.lightbulb_outline),
+                                onPressed: Platform.isWindows
+                                    ? null
+                                    : () {
+                                        _scanAnsw();
+                                      },
+                              )
+                            ])),
+                      ])),
+                ],
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                widget.editId == null
+                    ? const Text('')
+                    : OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                            primary: Colors.red,
+                            backgroundColor: const Color(0xFFFFE4E4)),
+                        icon: const Icon(Icons.delete),
+                        label: const Text('delete'),
+                        onPressed: () {
+                          _delete(context);
+                        },
+                      ),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.save),
+                  label: Text(widget.editId == null ? 'save' : 'edit'),
+                  onPressed: () {
+                    _save(context);
+                  },
+                )
+              ])
+            ])));
   }
 }
