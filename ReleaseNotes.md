@@ -22,6 +22,7 @@
 
 **bug-fixes**
 * [x] clear text fields after saving new question
+* [x] fix start workout dialog on android phone screen
 
 ## 0.00.003
 

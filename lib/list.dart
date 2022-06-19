@@ -157,7 +157,7 @@ class _ListPageState extends State<ListPage> {
               child: Container(
                   child: Scrollbar(
                       controller: _scrollController,
-                      isAlwaysShown: Platform.isWindows ||
+                      thumbVisibility: Platform.isWindows ||
                           Platform.isLinux ||
                           Platform.isMacOS,
                       child: SingleChildScrollView(

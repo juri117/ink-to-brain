@@ -16,8 +16,9 @@ import 'package:ink2brain/workout.dart';
 void main() async {
   await DatabaseCon().openCon();
   // await ncUploadFile();
-
-  DesktopWindow.setFullScreen(true);
+  if (Platform.isWindows) {
+    DesktopWindow.setFullScreen(true);
+  }
 
   runApp(const MyApp());
 }
@@ -66,70 +67,77 @@ class _MainFrameState extends State<MainFrame> {
 
   Future<void> _startWorkout() async {
     bool legacyVal = false;
+    final ScrollController _scrollController = ScrollController();
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text('start workout...'),
-            content: Container(
-                height: 200,
-                child: Column(children: [
-                  Container(
-                      width: 220,
-                      padding: EdgeInsets.all(5),
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.baby_changing_station),
-                        label: const Text('5 questions'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _navigateToWorkout(5, false);
-                        },
-                      )),
-                  Container(
-                      width: 220,
-                      padding: EdgeInsets.all(5),
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.school),
-                        label: const Text('10 questions'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _navigateToWorkout(10, false);
-                        },
-                      )),
-                  Container(
-                      width: 220,
-                      padding: EdgeInsets.all(5),
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.fitness_center),
-                        label: const Text('15 questions'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _navigateToWorkout(15, false);
-                        },
-                      )),
-                  Container(
-                      width: 220,
-                      padding: EdgeInsets.all(5),
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.airplanemode_on),
-                        label: const Text('all questions'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _navigateToWorkout(99999, false);
-                        },
-                      )),
-                  Container(
-                      width: 220,
-                      padding: EdgeInsets.all(5),
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.bolt_rounded),
-                        label: const Text('all questions (legacy)'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _navigateToWorkout(99999, true);
-                        },
-                      )),
-                ])),
+            content: Scrollbar(
+                controller: _scrollController,
+                thumbVisibility:
+                    Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+                child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: SizedBox(
+                        //height: 200,
+                        child: Column(children: [
+                      Container(
+                          width: 220,
+                          padding: EdgeInsets.all(5),
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.baby_changing_station),
+                            label: const Text('5 questions'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _navigateToWorkout(5, false);
+                            },
+                          )),
+                      Container(
+                          width: 220,
+                          padding: EdgeInsets.all(5),
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.school),
+                            label: const Text('10 questions'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _navigateToWorkout(10, false);
+                            },
+                          )),
+                      Container(
+                          width: 220,
+                          padding: EdgeInsets.all(5),
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.fitness_center),
+                            label: const Text('15 questions'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _navigateToWorkout(15, false);
+                            },
+                          )),
+                      Container(
+                          width: 220,
+                          padding: EdgeInsets.all(5),
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.airplanemode_on),
+                            label: const Text('all questions'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _navigateToWorkout(99999, false);
+                            },
+                          )),
+                      Container(
+                          width: 220,
+                          padding: EdgeInsets.all(5),
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.bolt_rounded),
+                            label: const Text('all questions (legacy)'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _navigateToWorkout(99999, true);
+                            },
+                          )),
+                    ])))),
             actions: <Widget>[
               TextButton(
                 onPressed: () {

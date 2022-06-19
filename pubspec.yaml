@@ -38,7 +38,7 @@ dependencies:
   #      url: git@github.com:juri117/painter.git
   #flutter_colorpicker: ^0.6.0
   path_provider: ^2.0.6
-  permission_handler: ^9.2.0
+  permission_handler: ^10.0.0
   path: ^1.8.0
   sqflite_common_ffi: ^2.1.0
   sqlite3_flutter_libs: ^0.5.1
@@ -65,7 +65,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
