@@ -9,10 +9,10 @@ class WriteWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WriteWidgetState createState() => _WriteWidgetState();
+  WriteWidgetState createState() => WriteWidgetState();
 }
 
-class _WriteWidgetState extends State<WriteWidget> {
+class WriteWidgetState extends State<WriteWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,9 +30,7 @@ class _WriteWidgetState extends State<WriteWidget> {
                 child: Stack(alignment: Alignment.topRight, children: [
                   Painter(widget.controller, usePen: widget.pen),
                   Positioned(
-                      //alignment: Alignment.topRight,
                       right: 0,
-                      // height: 100,
                       child: Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: Row(children: [
@@ -41,10 +39,8 @@ class _WriteWidgetState extends State<WriteWidget> {
                                     widget.controller.eraseMode ? 1 : 0,
                                 child: IconButton(
                                     icon: const Icon(Icons.create),
-                                    tooltip: (widget.controller.eraseMode
-                                            ? 'Disable'
-                                            : 'Enable') +
-                                        ' eraser',
+                                    tooltip:
+                                        '${widget.controller.eraseMode ? 'Disable' : 'Enable'} eraser',
                                     onPressed: () {
                                       setState(() {
                                         widget.controller.eraseMode =

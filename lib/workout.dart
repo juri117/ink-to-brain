@@ -301,16 +301,22 @@ class _WorkoutPageState extends State<WorkoutPage> {
         questoinCont,
         Expanded(
             flex: 4,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                WriteWidget(
-                  _controller,
-                  pen: true,
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: generateButtonBar(_state))
+                Expanded(
+                    flex: 4,
+                    child: WriteWidget(
+                      _controller,
+                      pen: true,
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: generateButtonBar(_state)))
               ],
             )),
       ];
@@ -359,9 +365,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
           ),
           const SizedBox(
             width: 5,
+            height: 5,
           ),
           const SizedBox(
             width: 5,
+            height: 5,
           )
         ];
         break;
@@ -369,9 +377,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
         buttons = [
           const SizedBox(
             width: 5,
+            height: 5,
           ),
           const SizedBox(
             width: 5,
+            height: 5,
           ),
           OutlinedButton.icon(
             icon: const Icon(Icons.sentiment_satisfied),
