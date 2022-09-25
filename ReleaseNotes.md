@@ -19,11 +19,13 @@
 **new features**
 * [x] open with expanded window on windows
 * [x] use subfolder on nextcloud
+* [x] add reset button to words list to reset correct-counter
 
 **bug-fixes**
 * [x] clear text fields after saving new question
 * [x] fix start workout dialog on android phone screen
 * [x] fix overflow on workout screen for phone
+* [x] fix scroll bar on new word page
 
 ## 0.00.003
 

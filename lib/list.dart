@@ -46,6 +46,13 @@ class _ListPageState extends State<ListPage> {
     });
   }
 
+  Future<void> _resetWordScore(Word word) async {
+    await DatabaseCon().resetWordScore(word);
+    setState(() {
+      word.correctCount = 0;
+    });
+  }
+
   Future<void> _filterWords({String searchWord: ""}) async {
     setState(() {
       if (searchWord.isNotEmpty) {
@@ -154,127 +161,128 @@ class _ListPageState extends State<ListPage> {
             height: 5,
           ),
           Expanded(
-              child: Container(
-                  child: Scrollbar(
+              child: Scrollbar(
+                  controller: _scrollController,
+                  thumbVisibility: Platform.isWindows ||
+                      Platform.isLinux ||
+                      Platform.isMacOS,
+                  child: SingleChildScrollView(
                       controller: _scrollController,
-                      thumbVisibility: Platform.isWindows ||
-                          Platform.isLinux ||
-                          Platform.isMacOS,
-                      child: SingleChildScrollView(
-                          controller: _scrollController,
-                          child: LayoutBuilder(
-                              builder: (context, constraints) => ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                      minWidth: constraints.maxWidth),
-                                  child: DataTable(
-                                      columnSpacing: 5.0,
-                                      sortColumnIndex: _currentSortColumn,
-                                      sortAscending: _isAscending,
-                                      columns: <DataColumn>[
-                                        DataColumn(
-                                            label: const Text('added'),
-                                            onSort: (columnIndex, ascending) {
-                                              _sort(columnIndex, ascending);
+                      child: LayoutBuilder(
+                          builder: (context, constraints) => ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  minWidth: constraints.maxWidth),
+                              child: DataTable(
+                                  columnSpacing: 5.0,
+                                  sortColumnIndex: _currentSortColumn,
+                                  sortAscending: _isAscending,
+                                  columns: <DataColumn>[
+                                    DataColumn(
+                                        label: const Text('added'),
+                                        onSort: (columnIndex, ascending) {
+                                          _sort(columnIndex, ascending);
+                                        }),
+                                    const DataColumn(label: Text('question')),
+                                    DataColumn(
+                                        label: const Text('note'),
+                                        onSort: (columnIndex, ascending) {
+                                          _sort(columnIndex, ascending);
+                                        }),
+                                    const DataColumn(label: Text('answer')),
+                                    DataColumn(
+                                        label: const Text('note'),
+                                        onSort: (columnIndex, ascending) {
+                                          _sort(columnIndex, ascending);
+                                        }),
+                                    DataColumn(
+                                        label: const Text('correct'),
+                                        onSort: (columnIndex, ascending) {
+                                          _sort(columnIndex, ascending);
+                                        }),
+                                    DataColumn(
+                                        label: const Text('asked'),
+                                        onSort: (columnIndex, ascending) {
+                                          _sort(columnIndex, ascending);
+                                        }),
+                                    const DataColumn(label: Text(''))
+                                  ],
+                                  rows: List<DataRow>.generate(
+                                      filteredWords.length,
+                                      (int index) => DataRow(
+                                            color: MaterialStateProperty
+                                                .resolveWith<Color?>(
+                                                    (Set<MaterialState>
+                                                        states) {
+                                              if (states.contains(
+                                                  MaterialState.selected)) {
+                                                return Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                    .withOpacity(0.08);
+                                              }
+                                              if (index.isEven) {
+                                                return Colors.grey
+                                                    .withOpacity(0.1);
+                                              }
+                                              return null;
                                             }),
-                                        const DataColumn(
-                                            label: Text('question')),
-                                        DataColumn(
-                                            label: const Text('note'),
-                                            onSort: (columnIndex, ascending) {
-                                              _sort(columnIndex, ascending);
-                                            }),
-                                        const DataColumn(label: Text('answer')),
-                                        DataColumn(
-                                            label: const Text('note'),
-                                            onSort: (columnIndex, ascending) {
-                                              _sort(columnIndex, ascending);
-                                            }),
-                                        DataColumn(
-                                            label: const Text('correct'),
-                                            onSort: (columnIndex, ascending) {
-                                              _sort(columnIndex, ascending);
-                                            }),
-                                        DataColumn(
-                                            label: const Text('asked'),
-                                            onSort: (columnIndex, ascending) {
-                                              _sort(columnIndex, ascending);
-                                            }),
-                                        const DataColumn(label: Text(''))
-                                      ],
-                                      rows: List<DataRow>.generate(
-                                          filteredWords.length,
-                                          (int index) => DataRow(
-                                                color: MaterialStateProperty
-                                                    .resolveWith<Color?>(
-                                                        (Set<MaterialState>
-                                                            states) {
-                                                  if (states.contains(
-                                                      MaterialState.selected)) {
-                                                    return Theme.of(context)
-                                                        .colorScheme
-                                                        .primary
-                                                        .withOpacity(0.08);
-                                                  }
-                                                  if (index.isEven) {
-                                                    return Colors.grey
-                                                        .withOpacity(0.1);
-                                                  }
-                                                  return null;
-                                                }),
-                                                cells: <DataCell>[
-                                                  DataCell(AspectRatio(
-                                                      aspectRatio: 3.0,
-                                                      child: Text(filteredWords[
-                                                              index]
-                                                          .getInsertDateStr()))),
-                                                  DataCell(SizedBox(
-                                                      width: 120,
-                                                      child: AspectRatio(
-                                                          aspectRatio: 3.0,
-                                                          child: Image.memory(
-                                                              filteredWords[
-                                                                      index]
-                                                                  .questionPix)))),
-                                                  DataCell(Text(
-                                                      filteredWords[index]
-                                                          .questionTxt)),
-                                                  DataCell(SizedBox(
-                                                      width: 120,
-                                                      child: AspectRatio(
-                                                          aspectRatio: 3.0,
-                                                          child: Image.memory(
-                                                              filteredWords[
-                                                                      index]
-                                                                  .answerPix)))),
-                                                  DataCell(Text(
-                                                      filteredWords[index]
-                                                          .answerTxt)),
-                                                  DataCell(Text(
-                                                      "${filteredWords[index].correctCount}")),
-                                                  DataCell(Text(filteredWords[
+                                            cells: <DataCell>[
+                                              DataCell(AspectRatio(
+                                                  aspectRatio: 3.0,
+                                                  child: Text(filteredWords[
                                                           index]
-                                                      .getlastAskedDateStr())),
-                                                  DataCell(
-                                                    IconButton(
-                                                      icon: const Icon(
-                                                          Icons.edit),
-                                                      tooltip: 'edit',
-                                                      onPressed: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  NewWordPage(
-                                                                      editId: filteredWords[
-                                                                              index]
-                                                                          .id)),
-                                                        ).then((value) =>
-                                                            _loadWords());
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              )))))))))
+                                                      .getInsertDateStr()))),
+                                              DataCell(SizedBox(
+                                                  width: 120,
+                                                  child: AspectRatio(
+                                                      aspectRatio: 3.0,
+                                                      child: Image.memory(
+                                                          filteredWords[index]
+                                                              .questionPix)))),
+                                              DataCell(Text(filteredWords[index]
+                                                  .questionTxt)),
+                                              DataCell(SizedBox(
+                                                  width: 120,
+                                                  child: AspectRatio(
+                                                      aspectRatio: 3.0,
+                                                      child: Image.memory(
+                                                          filteredWords[index]
+                                                              .answerPix)))),
+                                              DataCell(Text(filteredWords[index]
+                                                  .answerTxt)),
+                                              DataCell(Text(
+                                                  "${filteredWords[index].correctCount}")),
+                                              DataCell(Text(filteredWords[index]
+                                                  .getlastAskedDateStr())),
+                                              DataCell(Row(children: [
+                                                IconButton(
+                                                  icon: const Icon(Icons
+                                                      .restore_page_outlined),
+                                                  tooltip: 'reset score',
+                                                  onPressed: () {
+                                                    _resetWordScore(
+                                                        filteredWords[index]);
+                                                  },
+                                                ),
+                                                IconButton(
+                                                  icon: const Icon(Icons.edit),
+                                                  tooltip: 'edit',
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              NewWordPage(
+                                                                  editId: filteredWords[
+                                                                          index]
+                                                                      .id)),
+                                                    ).then((value) =>
+                                                        _loadWords());
+                                                  },
+                                                ),
+                                              ])),
+                                            ],
+                                          ))))))))
         ]));
   }
 }

@@ -121,6 +121,16 @@ class DatabaseCon {
     );
   }
 
+  Future<void> resetWordScore(Word word) async {
+    Map<String, dynamic> map = {'correctCount': 0};
+    await con?.update(
+      'words',
+      map,
+      where: 'id = ?',
+      whereArgs: [word.id],
+    );
+  }
+
   Future<void> deleteWord(int id) async {
     await con?.delete('words', where: 'id = $id');
   }

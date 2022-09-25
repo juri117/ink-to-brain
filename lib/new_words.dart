@@ -32,6 +32,7 @@ class _NewWordPageState extends State<NewWordPage>
   final TextEditingController _answTxtControl = TextEditingController();
 
   final ScrollController _scrollControl = ScrollController();
+  final ScrollController _scrollControl2 = ScrollController();
 
   Word editWord = Word(
       id: -1,
@@ -316,12 +317,12 @@ class _NewWordPageState extends State<NewWordPage>
                 Expanded(
                     flex: 4,
                     child: Scrollbar(
-                        controller: _scrollControl,
+                        controller: _scrollControl2,
                         thumbVisibility: Platform.isWindows ||
                             Platform.isLinux ||
                             Platform.isMacOS,
                         child: SingleChildScrollView(
-                            controller: _scrollControl,
+                            controller: _scrollControl2,
                             child: Column(children: [
                               WriteWidget(_answPaintControl, pen: true),
                               Padding(
