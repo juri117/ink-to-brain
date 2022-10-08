@@ -24,11 +24,14 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
   final nextcloudUserController = TextEditingController();
   final nextcloudPwController = TextEditingController();
 
+  bool useTextIfExists = false;
+
   Future<void> _store() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("nextcloud_host", nextcloudHostController.text);
     prefs.setString("nextcloud_user", nextcloudUserController.text);
     prefs.setString("nextcloud_pw", nextcloudPwController.text);
+    prefs.setBool("use_text_if_exists", useTextIfExists);
   }
 
   @override
@@ -44,6 +47,7 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
       nextcloudHostController.text = prefs.getString('nextcloud_host') ?? "";
       nextcloudUserController.text = prefs.getString('nextcloud_user') ?? "";
       nextcloudPwController.text = prefs.getString('nextcloud_pw') ?? "";
+      useTextIfExists = prefs.getBool('use_text_if_exists') ?? false;
     });
   }
 
@@ -132,6 +136,17 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                   ),
                 ],
               )),
+          ListTile(
+              title: const Text("misc."),
+              subtitle: CheckboxListTile(
+                  title: const Text("use text if existing (,not the doodle)"),
+                  value: useTextIfExists,
+                  onChanged: (bool? value) {
+                    if (!mounted) return;
+                    setState(() {
+                      useTextIfExists = !useTextIfExists;
+                    });
+                  }))
         ])))
       ]),
       floatingActionButton: FloatingActionButton(

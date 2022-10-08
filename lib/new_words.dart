@@ -18,10 +18,10 @@ class NewWordPage extends StatefulWidget {
   const NewWordPage({this.editId, Key? key}) : super(key: key);
 
   @override
-  _NewWordPageState createState() => _NewWordPageState();
+  NewWordPageState createState() => NewWordPageState();
 }
 
-class _NewWordPageState extends State<NewWordPage>
+class NewWordPageState extends State<NewWordPage>
     with SingleTickerProviderStateMixin {
   int tabIndex = 0;
 

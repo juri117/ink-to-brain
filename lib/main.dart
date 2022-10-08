@@ -10,7 +10,7 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/settings.dart';
 import 'package:ink2brain/theme.dart';
-import 'package:ink2brain/utils/nextcloude.dart';
+import 'package:ink2brain/utils/nextcloud.dart';
 import 'package:ink2brain/workout.dart';
 
 void main() async {
@@ -37,10 +37,10 @@ class MainFrame extends StatefulWidget {
   const MainFrame({Key? key}) : super(key: key);
 
   @override
-  _MainFrameState createState() => _MainFrameState();
+  MainFrameState createState() => MainFrameState();
 }
 
-class _MainFrameState extends State<MainFrame> {
+class MainFrameState extends State<MainFrame> {
   // Widget? content;
 
   final ScrollController _scrollController = ScrollController();
@@ -66,19 +66,19 @@ class _MainFrameState extends State<MainFrame> {
   }
 
   Future<void> _startWorkout() async {
-    bool legacyVal = false;
-    final ScrollController _scrollController = ScrollController();
+    // bool legacyVal = false;
+    final ScrollController dialogScrollController = ScrollController();
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text('start workout...'),
             content: Scrollbar(
-                controller: _scrollController,
+                controller: dialogScrollController,
                 thumbVisibility:
                     Platform.isWindows || Platform.isLinux || Platform.isMacOS,
                 child: SingleChildScrollView(
-                    controller: _scrollController,
+                    controller: dialogScrollController,
                     child: SizedBox(
                         //height: 200,
                         child: Column(children: [
@@ -210,7 +210,7 @@ class _MainFrameState extends State<MainFrame> {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.settings),
-                  tooltip: 'sync.',
+                  tooltip: 'settings',
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -220,7 +220,7 @@ class _MainFrameState extends State<MainFrame> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.sync),
-                  tooltip: 'settings',
+                  tooltip: 'sync.',
                   onPressed: () {
                     showDialog<bool>(
                         context: context,
@@ -233,7 +233,7 @@ class _MainFrameState extends State<MainFrame> {
             )),
         body: Scrollbar(
           controller: _scrollController,
-          isAlwaysShown:
+          thumbVisibility:
               Platform.isWindows || Platform.isLinux || Platform.isMacOS,
           child: SingleChildScrollView(
               controller: _scrollController,
@@ -352,10 +352,10 @@ class SyncDialog extends StatefulWidget {
   const SyncDialog({Key? key}) : super(key: key);
 
   @override
-  _SyncDialogStat createState() => _SyncDialogStat();
+  SyncDialogStat createState() => SyncDialogStat();
 }
 
-class _SyncDialogStat extends State<SyncDialog> {
+class SyncDialogStat extends State<SyncDialog> {
   String errorMessage = "";
 
   @override
@@ -401,7 +401,7 @@ class _SyncDialogStat extends State<SyncDialog> {
           SizedBox(
             width: 10,
           ),
-          Text("sync. database with nextcloude", style: TextStyle(fontSize: 14))
+          Text("sync. database with nextcloud", style: TextStyle(fontSize: 14))
         ]),
         content: SizedBox(
             height: (MediaQuery.of(context).size.height),
