@@ -20,7 +20,7 @@
 * [x] open with expanded window on windows
 * [x] use subfolder on nextcloud
 * [x] add reset button to words list to reset correct-counter
-* [ ] add option to only use text if it exists (not the doodle), this would save a lot of database space
+* [x] add option to only use text if it exists (not the doodle), this would save a lot of database space
 * [ ] check database update state on startup
 
 **bug-fixes**

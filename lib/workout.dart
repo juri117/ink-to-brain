@@ -8,6 +8,7 @@ import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/widgets/write_widget.dart';
 import 'package:ink2brain/widgets/painter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum WorkoutState { ask, answer, done, overview }
 
@@ -39,10 +40,18 @@ class _WorkoutPageState extends State<WorkoutPage> {
   int correctCount = 0;
   int skipCount = 0;
 
+  bool useTextOverImage = false;
+
   @override
   void initState() {
     super.initState();
+    _loadPrefs();
     _loadWords();
+  }
+
+  Future<void> _loadPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    useTextOverImage = prefs.getBool('use_text_if_exists') ?? false;
   }
 
   Future<void> _loadWords() async {
@@ -192,7 +201,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget questoinCont = Expanded(
+    Widget questionCont = Expanded(
         flex: 2,
         child: Padding(
             padding: const EdgeInsets.all(5),
@@ -217,7 +226,17 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                   aspectRatio: 3,
                                   child: currentWord.id <= 0
                                       ? const Center(child: Text("loading..."))
-                                      : Image.memory(currentWord.questionPix))),
+                                      : (currentWord.questionTxt != "" &&
+                                              useTextOverImage)
+                                          ? FittedBox(
+                                              fit: BoxFit.contain,
+                                              child: Text(
+                                                currentWord.questionTxt,
+                                                style: const TextStyle(
+                                                    fontSize: 25),
+                                              ))
+                                          : Image.memory(
+                                              currentWord.questionPix))),
                         )),
                     const SizedBox(width: 10),
                     Icon(Icons.compare_arrows_outlined,
@@ -279,7 +298,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 ))));
 
     List<Widget> mainRow = [
-      questoinCont,
+      questionCont,
       Expanded(
         flex: 4,
         child: WriteWidget(
@@ -298,7 +317,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         MediaQuery.of(context).orientation == Orientation.landscape &&
         !Platform.isWindows) {
       mainRow = [
-        questoinCont,
+        questionCont,
         Expanded(
             flex: 4,
             child: Flex(
@@ -387,7 +406,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
             icon: const Icon(Icons.sentiment_satisfied),
             label: const Text('wrong :('),
             style: OutlinedButton.styleFrom(
-                primary: Colors.red, backgroundColor: const Color(0xFFFFE4E4)),
+                foregroundColor: Colors.red,
+                backgroundColor: const Color(0xFFFFE4E4)),
             onPressed: () {
               _save(currentWord, false);
             },
@@ -396,7 +416,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             icon: const Icon(Icons.emoji_emotions_outlined),
             label: const Text('correct'),
             style: OutlinedButton.styleFrom(
-                primary: Colors.green,
+                foregroundColor: Colors.green,
                 backgroundColor: const Color(0xFFE4FFE6)),
             onPressed: () {
               _save(currentWord, true);
