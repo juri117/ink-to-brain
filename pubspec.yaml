@@ -51,6 +51,7 @@ dependencies:
   flutter_tesseract_ocr: ^0.4.18
   desktop_window: ^0.4.0
   flex_color_scheme: ^6.0.1
+  sqflite_common: ^2.3.0
 
 flutter_icons:
   android: true

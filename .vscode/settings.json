@@ -3,6 +3,8 @@
         "airplanemode",
         "AUTOINCREMENT",
         "DATETIME",
-        "nextcloud"
+        "nextcloud",
+        "sqflite",
+        "sqlite"
     ]
 }

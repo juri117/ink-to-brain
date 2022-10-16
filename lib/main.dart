@@ -15,6 +15,8 @@ import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/workout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const String versionName = "0.00.004";
+
 void main() async {
   await DatabaseCon().openCon();
   // await ncUploadFile();
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ink to brain',
+      title: "ink to brain",
       home: const MainFrame(),
       theme: FlexThemeData.light(
         colors: myFlexScheme.light,
@@ -223,7 +225,22 @@ class MainFrameState extends State<MainFrame> {
             preferredSize:
                 const Size.fromHeight(35.0), // here the desired height
             child: AppBar(
-              title: const Text('ink to brain'),
+              title:
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text("ink to brain"),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "v: $versionName",
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primaryContainer
+                          .withOpacity(0.5)),
+                )
+              ]),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.settings),
