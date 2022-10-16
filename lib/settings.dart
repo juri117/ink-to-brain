@@ -139,7 +139,7 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
           ListTile(
               title: const Text("misc."),
               subtitle: CheckboxListTile(
-                  title: const Text("use text if existing (,not the doodle)"),
+                  title: const Text("use text if existing (not the doodle)"),
                   value: useTextIfExists,
                   onChanged: (bool? value) {
                     if (!mounted) return;

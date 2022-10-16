@@ -6,6 +6,7 @@ import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
+import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/widgets/write_widget.dart';
 import 'package:ink2brain/widgets/painter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -220,23 +221,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColorLight,
                           ),
-                          child: Align(
-                              alignment: Alignment.center,
-                              child: AspectRatio(
-                                  aspectRatio: 3,
-                                  child: currentWord.id <= 0
-                                      ? const Center(child: Text("loading..."))
-                                      : (currentWord.questionTxt != "" &&
-                                              useTextOverImage)
-                                          ? FittedBox(
-                                              fit: BoxFit.contain,
-                                              child: Text(
-                                                currentWord.questionTxt,
-                                                style: const TextStyle(
-                                                    fontSize: 25),
-                                              ))
-                                          : Image.memory(
-                                              currentWord.questionPix))),
+                          child: WordDisplay(currentWord.questionPix,
+                              currentWord.questionTxt, useTextOverImage),
                         )),
                     const SizedBox(width: 10),
                     Icon(Icons.compare_arrows_outlined,
@@ -248,28 +234,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
                             decoration: BoxDecoration(
                               color: Theme.of(context).primaryColorLight,
                             ),
-                            child: Align(
-                                alignment: Alignment.center,
-                                child: AspectRatio(
-                                    aspectRatio: 3,
-                                    child: currentWord.id <= 0 ||
-                                            _state == WorkoutState.ask
-                                        ? Center(
-                                            child: Icon(Icons.visibility_off,
-                                                size: 40,
-                                                color: Theme.of(context)
-                                                    .primaryColor))
-                                        : (currentWord.answerTxt != "" &&
-                                                useTextOverImage)
-                                            ? FittedBox(
-                                                fit: BoxFit.contain,
-                                                child: Text(
-                                                  currentWord.answerTxt,
-                                                  style: const TextStyle(
-                                                      fontSize: 25),
-                                                ))
-                                            : Image.memory(
-                                                currentWord.answerPix))))),
+                            child: WordDisplay(currentWord.answerPix,
+                                currentWord.answerTxt, useTextOverImage,
+                                isVisible: currentWord.id <= 0 ||
+                                    _state == WorkoutState.ask))),
                     //const SizedBox(width: 10),
                     Container(
                         padding: const EdgeInsets.all(5),

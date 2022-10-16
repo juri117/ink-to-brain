@@ -11,6 +11,7 @@
   * [ ] db: log learning sessions
 * [ ] just in time download of tesseract tesserdata
 * [ ] auto next-cloud sync on startup and after session
+* [ ] check database update state on startup
 
 **bug-fixes**
 
@@ -21,7 +22,7 @@
 * [x] use subfolder on nextcloud
 * [x] add reset button to words list to reset correct-counter
 * [x] add option to only use text if it exists (not the doodle), this would save a lot of database space
-* [ ] check database update state on startup
+* [x] rework question table page to be more performant with huge database
 
 **bug-fixes**
 * [x] clear text fields after saving new question

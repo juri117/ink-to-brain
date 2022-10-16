@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 import 'dart:io';
 import 'package:desktop_window/desktop_window.dart';
 
@@ -11,7 +10,9 @@ import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/settings.dart';
 import 'package:ink2brain/theme.dart';
 import 'package:ink2brain/utils/nextcloud.dart';
+import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/workout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   await DatabaseCon().openCon();
@@ -49,10 +50,18 @@ class MainFrameState extends State<MainFrame> {
       Stat(totalCount: -1, activeCount: -1, learnedCount: -1, todayCount: -1);
   List<Word> badWords = [];
 
+  bool useTextOverImage = false;
+
   @override
   void initState() {
     super.initState();
+    _loadPrefs();
     _loadData();
+  }
+
+  Future<void> _loadPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    useTextOverImage = prefs.getBool('use_text_if_exists') ?? false;
   }
 
   Future<void> _loadData() async {
@@ -183,20 +192,16 @@ class MainFrameState extends State<MainFrame> {
                   const SizedBox(width: 10),
                   Expanded(
                       flex: 3,
-                      child: SizedBox(
-                          child: AspectRatio(
-                              aspectRatio: 3,
-                              child: Image.memory(w.questionPix)))),
+                      child: WordDisplay(
+                          w.questionPix, w.questionTxt, useTextOverImage)),
                   const SizedBox(width: 10),
                   Icon(Icons.compare_arrows_outlined,
                       size: 40, color: Theme.of(context).primaryColor),
                   const SizedBox(width: 10),
                   Expanded(
                       flex: 3,
-                      child: SizedBox(
-                          child: AspectRatio(
-                              aspectRatio: 3,
-                              child: Image.memory(w.answerPix))))
+                      child: WordDisplay(
+                          w.answerPix, w.answerTxt, useTextOverImage))
                 ],
               ))));
     }

@@ -39,7 +39,7 @@ class Word {
     return DateFormat('dd.MM.yyyy').format(insertTs);
   }
 
-  String getlastAskedDateStr() {
+  String getLastAskedDateStr() {
     if (lastAskedTs == null) return "never";
     return DateFormat('dd.MM.yyyy').format(lastAskedTs!);
   }
