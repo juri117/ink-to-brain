@@ -21,6 +21,7 @@ mkdir release/ink-to-brain-win-$VERSION
 cp build/windows/runner/Release/* release/ink-to-brain-win-$VERSION/ -r
 cp README.md release/ink-to-brain-win-$VERSION/
 cp ReleaseNotes.md release/ink-to-brain-win-$VERSION/
+cp LICENSE release/ink-to-brain-win-$VERSION/
 cp scripts/data/run.sh release/ink-to-brain-win-$VERSION/
 if ! [[ -f "scripts/data/sqlite3.dll" ]]; then
     echo "downloading sqlite3.dll"
