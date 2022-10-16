@@ -259,8 +259,17 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                                 size: 40,
                                                 color: Theme.of(context)
                                                     .primaryColor))
-                                        : Image.memory(
-                                            currentWord.answerPix))))),
+                                        : (currentWord.answerTxt != "" &&
+                                                useTextOverImage)
+                                            ? FittedBox(
+                                                fit: BoxFit.contain,
+                                                child: Text(
+                                                  currentWord.answerTxt,
+                                                  style: const TextStyle(
+                                                      fontSize: 25),
+                                                ))
+                                            : Image.memory(
+                                                currentWord.answerPix))))),
                     //const SizedBox(width: 10),
                     Container(
                         padding: const EdgeInsets.all(5),
