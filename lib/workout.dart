@@ -209,7 +209,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             child: Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.secondaryContainer,
                     border: Border.all(color: Colors.transparent, width: 1.5),
                     borderRadius: const BorderRadius.all(Radius.circular(3))),
                 child: Row(
@@ -219,7 +219,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         flex: 3,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColorLight,
+                            color:
+                                Theme.of(context).colorScheme.tertiaryContainer,
                           ),
                           child: WordDisplay(currentWord.questionPix,
                               currentWord.questionTxt, useTextOverImage),
@@ -232,7 +233,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         flex: 3,
                         child: Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColorLight,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .tertiaryContainer,
                             ),
                             child: WordDisplay(currentWord.answerPix,
                                 currentWord.answerTxt, useTextOverImage,

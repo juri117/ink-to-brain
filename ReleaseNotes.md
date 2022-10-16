@@ -23,6 +23,7 @@
 * [x] add reset button to words list to reset correct-counter
 * [x] add option to only use text if it exists (not the doodle), this would save a lot of database space
 * [x] rework question table page to be more performant with huge database
+* [x] rework theme integration
 
 **bug-fixes**
 * [x] clear text fields after saving new question

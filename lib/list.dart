@@ -25,33 +25,22 @@ class _ListPageState extends State<ListPage> {
     _loadWords();
   }
 
-  Future<void> _loadWords({String searchWord: ""}) async {
-    List<Word> newWords = [];
-    if (searchWord.isNotEmpty) {
-      newWords = await DatabaseCon().words(
-          orderBy: "insertTs",
-          where:
-              "questionTxt LIKE '%$searchWord%' OR answerTxt LIKE '%$searchWord%'");
-    } else {
-      newWords = await DatabaseCon().words(orderBy: "insertTs");
-    }
+  Future<void> _loadWords() async {
+    List<Word> newWords = await DatabaseCon().words(orderBy: "insertTs");
     setState(() {
       //newWords.shuffle();
       tableRow = WordTableRow(newWords, _resetWordScore, _editWord);
       tableRow._filter(_searchTxtControl.text);
       tableRow._sort(prevSort, _sortAscending);
-
-      //words = newWords;
-      //filteredWords = words;
-      //_sort(_currentSortColumn, _isAscending);
     });
   }
 
   Future<void> _resetWordScore(Word word) async {
     await DatabaseCon().resetWordScore(word);
-    setState(() {
-      word.correctCount = 0;
-    });
+    _loadWords();
+    //setState(() {
+    //  word.correctCount = 0;
+    //});
   }
 
   void _sort<T>(Comparable<T> Function(Word d) getField, int columnIndex,
@@ -207,14 +196,18 @@ class WordTableRow extends DataTableSource {
           icon: const Icon(Icons.restore_page_outlined),
           tooltip: 'reset score',
           onPressed: () {
-            resetWordScore ?? (filteredData[index]);
+            if (resetWordScore != null) {
+              resetWordScore!(filteredData[index]);
+            }
           },
         ),
         IconButton(
           icon: const Icon(Icons.edit),
           tooltip: 'edit',
           onPressed: () {
-            editWord ?? (filteredData[index]);
+            if (editWord != null) {
+              editWord!(filteredData[index]);
+            }
           },
         ),
       ]))

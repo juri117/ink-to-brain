@@ -7,6 +7,7 @@ import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
 import 'package:ink2brain/widgets/painter.dart';
+import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/widgets/write_widget.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -184,29 +185,15 @@ class NewWordPageState extends State<NewWordPage>
         Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       editWord.id <= 0
           ? const Text("")
-          : tabIndex == 0
-              ? Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColorLight,
-                  ),
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: AspectRatio(
-                          aspectRatio: 3,
-                          child: Image.memory(editWord.questionPix))),
-                )
-              : Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColorLight,
-                  ),
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: AspectRatio(
-                          aspectRatio: 3,
-                          child: Image.memory(editWord.answerPix))),
-                ),
+          : Container(
+              height: 60,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+              ),
+              child: (tabIndex == 0)
+                  ? WordDisplay(editWord.questionPix, "...", false)
+                  : WordDisplay(editWord.answerPix, "...", false),
+            ),
       tabIndex == 0
           ? OutlinedButton.icon(
               icon: const Icon(Icons.school),
@@ -230,7 +217,7 @@ class NewWordPageState extends State<NewWordPage>
           ? const Text('')
           : OutlinedButton.icon(
               style: OutlinedButton.styleFrom(
-                  primary: Colors.red,
+                  foregroundColor: Colors.red,
                   backgroundColor: const Color(0xFFFFE4E4)),
               icon: const Icon(Icons.delete),
               label: const Text('delete'),

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:desktop_window/desktop_window.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 import 'package:flutter/material.dart';
 import 'package:ink2brain/database_con.dart';
@@ -30,7 +31,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'ink to brain', home: MainFrame(), theme: myTheme);
+      title: 'ink to brain',
+      home: const MainFrame(),
+      theme: FlexThemeData.light(
+        colors: myFlexScheme.light,
+        //appBarElevation: 0.5,
+      ),
+      darkTheme: FlexThemeData.dark(
+        colors: myFlexScheme.dark,
+      ),
+      themeMode: themeMode,
+    );
   }
 }
 
@@ -175,14 +186,15 @@ class MainFrameState extends State<MainFrame> {
     List<Widget> badWordWidgetList = [];
     for (final w in badWords) {
       badWordWidgetList.add(Container(
-          padding: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
+          padding:
+              const EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
           width: MediaQuery.of(context).orientation == Orientation.landscape
               ? MediaQuery.of(context).size.width * 0.5
               : MediaQuery.of(context).size.width,
           child: Container(
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
+                  color: Theme.of(context).colorScheme.secondaryContainer,
                   border: Border.all(color: Colors.transparent, width: 1.5),
                   borderRadius: const BorderRadius.all(Radius.circular(3))),
               child: Row(
@@ -250,7 +262,9 @@ class MainFrameState extends State<MainFrame> {
                       Container(
                           padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
                               border: Border.all(
                                   color: Colors.transparent, width: 1.5),
                               borderRadius:
@@ -266,45 +280,45 @@ class MainFrameState extends State<MainFrame> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Column(children: [
-                                    Text("total"),
+                                    const Text("total"),
                                     Text("${stat.totalCount}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold))
                                   ]),
                                   Column(children: [
-                                    Text("mastered"),
+                                    const Text("mastered"),
                                     Text("${stat.learnedCount}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold))
                                   ]),
                                   Column(children: [
-                                    Text("new"),
+                                    const Text("new"),
                                     Text("${stat.activeCount}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold))
                                   ]),
                                   Column(children: [
-                                    Text("practiced today"),
+                                    const Text("practiced today"),
                                     Text("${stat.todayCount}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold))
                                   ]),
                                 ],
                               )
                             ],
                           )),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             OutlinedButton.icon(
-                              icon: Icon(Icons.fitness_center),
+                              icon: const Icon(Icons.fitness_center),
                               label: Container(
                                   width: 150,
-                                  padding: EdgeInsets.all(20),
-                                  child: Text('start workout')),
+                                  padding: const EdgeInsets.all(20),
+                                  child: const Text('start workout')),
                               onPressed: () {
                                 _startWorkout();
                               },
@@ -313,11 +327,11 @@ class MainFrameState extends State<MainFrame> {
                               height: 20,
                             ),
                             OutlinedButton.icon(
-                              icon: Icon(Icons.list),
+                              icon: const Icon(Icons.list),
                               label: Container(
-                                  padding: EdgeInsets.all(20),
+                                  padding: const EdgeInsets.all(20),
                                   width: 150,
-                                  child: Text('list of questions')),
+                                  child: const Text('all questions')),
                               onPressed: () {
                                 Navigator.push(
                                   context,

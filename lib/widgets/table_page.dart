@@ -24,8 +24,7 @@ class _TablePageState extends State<TablePage> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: Flexible(
-          child: SingleChildScrollView(
+      child: SingleChildScrollView(
         child: (widget.tableRow.rowCount <= 0)
             ? Center(
                 child: Column(children: [
@@ -61,7 +60,7 @@ class _TablePageState extends State<TablePage> {
                   sortColumnIndex: widget.sortIndex,
                   sortAscending: widget.sortAsc,
                 )),
-      )),
+      ),
     );
   }
 }
