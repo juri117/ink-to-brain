@@ -65,17 +65,17 @@ class _PainterState extends State<Painter> {
         );
       } else {
         child = GestureDetector(
-          child: child,
           onPanStart: _onPanStart,
           onPanUpdate: _onPanUpdate,
           onPanEnd: _onPanEnd,
+          child: child,
         );
       }
     }
     return SizedBox(
-      child: child,
       width: double.infinity,
       height: double.infinity,
+      child: child,
     );
   }
 

@@ -4,7 +4,7 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/widgets/table_page.dart';
 
-final String TAG = "fleet_overview_page";
+const String TAG = "fleet_overview_page";
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -181,13 +181,17 @@ class WordTableRow extends DataTableSource {
           width: 120,
           child: AspectRatio(
               aspectRatio: 3.0,
-              child: Image.memory(filteredData[index].questionPix)))),
+              child: (filteredData[index].questionPix != null)
+                  ? Image.memory(filteredData[index].questionPix!)
+                  : const SizedBox()))),
       DataCell(Text(filteredData[index].questionTxt)),
       DataCell(SizedBox(
           width: 120,
           child: AspectRatio(
               aspectRatio: 3.0,
-              child: Image.memory(filteredData[index].answerPix)))),
+              child: (filteredData[index].answerPix != null)
+                  ? Image.memory(filteredData[index].answerPix!)
+                  : const SizedBox()))),
       DataCell(Text(filteredData[index].answerTxt)),
       DataCell(Text("${filteredData[index].correctCount}")),
       DataCell(Text(filteredData[index].getLastAskedDateStr())),

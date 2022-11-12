@@ -15,7 +15,7 @@ import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/workout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const String versionName = "0.00.004";
+const String versionName = "0.00.005rc1";
 
 void main() async {
   await DatabaseCon().openCon();
@@ -106,7 +106,7 @@ class MainFrameState extends State<MainFrame> {
                         child: Column(children: [
                       Container(
                           width: 220,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.baby_changing_station),
                             label: const Text('5 questions'),
@@ -117,7 +117,7 @@ class MainFrameState extends State<MainFrame> {
                           )),
                       Container(
                           width: 220,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.school),
                             label: const Text('10 questions'),
@@ -128,7 +128,7 @@ class MainFrameState extends State<MainFrame> {
                           )),
                       Container(
                           width: 220,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.fitness_center),
                             label: const Text('15 questions'),
@@ -139,7 +139,7 @@ class MainFrameState extends State<MainFrame> {
                           )),
                       Container(
                           width: 220,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.airplanemode_on),
                             label: const Text('all questions'),
@@ -150,7 +150,7 @@ class MainFrameState extends State<MainFrame> {
                           )),
                       Container(
                           width: 220,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.bolt_rounded),
                             label: const Text('all questions (legacy)'),
@@ -248,7 +248,7 @@ class MainFrameState extends State<MainFrame> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Settings()),
+                      MaterialPageRoute(builder: (context) => const Settings()),
                     ).then((value) => _loadData());
                   },
                 ),
@@ -259,7 +259,7 @@ class MainFrameState extends State<MainFrame> {
                     showDialog<bool>(
                         context: context,
                         builder: (BuildContext context) {
-                          return SyncDialog();
+                          return const SyncDialog();
                         }).then((value) => _loadData());
                   },
                 ),
@@ -353,7 +353,7 @@ class MainFrameState extends State<MainFrame> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ListPage()),
+                                      builder: (context) => const ListPage()),
                                 ).then((value) => _loadData());
                               },
                             ),
@@ -361,16 +361,17 @@ class MainFrameState extends State<MainFrame> {
                               height: 20,
                             ),
                             OutlinedButton.icon(
-                              icon: Icon(Icons.library_add_outlined),
+                              icon: const Icon(Icons.library_add_outlined),
                               label: Container(
                                   width: 150,
-                                  padding: EdgeInsets.all(20),
-                                  child: Text('add questions')),
+                                  padding: const EdgeInsets.all(20),
+                                  child: const Text('add questions')),
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NewWordPage()),
+                                      builder: (context) =>
+                                          const NewWordPage()),
                                 ).then((value) => _loadData());
                               },
                             )
@@ -426,7 +427,7 @@ class SyncDialogStat extends State<SyncDialog> {
   @override
   Widget build(BuildContext context) {
     Widget doneButton = OutlinedButton(
-        child: Text("done"),
+        child: const Text("done"),
         onPressed: () {
           Navigator.pop(context);
         });
@@ -447,31 +448,31 @@ class SyncDialogStat extends State<SyncDialog> {
               children: <Widget>[
                 Wrap(children: <Widget>[
                   OutlinedButton.icon(
-                    icon: Icon(Icons.download),
+                    icon: const Icon(Icons.download),
                     label: Container(
                         //width: 150,
-                        padding: EdgeInsets.all(5),
-                        child: Text('download, overwrite db')),
+                        padding: const EdgeInsets.all(5),
+                        child: const Text('download, overwrite db')),
                     onPressed: () {
                       _downloadDb();
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                     width: 10,
                   ),
                   OutlinedButton.icon(
-                    icon: Icon(Icons.upload),
+                    icon: const Icon(Icons.upload),
                     label: Container(
                         //width: 150,
-                        padding: EdgeInsets.all(5),
-                        child: Text('upload local db')),
+                        padding: const EdgeInsets.all(5),
+                        child: const Text('upload local db')),
                     onPressed: () {
                       _uploadDb();
                     },
                   ),
                 ]),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(errorMessage,

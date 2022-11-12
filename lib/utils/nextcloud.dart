@@ -73,8 +73,8 @@ Future<String> ncDownloadFile() async {
 
     final client = await ncGetClient();
     if (client == null) {
-      print("no nextcloude host defined");
-      return "no nextcloude host defined";
+      print("no nextcloud host defined");
+      return "no nextcloud host defined";
     }
 
     File(dbPath).writeAsBytesSync(

@@ -15,6 +15,12 @@
 
 **bug-fixes**
 
+## 0.00.005 ...
+
+**new features**
+* [x] only store doodle to database if it is not empty
+* [ ] 
+
 ## 0.00.004
 
 **new features**

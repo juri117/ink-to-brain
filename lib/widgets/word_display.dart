@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 const String TAG = "TablePage";
 
 class WordDisplay extends StatefulWidget {
-  final Uint8List wordPix;
+  final Uint8List? wordPix;
   final String wordTxt;
   final bool showTxtIfPresent;
   final bool isVisible;
@@ -33,8 +33,10 @@ class _WordDisplayState extends State<WordDisplay> {
                           widget.wordTxt,
                           style: const TextStyle(fontSize: 25),
                         ))
-                    : (widget.wordPix.isNotEmpty)
-                        ? Image.memory(widget.wordPix)
-                        : const Text("loading...")));
+                    : (widget.wordPix != null)
+                        ? ((widget.wordPix!.isNotEmpty)
+                            ? Image.memory(widget.wordPix!)
+                            : const Text("loading..."))
+                        : const Text("empty")));
   }
 }

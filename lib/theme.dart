@@ -10,22 +10,22 @@ bool useDarkTheme = false;
 
 ThemeMode themeMode = (useDarkTheme) ? ThemeMode.dark : ThemeMode.light;
 
-Color primary = Color(0xFF70BA71);
-Color primaryContainer = Color(0xFFFFCD59);
-Color secondary = Color(0xFF336633);
-Color secondaryContainer = Color(0xFFFFE19D);
-Color tertiary = Color(0xFF000000);
-Color tertiaryContainer = Color(0xFFFFFFFF);
+Color primary = const Color(0xFF70BA71);
+Color primaryContainer = const Color(0xFFFFCD59);
+Color secondary = const Color(0xFF336633);
+Color secondaryContainer = const Color(0xFFFFE19D);
+Color tertiary = const Color(0xFF000000);
+Color tertiaryContainer = const Color(0xFFFFFFFF);
 
-Color darkPrimary = Color(0xffC484FF);
-Color darkPrimaryContainer = Color(0xFF373737);
-Color darkSecondary = Color(0xFF00DEC0);
-Color darkSecondaryContainer = Color(0xFF252525);
-Color darkTertiary = Color(0xFFFFB97D);
-Color darkTertiaryContainer = Color(0xFF505050);
+Color darkPrimary = const Color(0xffC484FF);
+Color darkPrimaryContainer = const Color(0xFF373737);
+Color darkSecondary = const Color(0xFF00DEC0);
+Color darkSecondaryContainer = const Color(0xFF252525);
+Color darkTertiary = const Color(0xFFFFB97D);
+Color darkTertiaryContainer = const Color(0xFF505050);
 
-final errorColor = Color(0xFFc21313);
-final successColor = Color(0xFF13c213);
+const errorColor = const Color(0xFFc21313);
+const successColor = Color(0xFF13c213);
 
 Color get colorPrimary {
   return (themeMode == ThemeMode.light) ? primary : darkPrimary;

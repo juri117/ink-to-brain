@@ -4,6 +4,8 @@
         "AUTOINCREMENT",
         "DATETIME",
         "nextcloud",
+        "prefs",
+        "Prefs",
         "sqflite",
         "sqlite"
     ]
