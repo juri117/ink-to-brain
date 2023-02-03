@@ -19,7 +19,8 @@
 
 **new features**
 * [x] only store doodle to database if it is not empty
-* [ ] 
+* [x] tweak repetition algorithm
+* [x] add button to word list, to force word into learning pool
 
 ## 0.00.004
 

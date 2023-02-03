@@ -94,7 +94,13 @@ class DatabaseCon {
             "SELECT COUNT(1) AS totalCount, "
             "COUNT(CASE WHEN correctCount < 4 THEN 1 END) AS activeCount, "
             "COUNT(CASE WHEN correctCount >= 4 THEN 1 END) AS learnedCount, "
-            "COUNT(CASE WHEN lastAskedTs >= DATE('now', 'start of day') THEN 1 END) AS todayCount "
+            "COUNT(CASE WHEN lastAskedTs >= DATE('now', 'start of day') THEN 1 END) AS todayCount, "
+            "COUNT(CASE WHEN (correctCount < 0 "
+            "OR (correctCount == 1 AND lastAskedTs <= date('now', '-12 hours')) "
+            "OR (correctCount == 2 AND lastAskedTs <= date('now', '-2 days')) "
+            "OR (correctCount == 3 AND lastAskedTs <= date('now', '-4 days')) "
+            "OR (correctCount == 4 AND lastAskedTs <= date('now', '-8 days')) "
+            "OR (correctCount == 5 AND lastAskedTs <= date('now', '-16 days'))) THEN 1 END) AS leftForToday "
             "FROM words;") ??
         [];
     if (maps.isNotEmpty) {
@@ -103,10 +109,15 @@ class DatabaseCon {
         activeCount: maps[0]['activeCount'],
         learnedCount: maps[0]['learnedCount'],
         todayCount: maps[0]['todayCount'],
+        leftForToday: maps[0]['leftForToday'],
       );
     }
     return Stat(
-        totalCount: -1, activeCount: -1, learnedCount: -1, todayCount: -1);
+        totalCount: -1,
+        activeCount: -1,
+        learnedCount: -1,
+        todayCount: -1,
+        leftForToday: -1);
   }
 
   Future<void> updateWord(Word word) async {
@@ -121,8 +132,8 @@ class DatabaseCon {
     );
   }
 
-  Future<void> resetWordScore(Word word) async {
-    Map<String, dynamic> map = {'correctCount': 0};
+  Future<void> resetWordScore(Word word, {correctCount: 0}) async {
+    Map<String, dynamic> map = {'correctCount': correctCount};
     await con?.update(
       'words',
       map,

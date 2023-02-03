@@ -61,11 +61,13 @@ class _WorkoutPageState extends State<WorkoutPage> {
     skipCount = 0;
     String? where;
     if (!widget.legacy) {
-      where = ("correctCount < 2 "
-          "OR (correctCount == 2 AND lastAskedTs <= date('now', '-1 hours')) "
-          "OR (correctCount == 3 AND lastAskedTs <= date('now', '-3 days')) "
-          "OR (correctCount == 4 AND lastAskedTs <= date('now', '-7 days')) "
-          "OR (correctCount == 5 AND lastAskedTs <= date('now', '-14 days'))");
+      where = ("correctCount < 0 "
+          "OR (correctCount == 1 AND lastAskedTs <= date('now', '-12 hours')) "
+          "OR (correctCount == 2 AND lastAskedTs <= date('now', '-2 days')) "
+          "OR (correctCount == 3 AND lastAskedTs <= date('now', '-4 days')) "
+          "OR (correctCount == 4 AND lastAskedTs <= date('now', '-8 days')) "
+          "OR (correctCount == 5 AND lastAskedTs <= date('now', '-16 days')) "
+          "OR correctCount == 0");
     }
     String orderBy = "lastAskedTs NULLS FIRST";
     // String orderBy = "RANDOM()";
@@ -132,7 +134,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       word.correctCount = max(1, word.correctCount + 1);
       correctCount++;
     } else {
-      word.correctCount = min(3, word.correctCount - 1);
+      word.correctCount = min(-1, word.correctCount - 1);
       wrongCount++;
     }
     word.lastAskedTs = DateTime.now();
