@@ -1,9 +1,7 @@
-# labfly_pilot
 
-- [labfly_pilot](#labfly_pilot)
-  - [install packages](#install-packages)
-  - [run](#run)
-  - [manage flutter](#manage-flutter)
+- [install packages](#install-packages)
+- [run](#run)
+- [manage flutter](#manage-flutter)
 
 ## install packages
 

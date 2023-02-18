@@ -15,11 +15,10 @@ class SharedPreferencesScreen extends StatefulWidget {
   const SharedPreferencesScreen({Key? key}) : super(key: key);
 
   @override
-  _SharedPreferencesScreenState createState() =>
-      _SharedPreferencesScreenState();
+  SharedPreferencesScreenState createState() => SharedPreferencesScreenState();
 }
 
-class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
+class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
   final nextcloudHostController = TextEditingController();
   final nextcloudUserController = TextEditingController();
   final nextcloudPwController = TextEditingController();
@@ -70,7 +69,7 @@ class _SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
             child: Card(
                 child: Column(children: [
           ListTile(
-              title: const Text("nectcloud login"),
+              title: const Text("nextcloud login"),
               subtitle: Column(
                 children: [
                   Wrap(

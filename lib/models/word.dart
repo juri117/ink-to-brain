@@ -46,7 +46,7 @@ class Word {
 
   Color getScoreColor(BuildContext context) {
     return correctCount < 0
-        ? Theme.of(context).errorColor
+        ? Theme.of(context).colorScheme.error
         : Theme.of(context).colorScheme.primary;
   }
 }

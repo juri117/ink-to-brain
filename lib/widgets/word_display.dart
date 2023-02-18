@@ -12,10 +12,10 @@ class WordDisplay extends StatefulWidget {
       {this.isVisible = false, Key? key})
       : super(key: key);
   @override
-  _WordDisplayState createState() => _WordDisplayState();
+  WordDisplayState createState() => WordDisplayState();
 }
 
-class _WordDisplayState extends State<WordDisplay> {
+class WordDisplayState extends State<WordDisplay> {
   @override
   Widget build(BuildContext context) {
     return Align(

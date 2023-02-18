@@ -14,10 +14,10 @@ class TablePage extends StatefulWidget {
       {Key? key})
       : super(key: key);
   @override
-  _TablePageState createState() => _TablePageState();
+  TablePageState createState() => TablePageState();
 }
 
-class _TablePageState extends State<TablePage> {
+class TablePageState extends State<TablePage> {
   int rowsPerPage = 10;
 
   @override

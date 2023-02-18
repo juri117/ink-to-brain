@@ -4,14 +4,12 @@
 
 **new features**
 * [ ] quiz, match words
-* [ ] create db backup
 * [ ] compress image files
 * learning statistics
-  * [ ] show learned words vs. all words etc.
   * [ ] db: log learning sessions
 * [ ] just in time download of tesseract tesserdata
-* [ ] auto next-cloud sync on startup and after session
 * [ ] check database update state on startup
+  * [ ] auto next-cloud sync on startup and after session
 
 **bug-fixes**
 
@@ -21,6 +19,7 @@
 * [x] only store doodle to database if it is not empty
 * [x] tweak repetition algorithm
 * [x] add button to word list, to force word into learning pool
+* [x] always trim word-strings before processing them
 
 ## 0.00.004
 

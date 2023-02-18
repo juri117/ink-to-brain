@@ -4,15 +4,15 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/widgets/table_page.dart';
 
-const String TAG = "fleet_overview_page";
+const String TAG = "list_page";
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
   @override
-  _ListPageState createState() => _ListPageState();
+  ListPageState createState() => ListPageState();
 }
 
-class _ListPageState extends State<ListPage> {
+class ListPageState extends State<ListPage> {
   WordTableRow tableRow = WordTableRow([], null, null, null);
   int _sortColumnIndex = 0;
   bool _sortAscending = false;
@@ -85,7 +85,7 @@ class _ListPageState extends State<ListPage> {
                       child: TextField(
                           controller: _searchTxtControl,
                           onSubmitted: (value) {
-                            tableRow._filter(_searchTxtControl.text);
+                            tableRow._filter(_searchTxtControl.text.trim());
                             tableRow._sort(prevSort, _sortAscending);
                             //_filterWords(searchWord: _searchTxtControl.text);
                           },

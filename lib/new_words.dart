@@ -98,9 +98,9 @@ class NewWordPageState extends State<NewWordPage>
           id: -1,
           insertTs: DateTime.now(),
           questionPix: (questIsEmpty) ? null : questPix,
-          questionTxt: _questTxtControl.text,
+          questionTxt: _questTxtControl.text.trim(),
           answerPix: (answIsEmpty) ? null : answPix,
-          answerTxt: _answTxtControl.text,
+          answerTxt: _answTxtControl.text.trim(),
           correctCount: 0));
     } else {
       DatabaseCon().updateWord(Word(
@@ -108,20 +108,13 @@ class NewWordPageState extends State<NewWordPage>
           insertTs: editWord.insertTs,
           questionPix:
               _questPaintControl.isEmpty ? editWord.questionPix : questPix,
-          questionTxt: _questTxtControl.text,
+          questionTxt: _questTxtControl.text.trim(),
           answerPix: _answPaintControl.isEmpty ? editWord.answerPix : answPix,
-          answerTxt: _answTxtControl.text,
+          answerTxt: _answTxtControl.text.trim(),
           correctCount: editWord.correctCount,
           lastAskedTs: editWord.lastAskedTs));
-      //Navigator.pop(context);
     }
     if (mounted) Navigator.pop(context);
-    //setState(() {
-    //  _questPaintControl = _newController();
-    //  _answPaintControl = _newController();
-    //  _questTxtControl.clear();
-    //  _answTxtControl.clear();
-    //});
   }
 
   Future<void> _delete(BuildContext context) async {
@@ -146,24 +139,11 @@ class NewWordPageState extends State<NewWordPage>
       final File fOut = File(fOutPath);
       fOut.writeAsBytes(pix);
 
-      /*
-    final inputImage = InputImage.fromFile(fOut);
-    final digitalInkRecogniser = GoogleMlKit.vision.digitalInkRecogniser();
-    final List<RecognitionCandidate> canditates =
-        await digitalInkRecogniser.readText(points, languageTag);
-    for (final candidate in candidates) {
-      final text = candidate.text;
-      final score = candidate.score;
-    }
-    digitalInkRecogniser.close();
-    */
-
       String langName = "deu";
       String text = await FlutterTesseractOcr.extractText(fOutPath,
           language: langName,
           args: {
             "psm": "7",
-            //"preserve_interword_spaces": "1",
           });
 
       setState(() {
@@ -191,7 +171,6 @@ class NewWordPageState extends State<NewWordPage>
           language: langName,
           args: {
             "psm": "7",
-            //"preserve_interword_spaces": "1",
           });
 
       setState(() {

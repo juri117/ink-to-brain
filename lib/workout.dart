@@ -20,10 +20,10 @@ class WorkoutPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WorkoutPageState createState() => _WorkoutPageState();
+  WorkoutPageState createState() => WorkoutPageState();
 }
 
-class _WorkoutPageState extends State<WorkoutPage> {
+class WorkoutPageState extends State<WorkoutPage> {
   PainterController _controller = _newController();
   List<Word> words = [];
   WorkoutState _state = WorkoutState.ask;
@@ -176,7 +176,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Yeah, you are done!'),
-            content: Container(
+            content: SizedBox(
                 height: 150,
                 child: Column(children: [
                   Text('correct: $correctCount'),
@@ -270,7 +270,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                         : Icons.block_outlined,
                                     color: currentWord.correctCount >= 0
                                         ? Theme.of(context).primaryColor
-                                        : Theme.of(context).errorColor,
+                                        : Theme.of(context).colorScheme.error,
                                     size: 18),
                               );
                             }),

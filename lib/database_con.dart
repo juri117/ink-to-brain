@@ -32,7 +32,7 @@ class DatabaseCon {
 
     final String? dbPath = await getDbPath();
     if (dbPath == null) {
-      print("could not find db file path");
+      //print("could not find db file path");
       return;
     }
 
@@ -132,7 +132,7 @@ class DatabaseCon {
     );
   }
 
-  Future<void> resetWordScore(Word word, {correctCount: 0}) async {
+  Future<void> resetWordScore(Word word, {correctCount = 0}) async {
     Map<String, dynamic> map = {'correctCount': correctCount};
     await con?.update(
       'words',
