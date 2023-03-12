@@ -16,6 +16,7 @@
 ## 0.00.005 ...
 
 **new features**
+* [x] add reverse questioning mode (answer is given, find the question)
 * [x] only store doodle to database if it is not empty
 * [x] tweak repetition algorithm
 * [x] add button to word list, to force word into learning pool

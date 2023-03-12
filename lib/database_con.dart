@@ -102,28 +102,28 @@ class DatabaseCon {
     });
   }
 
-  Future<Stat> statistic() async {
+  Future<Stat> statistic({bool reverse = false}) async {
+    String rev = (reverse) ? "Rev" : "";
     final List<Map<String, dynamic>> maps = await con?.rawQuery(
             "SELECT COUNT(1) AS totalCount, "
-            "COUNT(CASE WHEN correctCount < 4 THEN 1 END) AS activeCount, "
-            "COUNT(CASE WHEN correctCount >= 4 THEN 1 END) AS learnedCount, "
-            "COUNT(CASE WHEN lastAskedTs >= DATE('now', 'start of day') THEN 1 END) AS todayCount, "
-            "COUNT(CASE WHEN (correctCount < 0 "
-            "OR (correctCount == 1 AND lastAskedTs <= date('now', '-12 hours')) "
-            "OR (correctCount == 2 AND lastAskedTs <= date('now', '-2 days')) "
-            "OR (correctCount == 3 AND lastAskedTs <= date('now', '-4 days')) "
-            "OR (correctCount == 4 AND lastAskedTs <= date('now', '-8 days')) "
-            "OR (correctCount == 5 AND lastAskedTs <= date('now', '-16 days'))) THEN 1 END) AS leftForToday "
+            "COUNT(CASE WHEN correctCount$rev < 4 THEN 1 END) AS activeCount, "
+            "COUNT(CASE WHEN correctCount$rev >= 4 THEN 1 END) AS learnedCount, "
+            "COUNT(CASE WHEN lastAsked${rev}Ts >= DATE('now', 'start of day') THEN 1 END) AS todayCount, "
+            "COUNT(CASE WHEN (correctCount$rev <= 0 "
+            "OR (correctCount$rev == 1 AND lastAsked${rev}Ts <= date('now', '-12 hours')) "
+            "OR (correctCount$rev == 2 AND lastAsked${rev}Ts <= date('now', '-2 days')) "
+            "OR (correctCount$rev == 3 AND lastAsked${rev}Ts <= date('now', '-4 days')) "
+            "OR (correctCount$rev == 4 AND lastAsked${rev}Ts <= date('now', '-8 days')) "
+            "OR (correctCount$rev == 5 AND lastAsked${rev}Ts <= date('now', '-16 days'))) THEN 1 END) AS leftForToday "
             "FROM words;") ??
         [];
     if (maps.isNotEmpty) {
       return Stat(
-        totalCount: maps[0]['totalCount'],
-        activeCount: maps[0]['activeCount'],
-        learnedCount: maps[0]['learnedCount'],
-        todayCount: maps[0]['todayCount'],
-        leftForToday: maps[0]['leftForToday'],
-      );
+          totalCount: maps[0]['totalCount'],
+          activeCount: maps[0]['activeCount'],
+          learnedCount: maps[0]['learnedCount'],
+          todayCount: maps[0]['todayCount'],
+          leftForToday: maps[0]['leftForToday']);
     }
     return Stat(
         totalCount: -1,

@@ -65,6 +65,12 @@ class MainFrameState extends State<MainFrame> {
       learnedCount: -1,
       todayCount: -1,
       leftForToday: -1);
+  Stat statRev = Stat(
+      totalCount: -1,
+      activeCount: -1,
+      learnedCount: -1,
+      todayCount: -1,
+      leftForToday: -1);
   List<Word> badWords = [];
 
   bool useTextOverImage = false;
@@ -83,10 +89,12 @@ class MainFrameState extends State<MainFrame> {
 
   Future<void> _loadData() async {
     Stat newStat = await DatabaseCon().statistic();
+    Stat newStatRev = await DatabaseCon().statistic(reverse: true);
     List<Word> newBadWords =
         await DatabaseCon().words(orderBy: "correctCount", limit: 4);
     setState(() {
       stat = newStat;
+      statRev = newStatRev;
       badWords = newBadWords;
     });
   }
@@ -316,31 +324,36 @@ class MainFrameState extends State<MainFrame> {
                                     const Text("total"),
                                     Text("${stat.totalCount}",
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.bold))
+                                            fontWeight: FontWeight.bold)),
+                                    const Text("")
                                   ]),
                                   Column(children: [
                                     const Text("mastered"),
                                     Text("${stat.learnedCount}",
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.bold))
+                                            fontWeight: FontWeight.bold)),
+                                    Text("rev: ${statRev.learnedCount}")
                                   ]),
                                   Column(children: [
                                     const Text("new"),
                                     Text("${stat.activeCount}",
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.bold))
+                                            fontWeight: FontWeight.bold)),
+                                    Text("rev: ${statRev.activeCount}")
                                   ]),
                                   Column(children: [
                                     const Text("practiced today"),
                                     Text("${stat.todayCount}",
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.bold))
+                                            fontWeight: FontWeight.bold)),
+                                    Text("rev: ${statRev.todayCount}")
                                   ]),
                                   Column(children: [
                                     const Text("left for today"),
                                     Text("${stat.leftForToday}",
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.bold))
+                                            fontWeight: FontWeight.bold)),
+                                    Text("rev: ${statRev.leftForToday}")
                                   ]),
                                 ],
                               )

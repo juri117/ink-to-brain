@@ -185,7 +185,7 @@ class WordTableRow extends DataTableSource {
           width: 120,
           child: AspectRatio(
               aspectRatio: 3.0,
-              child: (filteredData[index].questionPix != null)
+              child: (filteredData[index].questionPix?.isNotEmpty ?? false)
                   ? Image.memory(filteredData[index].questionPix!)
                   : const SizedBox()))),
       DataCell(Text(filteredData[index].questionTxt)),
@@ -193,7 +193,7 @@ class WordTableRow extends DataTableSource {
           width: 120,
           child: AspectRatio(
               aspectRatio: 3.0,
-              child: (filteredData[index].answerPix != null)
+              child: (filteredData[index].answerPix?.isNotEmpty ?? false)
                   ? Image.memory(filteredData[index].answerPix!)
                   : const SizedBox()))),
       DataCell(Text(filteredData[index].answerTxt)),
