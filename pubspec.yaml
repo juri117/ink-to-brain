@@ -47,7 +47,7 @@ dependencies:
   nextcloud: ^3.0.1
   shared_preferences: ^2.0.9
   flutter_device_type: ^0.4.0
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.11.0
   flutter_tesseract_ocr: ^0.4.18
   desktop_window: ^0.4.0
   flex_color_scheme: ^6.0.1

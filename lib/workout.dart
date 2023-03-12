@@ -15,15 +15,20 @@ enum WorkoutState { ask, answer, done, overview }
 
 class WorkoutPage extends StatefulWidget {
   final int limit;
+  final bool reverse;
   final bool legacy;
-  const WorkoutPage({this.limit = 9999999, this.legacy = false, Key? key})
+  const WorkoutPage(
+      {this.limit = 9999999,
+      this.reverse = false,
+      this.legacy = false,
+      Key? key})
       : super(key: key);
 
   @override
-  _WorkoutPageState createState() => _WorkoutPageState();
+  WorkoutPageState createState() => WorkoutPageState();
 }
 
-class _WorkoutPageState extends State<WorkoutPage> {
+class WorkoutPageState extends State<WorkoutPage> {
   PainterController _controller = _newController();
   List<Word> words = [];
   WorkoutState _state = WorkoutState.ask;
@@ -34,7 +39,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
       questionTxt: "",
       answerPix: Uint8List(0),
       answerTxt: "",
-      correctCount: 0);
+      correctCount: 0,
+      correctCountRev: 0);
   int index = 0;
 
   int wrongCount = 0;
@@ -69,8 +75,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
     }
     String orderBy = "lastAskedTs NULLS FIRST";
     // String orderBy = "RANDOM()";
-    List<Word> newWords = await DatabaseCon()
-        .words(where: where, orderBy: orderBy, limit: widget.limit);
+    List<Word> newWords = await DatabaseCon().words(
+        where: where,
+        orderBy: orderBy,
+        limit: widget.limit,
+        reverse: widget.reverse);
     setState(() {
       newWords.shuffle();
       words = newWords;
@@ -85,7 +94,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
             questionTxt: "",
             answerPix: Uint8List(0),
             answerTxt: "",
-            correctCount: 0);
+            correctCount: 0,
+            correctCountRev: 0);
       }
     });
   }
@@ -104,10 +114,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
       _state = WorkoutState.done;
     });
     // update timestamp
-    word.lastAskedTs = DateTime.now();
-    if (word.correctCount > 2) {
-      word.correctCount = max(0, word.correctCount - 1);
-    }
+    //word.lastAskedTs = DateTime.now();
+    word.skip();
+
     DatabaseCon().updateWord(word);
 
     await Future.delayed(const Duration(seconds: 5), () {});
@@ -128,14 +137,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   Future<void> _save(Word word, bool suc) async {
+    word.updateCorrect(suc);
     if (suc) {
-      word.correctCount = max(1, word.correctCount + 1);
       correctCount++;
     } else {
-      word.correctCount = min(3, word.correctCount - 1);
       wrongCount++;
     }
-    word.lastAskedTs = DateTime.now();
     DatabaseCon().updateWord(word);
 
     setState(() {
@@ -174,7 +181,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Yeah, you are done!'),
-            content: Container(
+            content: SizedBox(
                 height: 150,
                 child: Column(children: [
                   Text('correct: $correctCount'),
@@ -267,8 +274,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                                         ? Icons.star
                                         : Icons.block_outlined,
                                     color: currentWord.correctCount >= 0
-                                        ? Theme.of(context).primaryColor
-                                        : Theme.of(context).errorColor,
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).colorScheme.error,
                                     size: 18),
                               );
                             }),

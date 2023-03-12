@@ -4,6 +4,7 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'dart:typed_data';
 
 class DatabaseCon {
   static final DatabaseCon _dbCon = DatabaseCon._internal();
@@ -16,7 +17,9 @@ class DatabaseCon {
       "answerPix	BLOB, "
       "answerTxt	TEXT, "
       "correctCount	NUMERIC, "
+      "correctCountRev	NUMERIC, "
       "lastAskedTs DATETIME, "
+      "lastAskedRevTs DATETIME, "
       "PRIMARY KEY(id AUTOINCREMENT));");
 
   factory DatabaseCon() {
@@ -32,7 +35,7 @@ class DatabaseCon {
 
     final String? dbPath = await getDbPath();
     if (dbPath == null) {
-      print("could not find db file path");
+      //print("could not find db file path");
       return;
     }
 
@@ -64,7 +67,11 @@ class DatabaseCon {
     );
   }
 
-  Future<List<Word>> words({String? where, String? orderBy, int? limit}) async {
+  Future<List<Word>> words(
+      {String? where,
+      String? orderBy,
+      int? limit,
+      bool reverse = false}) async {
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> maps = await con?.query('words',
             where: where, orderBy: orderBy, limit: limit) ??
@@ -76,16 +83,22 @@ class DatabaseCon {
       if (maps[i]['lastAskedTs'] != null) {
         lastAskedTs = DateTime.parse(maps[i]['lastAskedTs']);
       }
+      DateTime? lastAskedRevTs;
+      if (maps[i]['lastAskedRevTs'] != null) {
+        lastAskedRevTs = DateTime.parse(maps[i]['lastAskedRevTs']);
+      }
       return Word(
-        id: maps[i]['id'],
-        insertTs: DateTime.parse(maps[i]['insertTs']),
-        questionPix: maps[i]['questionPix'],
-        questionTxt: maps[i]['questionTxt'],
-        answerPix: maps[i]['answerPix'],
-        answerTxt: maps[i]['answerTxt'],
-        correctCount: maps[i]['correctCount'],
-        lastAskedTs: lastAskedTs,
-      );
+          id: maps[i]['id'],
+          insertTs: DateTime.parse(maps[i]['insertTs']),
+          questionPix: maps[i]['questionPix'] ?? Uint8List(0),
+          questionTxt: maps[i]['questionTxt'],
+          answerPix: maps[i]['answerPix'] ?? Uint8List(0),
+          answerTxt: maps[i]['answerTxt'],
+          correctCount: maps[i]['correctCount'] ?? 0,
+          correctCountRev: maps[i]['correctCountRev'] ?? 0,
+          lastAskedTs: lastAskedTs,
+          lastAskedRevTs: lastAskedRevTs,
+          isReverse: reverse);
     });
   }
 
@@ -122,7 +135,7 @@ class DatabaseCon {
   }
 
   Future<void> resetWordScore(Word word) async {
-    Map<String, dynamic> map = {'correctCount': 0};
+    Map<String, dynamic> map = {'correctCount': 0, 'correctCountRev': 0};
     await con?.update(
       'words',
       map,

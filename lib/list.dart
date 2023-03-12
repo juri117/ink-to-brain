@@ -4,15 +4,15 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/widgets/table_page.dart';
 
-final String TAG = "fleet_overview_page";
+const String TAG = "fleet_overview_page";
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
   @override
-  _ListPageState createState() => _ListPageState();
+  ListPageState createState() => ListPageState();
 }
 
-class _ListPageState extends State<ListPage> {
+class ListPageState extends State<ListPage> {
   WordTableRow tableRow = WordTableRow([], null, null);
   int _sortColumnIndex = 0;
   bool _sortAscending = false;
@@ -179,15 +179,19 @@ class WordTableRow extends DataTableSource {
           child: Text(filteredData[index].getInsertDateStr()))),
       DataCell(SizedBox(
           width: 120,
-          child: AspectRatio(
-              aspectRatio: 3.0,
-              child: Image.memory(filteredData[index].questionPix)))),
+          child: (filteredData[index].questionPix.isNotEmpty)
+              ? AspectRatio(
+                  aspectRatio: 3.0,
+                  child: Image.memory(filteredData[index].questionPix))
+              : const Text(""))),
       DataCell(Text(filteredData[index].questionTxt)),
       DataCell(SizedBox(
           width: 120,
-          child: AspectRatio(
-              aspectRatio: 3.0,
-              child: Image.memory(filteredData[index].answerPix)))),
+          child: (filteredData[index].answerPix.isNotEmpty)
+              ? AspectRatio(
+                  aspectRatio: 3.0,
+                  child: Image.memory(filteredData[index].answerPix))
+              : const Text(""))),
       DataCell(Text(filteredData[index].answerTxt)),
       DataCell(Text("${filteredData[index].correctCount}")),
       DataCell(Text(filteredData[index].getLastAskedDateStr())),

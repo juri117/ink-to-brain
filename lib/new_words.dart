@@ -42,7 +42,8 @@ class NewWordPageState extends State<NewWordPage>
       questionTxt: "",
       answerPix: Uint8List(0),
       answerTxt: "",
-      correctCount: 0);
+      correctCount: 0,
+      correctCountRev: 0);
 
   @override
   void initState() {
@@ -83,7 +84,8 @@ class NewWordPageState extends State<NewWordPage>
           questionTxt: _questTxtControl.text,
           answerPix: answPix,
           answerTxt: _answTxtControl.text,
-          correctCount: 0));
+          correctCount: 0,
+          correctCountRev: 0));
     } else {
       DatabaseCon().updateWord(Word(
           id: widget.editId!,
@@ -94,7 +96,9 @@ class NewWordPageState extends State<NewWordPage>
           answerPix: _answPaintControl.isEmpty ? editWord.answerPix : answPix,
           answerTxt: _answTxtControl.text,
           correctCount: editWord.correctCount,
-          lastAskedTs: editWord.lastAskedTs));
+          correctCountRev: editWord.correctCountRev,
+          lastAskedTs: editWord.lastAskedTs,
+          lastAskedRevTs: editWord.lastAskedRevTs));
       Navigator.pop(context);
     }
 
