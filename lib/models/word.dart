@@ -38,8 +38,15 @@ class Word {
       'answerPix': answerPix,
       'answerTxt': answerTxt,
       'correctCount': correctCount,
-      'lastAskedTs': lastAskedTs?.toString()
+      'correctCountRev': correctCountRev,
+      'lastAskedTs': lastAskedTs?.toString(),
+      'lastAskedRevTs': lastAskedRevTs?.toString()
     };
+  }
+
+  int getCorrectCount() {
+    if (isReverse) return correctCountRev;
+    return correctCount;
   }
 
   String getInsertDateStr() {
@@ -62,14 +69,14 @@ class Word {
       if (suc) {
         correctCountRev = max(1, correctCountRev + 1);
       } else {
-        correctCountRev = min(3, correctCountRev - 1);
+        correctCountRev = min(0, correctCountRev - 1);
       }
       lastAskedRevTs = DateTime.now();
     } else {
       if (suc) {
         correctCount = max(1, correctCount + 1);
       } else {
-        correctCount = min(3, correctCount - 1);
+        correctCount = min(0, correctCount - 1);
       }
       lastAskedTs = DateTime.now();
     }

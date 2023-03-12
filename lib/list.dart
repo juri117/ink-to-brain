@@ -4,7 +4,7 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/widgets/table_page.dart';
 
-const String TAG = "list_page";
+// const String TAG = "list_page";
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);

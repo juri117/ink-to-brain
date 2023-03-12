@@ -16,8 +16,8 @@ class DatabaseCon {
       "questionTxt	TEXT, "
       "answerPix	BLOB, "
       "answerTxt	TEXT, "
-      "correctCount	NUMERIC, "
-      "correctCountRev	NUMERIC, "
+      "correctCount	NUMERIC NOT NULL, "
+      "correctCountRev	NUMERIC NOT NULL, "
       "lastAskedTs DATETIME, "
       "lastAskedRevTs DATETIME, "
       "PRIMARY KEY(id AUTOINCREMENT));");

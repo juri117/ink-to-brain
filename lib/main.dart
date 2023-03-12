@@ -110,57 +110,68 @@ class MainFrameState extends State<MainFrame> {
                         child: Column(children: [
                       Container(
                           width: 220,
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(2),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.baby_changing_station),
                             label: const Text('5 questions'),
                             onPressed: () {
                               Navigator.pop(context);
-                              _navigateToWorkout(5, false);
+                              _navigateToWorkout(5, false, false);
                             },
                           )),
                       Container(
                           width: 220,
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(2),
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.baby_changing_station),
+                            label: const Text('5 rev questions'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _navigateToWorkout(5, true, false);
+                            },
+                          )),
+                      Container(
+                          width: 220,
+                          padding: const EdgeInsets.all(2),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.school),
                             label: const Text('10 questions'),
                             onPressed: () {
                               Navigator.pop(context);
-                              _navigateToWorkout(10, false);
+                              _navigateToWorkout(10, false, false);
                             },
                           )),
                       Container(
                           width: 220,
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(2),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.fitness_center),
                             label: const Text('15 questions'),
                             onPressed: () {
                               Navigator.pop(context);
-                              _navigateToWorkout(15, false);
+                              _navigateToWorkout(15, false, false);
                             },
                           )),
                       Container(
                           width: 220,
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(2),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.airplanemode_on),
                             label: const Text('all questions'),
                             onPressed: () {
                               Navigator.pop(context);
-                              _navigateToWorkout(99999, false);
+                              _navigateToWorkout(99999, false, false);
                             },
                           )),
                       Container(
                           width: 220,
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(2),
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.bolt_rounded),
                             label: const Text('all questions (legacy)'),
                             onPressed: () {
                               Navigator.pop(context);
-                              _navigateToWorkout(99999, true);
+                              _navigateToWorkout(99999, false, true);
                             },
                           )),
                     ])))),
@@ -176,13 +187,14 @@ class MainFrameState extends State<MainFrame> {
         });
   }
 
-  Future<void> _navigateToWorkout(int limit, bool legacy) async {
+  Future<void> _navigateToWorkout(int limit, bool reverse, bool legacy) async {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => WorkoutPage(
                 limit: limit,
                 legacy: legacy,
+                reverse: reverse,
               )),
     ).then((value) => _loadData());
   }

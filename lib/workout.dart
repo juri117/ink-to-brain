@@ -66,16 +66,17 @@ class WorkoutPageState extends State<WorkoutPage> {
     correctCount = 0;
     skipCount = 0;
     String? where;
+    String revStr = (widget.reverse) ? "Rev" : "";
     if (!widget.legacy) {
-      where = ("correctCount < 0 "
-          "OR (correctCount == 1 AND lastAskedTs <= date('now', '-12 hours')) "
-          "OR (correctCount == 2 AND lastAskedTs <= date('now', '-2 days')) "
-          "OR (correctCount == 3 AND lastAskedTs <= date('now', '-4 days')) "
-          "OR (correctCount == 4 AND lastAskedTs <= date('now', '-8 days')) "
-          "OR (correctCount == 5 AND lastAskedTs <= date('now', '-16 days')) "
-          "OR correctCount == 0");
+      where = ("correctCount$revStr < 0 "
+          "OR (correctCount$revStr == 1 AND lastAsked${revStr}Ts <= date('now', '-12 hours')) "
+          "OR (correctCount$revStr == 2 AND lastAsked${revStr}Ts <= date('now', '-2 days')) "
+          "OR (correctCount$revStr == 3 AND lastAsked${revStr}Ts <= date('now', '-4 days')) "
+          "OR (correctCount$revStr == 4 AND lastAsked${revStr}Ts <= date('now', '-8 days')) "
+          "OR (correctCount$revStr == 5 AND lastAsked${revStr}Ts <= date('now', '-16 days')) "
+          "OR correctCount$revStr == 0");
     }
-    String orderBy = "lastAskedTs NULLS FIRST";
+    String orderBy = "lastAsked${revStr}Ts NULLS FIRST";
     // String orderBy = "RANDOM()";
     List<Word> newWords = await DatabaseCon().words(
         where: where,
@@ -231,8 +232,11 @@ class WorkoutPageState extends State<WorkoutPage> {
                             color:
                                 Theme.of(context).colorScheme.tertiaryContainer,
                           ),
-                          child: WordDisplay(currentWord.questionPix,
-                              currentWord.questionTxt, useTextOverImage),
+                          child: (widget.reverse)
+                              ? WordDisplay(currentWord.answerPix,
+                                  currentWord.answerTxt, useTextOverImage)
+                              : WordDisplay(currentWord.questionPix,
+                                  currentWord.questionTxt, useTextOverImage),
                         )),
                     const SizedBox(width: 10),
                     Icon(Icons.compare_arrows_outlined,
@@ -246,10 +250,15 @@ class WorkoutPageState extends State<WorkoutPage> {
                                   .colorScheme
                                   .tertiaryContainer,
                             ),
-                            child: WordDisplay(currentWord.answerPix,
-                                currentWord.answerTxt, useTextOverImage,
-                                isVisible: currentWord.id <= 0 ||
-                                    _state == WorkoutState.ask))),
+                            child: (widget.reverse)
+                                ? WordDisplay(currentWord.questionPix,
+                                    currentWord.questionTxt, useTextOverImage,
+                                    isVisible: currentWord.id <= 0 ||
+                                        _state == WorkoutState.ask)
+                                : WordDisplay(currentWord.answerPix,
+                                    currentWord.answerTxt, useTextOverImage,
+                                    isVisible: currentWord.id <= 0 ||
+                                        _state == WorkoutState.ask))),
                     //const SizedBox(width: 10),
                     Container(
                         padding: const EdgeInsets.all(5),
@@ -258,7 +267,7 @@ class WorkoutPageState extends State<WorkoutPage> {
                           const Divider(
                             height: 5,
                           ),
-                          Text("score: ${currentWord.correctCount}",
+                          Text("score: ${currentWord.getCorrectCount()}",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   // fontSize: 18,
@@ -268,14 +277,14 @@ class WorkoutPageState extends State<WorkoutPage> {
                           ),
                           Wrap(
                             children: List.generate(
-                                min(5, currentWord.correctCount.abs()),
+                                min(5, currentWord.getCorrectCount().abs()),
                                 (index) {
                               return Center(
                                 child: Icon(
-                                    currentWord.correctCount >= 0
+                                    currentWord.getCorrectCount() >= 0
                                         ? Icons.star
                                         : Icons.block_outlined,
-                                    color: currentWord.correctCount >= 0
+                                    color: currentWord.getCorrectCount() >= 0
                                         ? Theme.of(context).colorScheme.primary
                                         : Theme.of(context).colorScheme.error,
                                     size: 18),
