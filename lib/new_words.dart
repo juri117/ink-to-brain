@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tesseract_ocr/android_ios.dart';
+import 'package:image/image.dart' as img;
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
@@ -26,8 +27,8 @@ class NewWordPageState extends State<NewWordPage>
     with SingleTickerProviderStateMixin {
   int tabIndex = 0;
 
-  PainterController _questPaintControl = _newController();
-  PainterController _answPaintControl = _newController();
+  final PainterController _questPaintControl = _newController();
+  final PainterController _answPaintControl = _newController();
 
   final TextEditingController _questTxtControl = TextEditingController();
   final TextEditingController _answTxtControl = TextEditingController();
@@ -76,14 +77,31 @@ class NewWordPageState extends State<NewWordPage>
   Future<void> _save(BuildContext context) async {
     Uint8List questPix = await _questPaintControl.finish().toPNG();
     Uint8List answPix = await _answPaintControl.finish().toPNG();
+
     if (widget.editId == null) {
+      Uint8List? questBytes = img.decodePng(questPix)?.getBytes();
+      bool questIsEmpty = true;
+      for (final pix in questBytes ?? []) {
+        if (pix != 0) {
+          questIsEmpty = false;
+          break;
+        }
+      }
+      Uint8List? answBytes = img.decodePng(answPix)?.getBytes();
+      bool answIsEmpty = true;
+      for (final pix in answBytes ?? []) {
+        if (pix != 0) {
+          answIsEmpty = false;
+          break;
+        }
+      }
       DatabaseCon().insertWord(Word(
           id: -1,
           insertTs: DateTime.now(),
-          questionPix: questPix,
-          questionTxt: _questTxtControl.text,
-          answerPix: answPix,
-          answerTxt: _answTxtControl.text,
+          questionPix: (questIsEmpty) ? null : questPix,
+          questionTxt: _questTxtControl.text.trim(),
+          answerPix: (answIsEmpty) ? null : answPix,
+          answerTxt: _answTxtControl.text.trim(),
           correctCount: 0,
           correctCountRev: 0));
     } else {
@@ -92,22 +110,16 @@ class NewWordPageState extends State<NewWordPage>
           insertTs: editWord.insertTs,
           questionPix:
               _questPaintControl.isEmpty ? editWord.questionPix : questPix,
-          questionTxt: _questTxtControl.text,
+          questionTxt: _questTxtControl.text.trim(),
           answerPix: _answPaintControl.isEmpty ? editWord.answerPix : answPix,
-          answerTxt: _answTxtControl.text,
+          answerTxt: _answTxtControl.text.trim(),
           correctCount: editWord.correctCount,
           correctCountRev: editWord.correctCountRev,
           lastAskedTs: editWord.lastAskedTs,
           lastAskedRevTs: editWord.lastAskedRevTs));
       Navigator.pop(context);
     }
-
-    setState(() {
-      _questPaintControl = _newController();
-      _answPaintControl = _newController();
-      _questTxtControl.clear();
-      _answTxtControl.clear();
-    });
+    if (mounted) Navigator.pop(context);
   }
 
   Future<void> _delete(BuildContext context) async {
@@ -118,69 +130,58 @@ class NewWordPageState extends State<NewWordPage>
   Future<void> _scanQuest() async {
     await requestWritePermission();
 
-    Uint8List pix = (editWord.id > 0 && _questPaintControl.isEmpty)
+    Uint8List? pix = (editWord.id > 0 && _questPaintControl.isEmpty)
         ? editWord.questionPix
         : await _questPaintControl.generateRendering().toPNG();
-    Directory? directory;
-    if (Platform.isWindows) {
-      directory = Directory.current;
-    } else {
-      directory = await getExternalStorageDirectory();
+    if (pix != null) {
+      Directory? directory;
+      if (Platform.isWindows) {
+        directory = Directory.current;
+      } else {
+        directory = await getExternalStorageDirectory();
+      }
+      final String fOutPath = join(directory!.path, "tmpQuestImg.png");
+      final File fOut = File(fOutPath);
+      fOut.writeAsBytes(pix);
+
+      String langName = "deu";
+      String text = await FlutterTesseractOcr.extractText(fOutPath,
+          language: langName,
+          args: {
+            "psm": "7",
+          });
+
+      setState(() {
+        _questTxtControl.text = text;
+      });
     }
-    final String fOutPath = join(directory!.path, "tmpQuestImg.png");
-    final File fOut = File(fOutPath);
-    fOut.writeAsBytes(pix);
-
-    /*
-    final inputImage = InputImage.fromFile(fOut);
-    final digitalInkRecogniser = GoogleMlKit.vision.digitalInkRecogniser();
-    final List<RecognitionCandidate> canditates =
-        await digitalInkRecogniser.readText(points, languageTag);
-    for (final candidate in candidates) {
-      final text = candidate.text;
-      final score = candidate.score;
-    }
-    digitalInkRecogniser.close();
-    */
-
-    String langName = "deu";
-    String text = await FlutterTesseractOcr.extractText(fOutPath,
-        language: langName,
-        args: {
-          "psm": "7",
-          //"preserve_interword_spaces": "1",
-        });
-
-    setState(() {
-      _questTxtControl.text = text;
-    });
   }
 
   Future<void> _scanAnsw() async {
     await requestWritePermission();
 
-    Uint8List pix = (editWord.id > 0 && _answPaintControl.isEmpty)
+    Uint8List? pix = (editWord.id > 0 && _answPaintControl.isEmpty)
         ? editWord.answerPix
         : await _answPaintControl.generateRendering().toPNG();
+    if (pix != null) {
+      // Uint8List pix = await _answPaintControl.generateRendering().toPNG();
+      final Directory? directory = await getExternalStorageDirectory();
+      final String fOutPath = join(directory!.path, "tmpAnswImg.png");
+      final File fOut = File(fOutPath);
+      fOut.writeAsBytes(pix);
 
-    // Uint8List pix = await _answPaintControl.generateRendering().toPNG();
-    final Directory? directory = await getExternalStorageDirectory();
-    final String fOutPath = join(directory!.path, "tmpAnswImg.png");
-    final File fOut = File(fOutPath);
-    fOut.writeAsBytes(pix);
+      String langName = "vie";
 
-    String langName = "vie";
+      String text = await FlutterTesseractOcr.extractText(fOutPath,
+          language: langName,
+          args: {
+            "psm": "7",
+          });
 
-    String text = await FlutterTesseractOcr.extractText(fOutPath,
-        language: langName,
-        args: {
-          "psm": "7",
-          //"preserve_interword_spaces": "1",
-        });
-
-    setState(() {
-      _answTxtControl.text = text;
-    });
+      setState(() {
+        _answTxtControl.text = text;
+      });
+    }
   }
 
   @override

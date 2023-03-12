@@ -6,9 +6,9 @@ import 'dart:math';
 class Word {
   final int id;
   final DateTime insertTs;
-  final Uint8List questionPix;
+  final Uint8List? questionPix;
   final String questionTxt;
-  final Uint8List answerPix;
+  final Uint8List? answerPix;
   final String answerTxt;
   int correctCount;
   int correctCountRev;

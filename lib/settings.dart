@@ -69,7 +69,7 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
             child: Card(
                 child: Column(children: [
           ListTile(
-              title: const Text("nectcloud login"),
+              title: const Text("nextcloud login"),
               subtitle: Column(
                 children: [
                   Wrap(

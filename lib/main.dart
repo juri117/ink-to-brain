@@ -15,7 +15,7 @@ import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/workout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const String versionName = "0.00.004";
+const String versionName = "0.00.005";
 
 void main() async {
   await DatabaseCon().openCon();
@@ -59,8 +59,12 @@ class MainFrameState extends State<MainFrame> {
 
   final ScrollController _scrollController = ScrollController();
 
-  Stat stat =
-      Stat(totalCount: -1, activeCount: -1, learnedCount: -1, todayCount: -1);
+  Stat stat = Stat(
+      totalCount: -1,
+      activeCount: -1,
+      learnedCount: -1,
+      todayCount: -1,
+      leftForToday: -1);
   List<Word> badWords = [];
 
   bool useTextOverImage = false;
@@ -317,6 +321,12 @@ class MainFrameState extends State<MainFrame> {
                                   Column(children: [
                                     const Text("practiced today"),
                                     Text("${stat.todayCount}",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold))
+                                  ]),
+                                  Column(children: [
+                                    const Text("left for today"),
+                                    Text("${stat.leftForToday}",
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold))
                                   ]),

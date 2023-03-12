@@ -4,7 +4,7 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/widgets/table_page.dart';
 
-const String TAG = "fleet_overview_page";
+const String TAG = "list_page";
 
 class ListPage extends StatefulWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class ListPage extends StatefulWidget {
 }
 
 class ListPageState extends State<ListPage> {
-  WordTableRow tableRow = WordTableRow([], null, null);
+  WordTableRow tableRow = WordTableRow([], null, null, null);
   int _sortColumnIndex = 0;
   bool _sortAscending = false;
   Comparable<dynamic> Function(Word d) prevSort = (Word d) => d.insertTs;
@@ -29,7 +29,8 @@ class ListPageState extends State<ListPage> {
     List<Word> newWords = await DatabaseCon().words(orderBy: "insertTs");
     setState(() {
       //newWords.shuffle();
-      tableRow = WordTableRow(newWords, _resetWordScore, _editWord);
+      tableRow =
+          WordTableRow(newWords, _resetWordScore, _forceStartWord, _editWord);
       tableRow._filter(_searchTxtControl.text);
       tableRow._sort(prevSort, _sortAscending);
     });
@@ -38,9 +39,11 @@ class ListPageState extends State<ListPage> {
   Future<void> _resetWordScore(Word word) async {
     await DatabaseCon().resetWordScore(word);
     _loadWords();
-    //setState(() {
-    //  word.correctCount = 0;
-    //});
+  }
+
+  Future<void> _forceStartWord(Word word) async {
+    await DatabaseCon().resetWordScore(word, correctCount: -1);
+    _loadWords();
   }
 
   void _sort<T>(Comparable<T> Function(Word d) getField, int columnIndex,
@@ -82,7 +85,7 @@ class ListPageState extends State<ListPage> {
                       child: TextField(
                           controller: _searchTxtControl,
                           onSubmitted: (value) {
-                            tableRow._filter(_searchTxtControl.text);
+                            tableRow._filter(_searchTxtControl.text.trim());
                             tableRow._sort(prevSort, _sortAscending);
                             //_filterWords(searchWord: _searchTxtControl.text);
                           },
@@ -165,9 +168,10 @@ class WordTableRow extends DataTableSource {
   final List<Word> data;
   List<Word> filteredData = [];
   final Function? resetWordScore;
+  final Function? forceStart;
   final Function? editWord;
 
-  WordTableRow(this.data, this.resetWordScore, this.editWord) {
+  WordTableRow(this.data, this.resetWordScore, this.forceStart, this.editWord) {
     filteredData = data;
   }
 
@@ -179,19 +183,19 @@ class WordTableRow extends DataTableSource {
           child: Text(filteredData[index].getInsertDateStr()))),
       DataCell(SizedBox(
           width: 120,
-          child: (filteredData[index].questionPix.isNotEmpty)
-              ? AspectRatio(
-                  aspectRatio: 3.0,
-                  child: Image.memory(filteredData[index].questionPix))
-              : const Text(""))),
+          child: AspectRatio(
+              aspectRatio: 3.0,
+              child: (filteredData[index].questionPix != null)
+                  ? Image.memory(filteredData[index].questionPix!)
+                  : const SizedBox()))),
       DataCell(Text(filteredData[index].questionTxt)),
       DataCell(SizedBox(
           width: 120,
-          child: (filteredData[index].answerPix.isNotEmpty)
-              ? AspectRatio(
-                  aspectRatio: 3.0,
-                  child: Image.memory(filteredData[index].answerPix))
-              : const Text(""))),
+          child: AspectRatio(
+              aspectRatio: 3.0,
+              child: (filteredData[index].answerPix != null)
+                  ? Image.memory(filteredData[index].answerPix!)
+                  : const SizedBox()))),
       DataCell(Text(filteredData[index].answerTxt)),
       DataCell(Text("${filteredData[index].correctCount}")),
       DataCell(Text(filteredData[index].getLastAskedDateStr())),
@@ -202,6 +206,15 @@ class WordTableRow extends DataTableSource {
           onPressed: () {
             if (resetWordScore != null) {
               resetWordScore!(filteredData[index]);
+            }
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.new_label_outlined),
+          tooltip: 'force start learning',
+          onPressed: () {
+            if (forceStart != null) {
+              forceStart!(filteredData[index]);
             }
           },
         ),

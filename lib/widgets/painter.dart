@@ -5,9 +5,9 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:flutter/gestures.dart';
+//import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter/widgets.dart' hide Image;
+//import 'package:flutter/widgets.dart' hide Image;
 
 /// A very simple widget that supports drawing using touch.
 class Painter extends StatefulWidget {
@@ -19,10 +19,10 @@ class Painter extends StatefulWidget {
       : super(key: ValueKey<PainterController>(painterController));
 
   @override
-  _PainterState createState() => _PainterState();
+  PainterState createState() => PainterState();
 }
 
-class _PainterState extends State<Painter> {
+class PainterState extends State<Painter> {
   final bool _finished = false;
 
   @override
@@ -49,7 +49,6 @@ class _PainterState extends State<Painter> {
     if (!_finished) {
       if (widget.usePen) {
         child = Listener(
-          child: child,
           onPointerDown: _onPenDown,
           onPointerMove: _onPenMove,
           onPointerUp: _onPenUp,
@@ -62,20 +61,21 @@ class _PainterState extends State<Painter> {
           onPointerCancel: (event) {
             //print("cancel");
           },
+          child: child,
         );
       } else {
         child = GestureDetector(
-          child: child,
           onPanStart: _onPanStart,
           onPanUpdate: _onPanUpdate,
           onPanEnd: _onPanEnd,
+          child: child,
         );
       }
     }
     return SizedBox(
-      child: child,
       width: double.infinity,
       height: double.infinity,
+      child: child,
     );
   }
 
@@ -99,7 +99,7 @@ class _PainterState extends State<Painter> {
   }
 
   void _onPenDown(PointerEvent start) {
-    print("k:${start.kind}, b:${start.buttons}");
+    //print("k:${start.kind}, b:${start.buttons}");
     /*
     if (start.buttons & kSecondaryButton == kSecondaryButton ||
         start.kind == PointerDeviceKind.invertedStylus) {
@@ -217,7 +217,7 @@ class _PathHistory {
   }
 }
 
-/// Container that holds the size of a finished drawing and the drawed data as [Picture].
+/// Container that holds the size of a finished drawing and the draw data as [Picture].
 class PictureDetails {
   /// The drawings data as [Picture].
   final Picture picture;

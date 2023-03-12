@@ -1,10 +1,17 @@
 {
     "cSpell.words": [
         "airplanemode",
+        "answ",
+        "ARGB",
+        "autocorrect",
         "AUTOINCREMENT",
         "DATETIME",
+        "LTWH",
         "nextcloud",
+        "prefs",
+        "Prefs",
         "sqflite",
-        "sqlite"
+        "sqlite",
+        "tesseract"
     ]
 }
