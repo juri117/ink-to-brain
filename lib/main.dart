@@ -10,9 +10,10 @@ import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/settings.dart';
 import 'package:ink2brain/theme.dart';
-import 'package:ink2brain/utils/nextcloud.dart';
 import 'package:ink2brain/widgets/word_display.dart';
-import 'package:ink2brain/workout.dart';
+import 'package:ink2brain/dialog/sync_dialog.dart';
+import 'package:ink2brain/dialog/start_workout_dialog.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String versionName = "0.00.005";
@@ -101,110 +102,12 @@ class MainFrameState extends State<MainFrame> {
 
   Future<void> _startWorkout() async {
     // bool legacyVal = false;
-    final ScrollController dialogScrollController = ScrollController();
+
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: const Text('start workout...'),
-            content: Scrollbar(
-                controller: dialogScrollController,
-                thumbVisibility:
-                    Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-                child: SingleChildScrollView(
-                    controller: dialogScrollController,
-                    child: SizedBox(
-                        //height: 200,
-                        child: Column(children: [
-                      Container(
-                          width: 220,
-                          padding: const EdgeInsets.all(2),
-                          child: OutlinedButton.icon(
-                            icon: const Icon(Icons.baby_changing_station),
-                            label: const Text('5 questions'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _navigateToWorkout(5, false, false);
-                            },
-                          )),
-                      Container(
-                          width: 220,
-                          padding: const EdgeInsets.all(2),
-                          child: OutlinedButton.icon(
-                            icon: const Icon(Icons.baby_changing_station),
-                            label: const Text('5 rev questions'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _navigateToWorkout(5, true, false);
-                            },
-                          )),
-                      Container(
-                          width: 220,
-                          padding: const EdgeInsets.all(2),
-                          child: OutlinedButton.icon(
-                            icon: const Icon(Icons.school),
-                            label: const Text('10 questions'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _navigateToWorkout(10, false, false);
-                            },
-                          )),
-                      Container(
-                          width: 220,
-                          padding: const EdgeInsets.all(2),
-                          child: OutlinedButton.icon(
-                            icon: const Icon(Icons.fitness_center),
-                            label: const Text('15 questions'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _navigateToWorkout(15, false, false);
-                            },
-                          )),
-                      Container(
-                          width: 220,
-                          padding: const EdgeInsets.all(2),
-                          child: OutlinedButton.icon(
-                            icon: const Icon(Icons.airplanemode_on),
-                            label: const Text('all questions'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _navigateToWorkout(99999, false, false);
-                            },
-                          )),
-                      Container(
-                          width: 220,
-                          padding: const EdgeInsets.all(2),
-                          child: OutlinedButton.icon(
-                            icon: const Icon(Icons.bolt_rounded),
-                            label: const Text('all questions (legacy)'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _navigateToWorkout(99999, false, true);
-                            },
-                          )),
-                    ])))),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('cancel'),
-              )
-            ],
-          );
-        });
-  }
-
-  Future<void> _navigateToWorkout(int limit, bool reverse, bool legacy) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => WorkoutPage(
-                limit: limit,
-                legacy: legacy,
-                reverse: reverse,
-              )),
-    ).then((value) => _loadData());
+          return StartWorkoutDialog(_loadData);
+        }).then((value) => _loadData());
   }
 
   @override
@@ -417,106 +320,5 @@ class MainFrameState extends State<MainFrame> {
                 )
               ])),
         ));
-  }
-}
-
-class SyncDialog extends StatefulWidget {
-  const SyncDialog({Key? key}) : super(key: key);
-
-  @override
-  SyncDialogStat createState() => SyncDialogStat();
-}
-
-class SyncDialogStat extends State<SyncDialog> {
-  String errorMessage = "";
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<void> _uploadDb() async {
-    setState(() {
-      errorMessage = "loading...";
-    });
-    await DatabaseCon().closeCon();
-    String res = await ncUploadFile();
-    setState(() {
-      errorMessage = "upload: $res";
-    });
-    await DatabaseCon().openCon();
-  }
-
-  Future<void> _downloadDb() async {
-    setState(() {
-      errorMessage = "loading...";
-    });
-    await DatabaseCon().closeCon();
-    String res = await ncDownloadFile();
-    setState(() {
-      errorMessage = "download: $res";
-    });
-    await DatabaseCon().openCon();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Widget doneButton = OutlinedButton(
-        child: const Text("done"),
-        onPressed: () {
-          Navigator.pop(context);
-        });
-    return AlertDialog(
-        actions: [doneButton],
-        title: Row(children: const [
-          Icon(Icons.sync),
-          SizedBox(
-            width: 10,
-          ),
-          Text("sync. database with nextcloud", style: TextStyle(fontSize: 14))
-        ]),
-        content: SizedBox(
-            height: (MediaQuery.of(context).size.height),
-            width: (MediaQuery.of(context).size.width),
-            child: SingleChildScrollView(
-                child: Column(
-              children: <Widget>[
-                Wrap(children: <Widget>[
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.download),
-                    label: Container(
-                        //width: 150,
-                        padding: const EdgeInsets.all(5),
-                        child: const Text('download, overwrite db')),
-                    onPressed: () {
-                      _downloadDb();
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                    width: 10,
-                  ),
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.upload),
-                    label: Container(
-                        //width: 150,
-                        padding: const EdgeInsets.all(5),
-                        child: const Text('upload local db')),
-                    onPressed: () {
-                      _uploadDb();
-                    },
-                  ),
-                ]),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(errorMessage,
-                    style: TextStyle(
-                        color: errorMessage.contains("OK") ||
-                                errorMessage.contains("loading...")
-                            ? Colors.black
-                            : Colors.red))
-              ],
-            ))));
   }
 }

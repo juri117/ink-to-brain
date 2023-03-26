@@ -21,6 +21,7 @@
 * [x] tweak repetition algorithm
 * [x] add button to word list, to force word into learning pool
 * [x] always trim word-strings before processing them
+* [x] rework start workout dialog
 
 ## 0.00.004
 

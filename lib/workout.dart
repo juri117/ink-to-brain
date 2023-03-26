@@ -153,12 +153,12 @@ class WorkoutPageState extends State<WorkoutPage> {
       _state = WorkoutState.done;
     });
 
-    await Future.delayed(const Duration(seconds: 2), () {});
+    await Future.delayed(const Duration(seconds: 1), () {});
 
     words.removeAt(0);
     if (!suc) {
-      if (words.length > 10) {
-        words.insert(10, currentWord);
+      if (words.length > 5) {
+        words.insert(5, currentWord);
       } else {
         words.add(currentWord);
       }

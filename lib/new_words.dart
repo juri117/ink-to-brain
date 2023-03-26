@@ -117,7 +117,6 @@ class NewWordPageState extends State<NewWordPage>
           correctCountRev: editWord.correctCountRev,
           lastAskedTs: editWord.lastAskedTs,
           lastAskedRevTs: editWord.lastAskedRevTs));
-      Navigator.pop(context);
     }
     if (mounted) Navigator.pop(context);
   }
