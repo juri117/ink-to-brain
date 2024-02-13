@@ -36,7 +36,14 @@ class WordDisplayState extends State<WordDisplay> {
                     : (widget.wordPix != null)
                         ? ((widget.wordPix!.isNotEmpty)
                             ? Image.memory(widget.wordPix!)
-                            : const Text("loading..."))
+                            : (widget.wordTxt != "")
+                                ? FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      widget.wordTxt,
+                                      style: const TextStyle(fontSize: 25),
+                                    ))
+                                : const Text("loading..."))
                         : const Text("empty")));
   }
 }

@@ -7,7 +7,7 @@ import 'package:nextcloud/nextcloud.dart';
 
 const nextCloudDir = "ink2brain";
 
-Future<NextCloudClient?> ncGetClient() async {
+Future<NextcloudClient?> ncGetClient() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // final SharedPreferences prefs = await _prefs;
   final String host = prefs.getString('nextcloud_host') ?? "";
@@ -18,10 +18,10 @@ Future<NextCloudClient?> ncGetClient() async {
     return null;
   }
 
-  return NextCloudClient.withCredentials(
-    Uri(host: host),
-    user,
-    pw,
+  return NextcloudClient(
+    Uri(host: host, scheme: 'https'),
+    loginName: user,
+    password: pw,
   );
 }
 
@@ -34,12 +34,13 @@ Future<String> ncUploadFile() async {
     }
 
     final client = await ncGetClient();
+
     if (client == null) {
       //print("no nextcloud host defined");
       return "no nextcloud host defined";
     }
     try {
-      await client.webDav.mkdir('/$nextCloudDir');
+      await client.webdav.mkcol(PathUri.parse('/$nextCloudDir'));
     } catch (e, stacktrace) {
       print(stacktrace);
       //return "failed";
@@ -47,18 +48,19 @@ Future<String> ncUploadFile() async {
 
     try {
       String date = DateFormat("yyyy-MM-dd_HH-mm-ss").format(DateTime.now());
-      await client.webDav
-          .copy('/$nextCloudDir/words.db', '/$nextCloudDir/words_old_$date.db');
+      await client.webdav.copy(PathUri.parse('/$nextCloudDir/words.db'),
+          PathUri.parse('/$nextCloudDir/words_old_$date.db'));
     } catch (e, stacktrace) {
       print(stacktrace);
     }
-    await client.webDav
-        .upload(File(dbPath).readAsBytesSync(), '/$nextCloudDir/words.db');
-  } on RequestException catch (e, stacktrace) {
-    print(e.statusCode);
-    print(e.body);
+    await client.webdav.put(File(dbPath).readAsBytesSync(),
+        PathUri.parse('/$nextCloudDir/words.db'));
+  } on Exception catch (e, stacktrace) {
+    //print(e.statusCode);
+    //print(e.body);
+    print(e);
     print(stacktrace);
-    return "failed: ${e.body}";
+    return "failed: ${e}";
   }
   return "OK";
 }
@@ -78,19 +80,22 @@ Future<String> ncDownloadFile() async {
     }
 
     File(dbPath).writeAsBytesSync(
-        await client.webDav.download('/$nextCloudDir/words.db'));
-  } on RequestException catch (e, stacktrace) {
-    print(e.statusCode);
-    print(e.body);
+        await client.webdav.get(PathUri.parse('/$nextCloudDir/words.db')));
+  } on Exception catch (e, stacktrace) {
+    //print(e.statusCode);
+    //print(e.body);
+    print(e);
     print(stacktrace);
     return "failed";
   }
   return "OK";
 }
 
-Future listFiles(NextCloudClient client) async {
-  final files = await client.webDav.ls('/');
+/*
+Future listFiles(NextcloudClient client) async {
+  final files = await client.webdav.ls('/');
   for (final file in files) {
     print(file.path);
   }
 }
+*/
