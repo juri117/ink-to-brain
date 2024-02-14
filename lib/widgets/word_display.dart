@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const String TAG = "TablePage";
+const String tag = "TablePage";
 
 class WordDisplay extends StatefulWidget {
   final Uint8List? wordPix;

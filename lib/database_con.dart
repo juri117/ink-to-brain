@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:typed_data';
 

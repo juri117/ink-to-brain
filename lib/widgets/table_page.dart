@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String TAG = "TablePage";
+const String tag = "TablePage";
 
 class TablePage extends StatefulWidget {
   final Widget title;

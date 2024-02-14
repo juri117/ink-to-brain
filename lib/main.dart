@@ -1,28 +1,39 @@
 import 'dart:io';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/list.dart';
 import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
+import 'package:ink2brain/noti.dart';
 import 'package:ink2brain/settings.dart';
 import 'package:ink2brain/theme.dart';
 import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/dialog/sync_dialog.dart';
 import 'package:ink2brain/dialog/start_workout_dialog.dart';
+import 'package:ink2brain/notification.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String versionName = "0.00.005";
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void main() async {
   await DatabaseCon().openCon();
   // await ncUploadFile();
   if (Platform.isWindows) {
     DesktopWindow.setFullScreen(true);
+  }
+
+  if (Platform.isAndroid) {
+    scheduleDailyTenAMNotification();
   }
 
   runApp(const MyApp());
@@ -81,6 +92,9 @@ class MainFrameState extends State<MainFrame> {
     super.initState();
     _loadPrefs();
     _loadData();
+    tz.initializeTimeZones();
+    Noti.initialize(flutterLocalNotificationsPlugin);
+    Noti.zonedScheduleNotification(fln: flutterLocalNotificationsPlugin);
   }
 
   Future<void> _loadPrefs() async {
@@ -312,7 +326,13 @@ class MainFrameState extends State<MainFrame> {
                                           const NewWordPage()),
                                 ).then((value) => _loadData());
                               },
-                            )
+                            ),
+                            //ElevatedButton(
+                            //    onPressed: () async {
+                            //      Noti.zonedScheduleNotification(
+                            //          fln: flutterLocalNotificationsPlugin);
+                            //    },
+                            //    child: const Text("Schedule Drink"))
                           ])
                     ]),
                 Wrap(

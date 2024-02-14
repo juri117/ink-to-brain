@@ -50,7 +50,7 @@ class SyncDialogStat extends State<SyncDialog> {
         });
     return AlertDialog(
         actions: [doneButton],
-        title: Row(children: const [
+        title: const Row(children: [
           Icon(Icons.sync),
           SizedBox(
             width: 10,

@@ -60,7 +60,7 @@ Future<String> ncUploadFile() async {
     //print(e.body);
     print(e);
     print(stacktrace);
-    return "failed: ${e}";
+    return "failed: $e";
   }
   return "OK";
 }
