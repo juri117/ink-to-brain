@@ -116,6 +116,7 @@ class MainFrameState extends State<MainFrame> {
 
   Future<void> _startWorkout() async {
     // bool legacyVal = false;
+    Noti.zonedScheduleNotification(fln: flutterLocalNotificationsPlugin);
 
     showDialog(
         context: context,
