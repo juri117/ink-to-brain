@@ -16,7 +16,6 @@ import 'package:ink2brain/theme.dart';
 import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/dialog/sync_dialog.dart';
 import 'package:ink2brain/dialog/start_workout_dialog.dart';
-import 'package:ink2brain/notification.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,9 +31,9 @@ void main() async {
     DesktopWindow.setFullScreen(true);
   }
 
-  if (Platform.isAndroid) {
-    scheduleDailyTenAMNotification();
-  }
+  //if (Platform.isAndroid) {
+  //  scheduleDailyTenAMNotification();
+  //}
 
   runApp(const MyApp());
 }
@@ -93,8 +92,10 @@ class MainFrameState extends State<MainFrame> {
     _loadPrefs();
     _loadData();
     tz.initializeTimeZones();
-    Noti.initialize(flutterLocalNotificationsPlugin);
-    Noti.zonedScheduleNotification(fln: flutterLocalNotificationsPlugin);
+    if (Platform.isAndroid) {
+      Noti.initialize(flutterLocalNotificationsPlugin);
+      Noti.zonedScheduleNotification(fln: flutterLocalNotificationsPlugin);
+    }
   }
 
   Future<void> _loadPrefs() async {
@@ -116,7 +117,9 @@ class MainFrameState extends State<MainFrame> {
 
   Future<void> _startWorkout() async {
     // bool legacyVal = false;
-    Noti.zonedScheduleNotification(fln: flutterLocalNotificationsPlugin);
+    if (Platform.isAndroid) {
+      Noti.zonedScheduleNotification(fln: flutterLocalNotificationsPlugin);
+    }
 
     showDialog(
         context: context,

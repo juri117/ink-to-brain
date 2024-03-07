@@ -13,7 +13,12 @@
 
 **bug-fixes**
 
-## 0.00.005 ...
+## 0.00.006 ...
+
+**new features**
+* add support for timed notification on android
+
+## 0.00.005
 
 **new features**
 * [x] add reverse questioning mode (answer is given, find the question)
