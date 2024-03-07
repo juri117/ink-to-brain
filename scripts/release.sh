@@ -10,7 +10,7 @@ rm release/* -rf
 
 echo "build for Android"
 flutter build apk
-cp build/app/outputs/flutter-apk/app-release.apk release/ink-to-brain-app-$VERSION.apk
+cp build/app/outputs/apk/rellease/app-release.apk release/ink-to-brain-app-$VERSION.apk
 
 
 echo "build for Windows"
@@ -18,7 +18,7 @@ flutter build windows
 
 echo "copy release files"
 mkdir release/ink-to-brain-win-$VERSION
-cp build/windows/runner/Release/* release/ink-to-brain-win-$VERSION/ -r
+cp build/windows/x64/runner/Release/* release/ink-to-brain-win-$VERSION/ -r
 cp README.md release/ink-to-brain-win-$VERSION/
 cp ReleaseNotes.md release/ink-to-brain-win-$VERSION/
 cp LICENSE release/ink-to-brain-win-$VERSION/
