@@ -56,6 +56,16 @@
             ],
         },
         {
+            "name": "Flutter android Pixel 8a",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "3C271JEKB05557"
+            ],
+        },
+        {
             "name": "Flutter android",
             "request": "launch",
             "type": "dart",

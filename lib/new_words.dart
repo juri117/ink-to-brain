@@ -75,10 +75,11 @@ class NewWordPageState extends State<NewWordPage>
   }
 
   Future<void> _save(BuildContext context) async {
-    Uint8List questPix = await _questPaintControl.finish().toPNG();
-    Uint8List answPix = await _answPaintControl.finish().toPNG();
+    //Uint8List questPix = await _questPaintControl.finish().toPNG();
+    //Uint8List answPix = await _answPaintControl.finish().toPNG();
 
     if (widget.editId == null) {
+      /*
       Uint8List? questBytes = img.decodePng(questPix)?.getBytes();
       bool questIsEmpty = true;
       for (final pix in questBytes ?? []) {
@@ -95,12 +96,13 @@ class NewWordPageState extends State<NewWordPage>
           break;
         }
       }
+      */
       DatabaseCon().insertWord(Word(
           id: -1,
           insertTs: DateTime.now(),
-          questionPix: (questIsEmpty) ? null : questPix,
+          questionPix: null,
           questionTxt: _questTxtControl.text.trim(),
-          answerPix: (answIsEmpty) ? null : answPix,
+          answerPix: null,
           answerTxt: _answTxtControl.text.trim(),
           correctCount: 0,
           correctCountRev: 0));
@@ -108,17 +110,15 @@ class NewWordPageState extends State<NewWordPage>
       DatabaseCon().updateWord(Word(
           id: widget.editId!,
           insertTs: editWord.insertTs,
-          questionPix:
-              _questPaintControl.isEmpty ? editWord.questionPix : questPix,
+          questionPix: _questPaintControl.isEmpty ? editWord.questionPix : null,
           questionTxt: _questTxtControl.text.trim(),
-          answerPix: _answPaintControl.isEmpty ? editWord.answerPix : answPix,
+          answerPix: _answPaintControl.isEmpty ? editWord.answerPix : null,
           answerTxt: _answTxtControl.text.trim(),
           correctCount: editWord.correctCount,
           correctCountRev: editWord.correctCountRev,
           lastAskedTs: editWord.lastAskedTs,
           lastAskedRevTs: editWord.lastAskedRevTs));
     }
-    if (mounted) Navigator.pop(context);
   }
 
   Future<void> _delete(BuildContext context) async {
@@ -126,6 +126,7 @@ class NewWordPageState extends State<NewWordPage>
     Navigator.pop(context);
   }
 
+/*
   Future<void> _scanQuest() async {
     await requestWritePermission();
 
@@ -182,41 +183,11 @@ class NewWordPageState extends State<NewWordPage>
       });
     }
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     Widget buttons =
-        Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-      editWord.id <= 0
-          ? const Text("")
-          : Container(
-              height: 60,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-              ),
-              child: (tabIndex == 0)
-                  ? WordDisplay(editWord.questionPix, "...", false)
-                  : WordDisplay(editWord.answerPix, "...", false),
-            ),
-      tabIndex == 0
-          ? OutlinedButton.icon(
-              icon: const Icon(Icons.school),
-              label: const Text('next'),
-              onPressed: () {
-                setState(() {
-                  tabIndex = 1;
-                });
-              },
-            )
-          : OutlinedButton.icon(
-              icon: const Icon(Icons.question_mark),
-              label: const Text('back'),
-              onPressed: () {
-                setState(() {
-                  tabIndex = 0;
-                });
-              },
-            ),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       widget.editId == null
           ? const Text('')
           : OutlinedButton.icon(
@@ -234,6 +205,7 @@ class NewWordPageState extends State<NewWordPage>
         label: Text(widget.editId == null ? 'save' : 'edit'),
         onPressed: () {
           _save(context);
+          if (mounted) Navigator.pop(context);
         },
       )
     ]);
@@ -244,111 +216,52 @@ class NewWordPageState extends State<NewWordPage>
           child: AppBar(
             title: const Text("add questions"),
           )),
-      body: IndexedStack(
-        //controller: _tabController,
-        //physics: const NeverScrollableScrollPhysics(),
-        index: tabIndex,
+      body: Column(
         children: [
-          Flex(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+          Padding(
+              padding: const EdgeInsets.all(5),
+              child: Row(children: [
                 Expanded(
-                    flex: 4,
-                    child: Scrollbar(
-                        controller: _scrollControl,
-                        thumbVisibility: Platform.isWindows ||
-                            Platform.isLinux ||
-                            Platform.isMacOS,
-                        child: SingleChildScrollView(
-                            controller: _scrollControl,
-                            child: Column(children: [
-                              WriteWidget(_questPaintControl, pen: true),
-                              Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Row(children: [
-                                    Expanded(
-                                        flex: 1,
-                                        child: TextField(
-                                            controller: _questTxtControl,
-                                            minLines:
-                                                1, //Normal textInputField will be displayed
-                                            maxLines:
-                                                1, // when user presses enter it will adapt to it
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary)),
-                                              hintText: '...',
-                                              labelText: 'Question Note',
-                                            ))),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.lightbulb_outline),
-                                      onPressed: Platform.isWindows
-                                          ? null
-                                          : () {
-                                              _scanQuest();
-                                            },
-                                    )
-                                  ])),
-                            ])))),
-                Expanded(flex: 1, child: buttons)
-              ]),
-          Flex(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+                    flex: 1,
+                    child: TextField(
+                        controller: _questTxtControl,
+                        minLines: 1, //Normal textInputField will be displayed
+                        maxLines:
+                            1, // when user presses enter it will adapt to it
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary)),
+                          hintText: '...',
+                          labelText: 'Question Note',
+                        ))),
+                const SizedBox(
+                  width: 10,
+                ),
+              ])),
+          Padding(
+              padding: const EdgeInsets.all(5),
+              child: Row(children: [
                 Expanded(
-                    flex: 4,
-                    child: Scrollbar(
-                        controller: _scrollControl2,
-                        thumbVisibility: Platform.isWindows ||
-                            Platform.isLinux ||
-                            Platform.isMacOS,
-                        child: SingleChildScrollView(
-                            controller: _scrollControl2,
-                            child: Column(children: [
-                              WriteWidget(_answPaintControl, pen: true),
-                              Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Row(children: [
-                                    Expanded(
-                                        flex: 1,
-                                        child: TextField(
-                                            controller: _answTxtControl,
-                                            minLines: 1,
-                                            maxLines: 1,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary)),
-                                              hintText: '...',
-                                              labelText: 'Answer Note',
-                                            ))),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.lightbulb_outline),
-                                      onPressed: Platform.isWindows
-                                          ? null
-                                          : () {
-                                              _scanAnsw();
-                                            },
-                                    )
-                                  ])),
-                            ])))),
-                Expanded(flex: 1, child: buttons)
-              ]),
+                    flex: 1,
+                    child: TextField(
+                        controller: _answTxtControl,
+                        minLines: 1,
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary)),
+                          hintText: '...',
+                          labelText: 'Answer Note',
+                        ))),
+                const SizedBox(
+                  width: 10,
+                ),
+              ])),
+          buttons
         ],
       ),
     );

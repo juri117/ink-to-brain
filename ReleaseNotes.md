@@ -17,6 +17,7 @@
 
 **new features**
 * add support for timed notification on android
+* simplify add word dialog (not more draw option for now)
 
 ## 0.00.005
 

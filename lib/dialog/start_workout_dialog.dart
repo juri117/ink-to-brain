@@ -97,16 +97,15 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                             width: 140,
                             height: 60,
                             child: OutlinedButton(
-                              style:
-                                  (learnOptions[index] == selectedLearnOption)
-                                      ? ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .primary
-                                                      .withOpacity(0.3)))
-                                      : null,
+                              style: (learnOptions[index] ==
+                                      selectedLearnOption)
+                                  ? ButtonStyle(
+                                      backgroundColor: WidgetStateProperty.all(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.3)))
+                                  : null,
                               onPressed: () {
                                 setState(() {
                                   selectedLearnOption = learnOptions[index];

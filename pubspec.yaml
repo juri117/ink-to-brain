@@ -44,7 +44,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.1
   intl: ^0.19.0
   #google_ml_kit: ^0.7.3
-  nextcloud: ^5.0.1
+  nextcloud: ^6.1.0
   shared_preferences: ^2.0.9
   flutter_device_type: ^0.4.0
   flutter_launcher_icons: ^0.13.1
@@ -53,12 +53,11 @@ dependencies:
   flex_color_scheme: ^7.1.2
   sqflite_common: ^2.3.0
   image: ^4.1.7
-  flutter_local_notifications: ^16.3.2
+  flutter_local_notifications: ^17.2.1
   timezone: ^0.9.2
-  rxdart: ^0.27.7
-  flutter_native_timezone: ^2.0.0
+  rxdart: ^0.28.0
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: false
   image_path: "resources/icon/launch_icon.png"
@@ -72,7 +71,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
