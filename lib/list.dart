@@ -80,7 +80,7 @@ class ListPageState extends State<ListPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                      width: 300,
+                      width: 200,
                       padding: const EdgeInsets.all(5),
                       child: TextField(
                           controller: _searchTxtControl,
@@ -114,10 +114,10 @@ class ListPageState extends State<ListPage> {
                             ),
                           ))),
                   const SizedBox(
-                    width: 20,
+                    width: 5,
                   ),
                   ElevatedButton(
-                    child: const Text("search"),
+                    child: const Icon(Icons.search),
                     onPressed: () {
                       tableRow._filter(_searchTxtControl.text);
                       tableRow._sort(prevSort, _sortAscending);
@@ -130,15 +130,15 @@ class ListPageState extends State<ListPage> {
                 onSort: (int columnIndex, bool ascending) => _sort<DateTime>(
                     (Word d) => d.insertTs, columnIndex, ascending),
               ),
-              const DataColumn(label: Text('question')),
+              //const DataColumn(label: Text('question')),
               DataColumn(
-                label: const Text(''),
+                label: const Text('question'),
                 onSort: (int columnIndex, bool ascending) => _sort<String>(
                     (Word d) => d.questionTxt, columnIndex, ascending),
               ),
-              const DataColumn(label: Text('answer')),
+              //const DataColumn(label: Text('answer')),
               DataColumn(
-                label: const Text(''),
+                label: const Text('answer'),
                 onSort: (int columnIndex, bool ascending) => _sort<String>(
                     (Word d) => d.answerTxt, columnIndex, ascending),
               ),
@@ -181,6 +181,17 @@ class WordTableRow extends DataTableSource {
       DataCell(AspectRatio(
           aspectRatio: 3.0,
           child: Text(filteredData[index].getInsertDateStr()))),
+      DataCell(Row(children: [
+        (filteredData[index].questionPix?.isNotEmpty ?? false)
+            ? SizedBox(
+                width: 120,
+                child: AspectRatio(
+                    aspectRatio: 3.0,
+                    child: Image.memory(filteredData[index].questionPix!)))
+            : const SizedBox(),
+        Text(filteredData[index].questionTxt)
+      ])),
+      /*
       DataCell(SizedBox(
           width: 120,
           child: AspectRatio(
@@ -189,14 +200,18 @@ class WordTableRow extends DataTableSource {
                   ? Image.memory(filteredData[index].questionPix!)
                   : const SizedBox()))),
       DataCell(Text(filteredData[index].questionTxt)),
-      DataCell(SizedBox(
-          width: 120,
-          child: AspectRatio(
-              aspectRatio: 3.0,
-              child: (filteredData[index].answerPix?.isNotEmpty ?? false)
-                  ? Image.memory(filteredData[index].answerPix!)
-                  : const SizedBox()))),
-      DataCell(Text(filteredData[index].answerTxt)),
+      */
+      DataCell(Row(children: [
+        (filteredData[index].answerPix?.isNotEmpty ?? false)
+            ? SizedBox(
+                width: 120,
+                child: AspectRatio(
+                    aspectRatio: 3.0,
+                    child: Image.memory(filteredData[index].answerPix!)))
+            : const SizedBox(),
+        Text(filteredData[index].answerTxt)
+      ])),
+      //DataCell(Text(filteredData[index].answerTxt)),
       DataCell(Text("${filteredData[index].correctCount}")),
       DataCell(Text(filteredData[index].getLastAskedDateStr())),
       DataCell(Row(children: [

@@ -28,7 +28,7 @@ Future<String?> getDbPath() async {
     }
     return path.join(dir.path, 'words.db');
   }
-  if (io.Platform.isWindows) {
+  if (io.Platform.isWindows || io.Platform.isLinux) {
     final dir = io.Directory.current;
     if (!await dir.exists()) {
       await dir.create(recursive: true);

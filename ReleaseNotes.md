@@ -13,7 +13,7 @@
 
 **bug-fixes**
 
-## 0.00.006 ...
+## 0.00.006
 
 **new features**
 * add support for timed notification on android

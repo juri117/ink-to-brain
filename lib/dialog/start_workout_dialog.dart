@@ -48,7 +48,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
       //title: const Text('start workout...'),
       content: SizedBox(
           height: 200, //(MediaQuery.of(context).size.height),
-          width: 400, //(MediaQuery.of(context).size.width),
+          width: 500,
           child: Scrollbar(
               controller: dialogScrollController,
               thumbVisibility:
@@ -58,10 +58,11 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                   child: Column(children: [
                     Row(children: [
                       SizedBox(
-                          width: 190,
+                          width: 140,
                           height: 60,
                           child: SwitchListTile(
                             title: const Text('reverse'),
+                            contentPadding: const EdgeInsets.only(right: 12),
                             value: learnReverse,
                             onChanged: (bool value) {
                               setState(() {
@@ -72,10 +73,11 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                             //    const Icon(Icons.lightbulb_outline),
                           )),
                       SizedBox(
-                          width: 190,
+                          width: 140,
                           height: 60,
                           child: SwitchListTile(
                             title: const Text('legacy'),
+                            contentPadding: const EdgeInsets.only(left: 16),
                             value: learnLegacy,
                             onChanged: (bool value) {
                               setState(() {

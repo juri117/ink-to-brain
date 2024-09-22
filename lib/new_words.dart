@@ -1,17 +1,10 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_tesseract_ocr/android_ios.dart';
-import 'package:image/image.dart' as img;
+import 'package:flutter/services.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
-import 'package:ink2brain/utils/file_utils.dart';
 import 'package:ink2brain/widgets/painter.dart';
-import 'package:ink2brain/widgets/word_display.dart';
-import 'package:ink2brain/widgets/write_widget.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 // import 'package:google_ml_kit/google_ml_kit.dart';
 
 class NewWordPage extends StatefulWidget {
@@ -33,8 +26,8 @@ class NewWordPageState extends State<NewWordPage>
   final TextEditingController _questTxtControl = TextEditingController();
   final TextEditingController _answTxtControl = TextEditingController();
 
-  final ScrollController _scrollControl = ScrollController();
-  final ScrollController _scrollControl2 = ScrollController();
+  //final ScrollController _scrollControl = ScrollController();
+  //final ScrollController _scrollControl2 = ScrollController();
 
   Word editWord = Word(
       id: -1,
@@ -49,6 +42,11 @@ class NewWordPageState extends State<NewWordPage>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
     _loadData();
   }
 

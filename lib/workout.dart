@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:math';
+import 'package:flutter/services.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 
 import 'package:flutter/material.dart';
@@ -52,6 +53,11 @@ class WorkoutPageState extends State<WorkoutPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft
+    ]);
     _loadPrefs();
     _loadWords();
   }
@@ -313,7 +319,7 @@ class WorkoutPageState extends State<WorkoutPage> {
 
     if (Device.get().isPhone &&
         MediaQuery.of(context).orientation == Orientation.landscape &&
-        !Platform.isWindows) {
+        !(Platform.isWindows || Platform.isLinux)) {
       mainRow = [
         questionCont,
         Expanded(
@@ -431,7 +437,7 @@ class WorkoutPageState extends State<WorkoutPage> {
     }
     if (Device.get().isPhone &&
         MediaQuery.of(context).orientation == Orientation.landscape &&
-        !Platform.isWindows) {
+        !(Platform.isWindows || Platform.isLinux)) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround, children: buttons);
     }

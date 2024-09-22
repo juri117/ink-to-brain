@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_tesseract_ocr/android_ios.dart';
+//import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:image/image.dart' as img;
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
@@ -133,7 +133,7 @@ class NewWordPageState extends State<NewWordPage>
         : await _questPaintControl.generateRendering().toPNG();
     if (pix != null) {
       Directory? directory;
-      if (Platform.isWindows) {
+      if (Platform.isWindows || Platform.isLinux) {
         directory = Directory.current;
       } else {
         directory = await getExternalStorageDirectory();
@@ -141,8 +141,9 @@ class NewWordPageState extends State<NewWordPage>
       final String fOutPath = join(directory!.path, "tmpQuestImg.png");
       final File fOut = File(fOutPath);
       fOut.writeAsBytes(pix);
-
+      /*
       String langName = "deu";
+      
       String text = await FlutterTesseractOcr.extractText(fOutPath,
           language: langName,
           args: {
@@ -152,6 +153,7 @@ class NewWordPageState extends State<NewWordPage>
       setState(() {
         _questTxtControl.text = text;
       });
+      */
     }
   }
 
@@ -167,7 +169,7 @@ class NewWordPageState extends State<NewWordPage>
       final String fOutPath = join(directory!.path, "tmpAnswImg.png");
       final File fOut = File(fOutPath);
       fOut.writeAsBytes(pix);
-
+      /*
       String langName = "vie";
 
       String text = await FlutterTesseractOcr.extractText(fOutPath,
@@ -179,6 +181,7 @@ class NewWordPageState extends State<NewWordPage>
       setState(() {
         _answTxtControl.text = text;
       });
+      */
     }
   }
 

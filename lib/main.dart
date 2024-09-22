@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/services.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import 'package:flutter/material.dart';
@@ -25,6 +26,19 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  if (flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>() !=
+      null) {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()!
+        .requestNotificationsPermission();
+  }
+
   await DatabaseCon().openCon();
   // await ncUploadFile();
   if (Platform.isWindows) {
@@ -89,6 +103,11 @@ class MainFrameState extends State<MainFrame> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft
+    ]);
     _loadPrefs();
     _loadData();
     tz.initializeTimeZones();
@@ -165,6 +184,51 @@ class MainFrameState extends State<MainFrame> {
               ))));
     }
 
+    List<Widget> buttons = [
+      OutlinedButton.icon(
+        icon: const Icon(Icons.fitness_center),
+        label: Container(
+            width: 150,
+            padding: const EdgeInsets.all(20),
+            child: const Text('start workout')),
+        onPressed: () {
+          _startWorkout();
+        },
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      OutlinedButton.icon(
+        icon: const Icon(Icons.list),
+        label: Container(
+            padding: const EdgeInsets.all(20),
+            width: 150,
+            child: const Text('all questions')),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ListPage()),
+          ).then((value) => _loadData());
+        },
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      OutlinedButton.icon(
+        icon: const Icon(Icons.library_add_outlined),
+        label: Container(
+            width: 150,
+            padding: const EdgeInsets.all(20),
+            child: const Text('add questions')),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const NewWordPage()),
+          ).then((value) => _loadData());
+        },
+      ),
+    ];
+
     return Scaffold(
         appBar: PreferredSize(
             preferredSize:
@@ -210,139 +274,92 @@ class MainFrameState extends State<MainFrame> {
                 ),
               ],
             )),
-        body: Scrollbar(
-          controller: _scrollController,
-          thumbVisibility:
-              Platform.isWindows || Platform.isLinux || Platform.isMacOS,
-          child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(children: [
-                Column(
-                    //padding: const EdgeInsets.only(
-                    //    top: 10.0, bottom: 10, left: 50, right: 50),
-                    children: [
-                      Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                              border: Border.all(
-                                  color: Colors.transparent, width: 1.5),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(3))),
-                          child: Column(
-                            children: [
-                              //Text(
-                              //  "Questions:",
-                              //  style: TextStyle(fontWeight: FontWeight.bold),
-                              //),
-                              Row(
+        body: OrientationBuilder(builder: (context, orientation) {
+          return Scrollbar(
+            controller: _scrollController,
+            thumbVisibility:
+                Platform.isWindows || Platform.isLinux || Platform.isMacOS,
+            child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(children: [
+                  Column(
+                      //padding: const EdgeInsets.only(
+                      //    top: 10.0, bottom: 10, left: 50, right: 50),
+                      children: [
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                                border: Border.all(
+                                    color: Colors.transparent, width: 1.5),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(3))),
+                            child: Column(
+                              children: [
+                                //Text(
+                                //  "Questions:",
+                                //  style: TextStyle(fontWeight: FontWeight.bold),
+                                //),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(children: [
+                                      const Text("total"),
+                                      Text("${stat.totalCount}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      const Text("")
+                                    ]),
+                                    Column(children: [
+                                      const Text("mastered"),
+                                      Text("${stat.learnedCount}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text("rev: ${statRev.learnedCount}")
+                                    ]),
+                                    Column(children: [
+                                      const Text("new"),
+                                      Text("${stat.activeCount}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text("rev: ${statRev.activeCount}")
+                                    ]),
+                                    Column(children: [
+                                      const Text("practiced today"),
+                                      Text("${stat.todayCount}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text("rev: ${statRev.todayCount}")
+                                    ]),
+                                    Column(children: [
+                                      const Text("left for today"),
+                                      Text("${stat.leftForToday}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text("rev: ${statRev.leftForToday}")
+                                    ]),
+                                  ],
+                                )
+                              ],
+                            )),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        (orientation == Orientation.landscape)
+                            ? Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
-                                children: [
-                                  Column(children: [
-                                    const Text("total"),
-                                    Text("${stat.totalCount}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    const Text("")
-                                  ]),
-                                  Column(children: [
-                                    const Text("mastered"),
-                                    Text("${stat.learnedCount}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text("rev: ${statRev.learnedCount}")
-                                  ]),
-                                  Column(children: [
-                                    const Text("new"),
-                                    Text("${stat.activeCount}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text("rev: ${statRev.activeCount}")
-                                  ]),
-                                  Column(children: [
-                                    const Text("practiced today"),
-                                    Text("${stat.todayCount}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text("rev: ${statRev.todayCount}")
-                                  ]),
-                                  Column(children: [
-                                    const Text("left for today"),
-                                    Text("${stat.leftForToday}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text("rev: ${statRev.leftForToday}")
-                                  ]),
-                                ],
-                              )
-                            ],
-                          )),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            OutlinedButton.icon(
-                              icon: const Icon(Icons.fitness_center),
-                              label: Container(
-                                  width: 150,
-                                  padding: const EdgeInsets.all(20),
-                                  child: const Text('start workout')),
-                              onPressed: () {
-                                _startWorkout();
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            OutlinedButton.icon(
-                              icon: const Icon(Icons.list),
-                              label: Container(
-                                  padding: const EdgeInsets.all(20),
-                                  width: 150,
-                                  child: const Text('all questions')),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const ListPage()),
-                                ).then((value) => _loadData());
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            OutlinedButton.icon(
-                              icon: const Icon(Icons.library_add_outlined),
-                              label: Container(
-                                  width: 150,
-                                  padding: const EdgeInsets.all(20),
-                                  child: const Text('add questions')),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const NewWordPage()),
-                                ).then((value) => _loadData());
-                              },
-                            ),
-                            //ElevatedButton(
-                            //    onPressed: () async {
-                            //      Noti.zonedScheduleNotification(
-                            //          fln: flutterLocalNotificationsPlugin);
-                            //    },
-                            //    child: const Text("Schedule Drink"))
-                          ])
-                    ]),
-                Wrap(
-                  children: badWordWidgetList,
-                )
-              ])),
-        ));
+                                children: buttons)
+                            : Column(children: buttons)
+                      ]),
+                  Wrap(
+                    children: badWordWidgetList,
+                  )
+                ])),
+          );
+        }));
   }
 }
