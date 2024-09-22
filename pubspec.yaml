@@ -58,9 +58,11 @@ dependencies:
   rxdart: ^0.28.0
 
 flutter_launcher_icons:
+  # flutter pub run flutter_launcher_icons
   android: true
   ios: false
   image_path: "resources/icon/launch_icon.png"
+  adaptive_icon_background: "#ffffff"
 
 dev_dependencies:
   flutter_test:
