@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
@@ -54,8 +53,8 @@ class WorkoutPageState extends State<WorkoutPage> {
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.landscapeRight,
+      //DeviceOrientation.portraitUp,
+      //DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft
     ]);
     _loadPrefs();

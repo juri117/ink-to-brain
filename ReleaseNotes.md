@@ -13,6 +13,18 @@
 
 **bug-fixes**
 
+## 0.00.007
+
+**new features**
+* upgrade dependencies
+* force landscape on android in workout screen
+* use version from pubspec.yaml
+* release script, release for linux if on linux
+
+**bug-fixes**
+* fix icon on android
+* prevent being send to lockscreen on startup
+
 ## 0.00.006
 
 **new features**

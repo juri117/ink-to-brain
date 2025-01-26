@@ -38,21 +38,26 @@ flutter build apk
 cp build/app/outputs/apk/release/app-release.apk release/$RELEASE_FOLDER_APP.apk
 
 
-echo "build for Windows"
-flutter build windows
+echo "build for $PLATFORM"
+flutter build $PLATFORM --release
 
 echo "copy release files"
 mkdir release/$RELEASE_FOLDER_WIN
-cp build/windows/x64/runner/Release/* release/$RELEASE_FOLDER_WIN/ -r
+# cp build/windows/x64/runner/Release/* release/$RELEASE_FOLDER_WIN/ -r
+cp $RELEASE_PATH/* release/$RELEASE_FOLDER/ -r
 cp README.md release/$RELEASE_FOLDER_WIN/
 cp ReleaseNotes.md release/$RELEASE_FOLDER_WIN/
 cp LICENSE release/$RELEASE_FOLDER_WIN/
 cp scripts/data/run.sh release/$RELEASE_FOLDER_WIN/
-if ! [[ -f "scripts/data/sqlite3.dll" ]]; then
-    echo "downloading sqlite3.dll"
-    curl https://raw.githubusercontent.com/tekartik/sqflite/master/sqflite_common_ffi/lib/src/windows/sqlite3.dll --output scripts/data/sqlite3.dll
+
+if [[ $PLATFORM == "windows" ]]; then
+    if ! [[ -f "scripts/data/sqlite3.dll" ]]; then
+        echo "downloading sqlite3.dll"
+        curl https://raw.githubusercontent.com/tekartik/sqflite/master/sqflite_common_ffi/lib/src/windows/sqlite3.dll --output scripts/data/sqlite3.dll
+    fi
+    cp scripts/data/sqlite3.dll release/$RELEASE_FOLDER_WIN/
 fi
-cp scripts/data/sqlite3.dll release/$RELEASE_FOLDER_WIN/
+
 
 echo "zip release files"
 cd release

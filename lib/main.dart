@@ -3,6 +3,7 @@ import 'package:desktop_window/desktop_window.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/services.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -20,13 +21,25 @@ import 'package:ink2brain/dialog/start_workout_dialog.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-const String versionName = "0.00.005";
+String versionName = "?.?.?";
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // prevent being send to lockscreen on startup
+  if (Platform.isAndroid) {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.edgeToEdge,
+      overlays: [SystemUiOverlay.top],
+    );
+  }
+
+  // read version
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  versionName = packageInfo.version;
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -247,7 +260,7 @@ class MainFrameState extends State<MainFrame> {
                       color: Theme.of(context)
                           .colorScheme
                           .primaryContainer
-                          .withOpacity(0.5)),
+                          .withValues(alpha: 0.5)),
                 )
               ]),
               actions: [

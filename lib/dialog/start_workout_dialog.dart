@@ -106,7 +106,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                                           Theme.of(context)
                                               .colorScheme
                                               .primary
-                                              .withOpacity(0.3)))
+                                              .withValues(alpha: 0.3)))
                                   : null,
                               onPressed: () {
                                 setState(() {
