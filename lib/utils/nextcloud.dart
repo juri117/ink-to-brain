@@ -44,7 +44,6 @@ Future<String> ncUploadFile() async {
       await client.webdav.mkcol(PathUri.parse('/$nextCloudDir'));
     } catch (e, stacktrace) {
       print(stacktrace);
-      //return "failed";
     }
 
     try {

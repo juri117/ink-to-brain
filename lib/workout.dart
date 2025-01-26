@@ -406,8 +406,11 @@ class WorkoutPageState extends State<WorkoutPage> {
             height: 5,
           ),
           OutlinedButton.icon(
-            icon: const Icon(Icons.sentiment_satisfied),
-            label: const Text('wrong :('),
+            icon: const Icon(
+              Icons.sentiment_very_dissatisfied,
+              color: Colors.red,
+            ),
+            label: const Text('wrong'),
             style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.red,
                 backgroundColor: const Color(0xFFFFE4E4)),
@@ -416,7 +419,10 @@ class WorkoutPageState extends State<WorkoutPage> {
             },
           ),
           OutlinedButton.icon(
-            icon: const Icon(Icons.emoji_emotions_outlined),
+            icon: const Icon(
+              Icons.sentiment_satisfied_alt,
+              color: Colors.green,
+            ),
             label: const Text('correct'),
             style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.green,

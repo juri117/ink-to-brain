@@ -47,7 +47,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
     return AlertDialog(
       //title: const Text('start workout...'),
       content: SizedBox(
-          height: 200, //(MediaQuery.of(context).size.height),
+          height: 190, //(MediaQuery.of(context).size.height),
           width: 500,
           child: Scrollbar(
               controller: dialogScrollController,
@@ -62,7 +62,8 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                           height: 60,
                           child: SwitchListTile(
                             title: const Text('reverse'),
-                            contentPadding: const EdgeInsets.only(right: 12),
+                            contentPadding: const EdgeInsets.only(right: 8),
+                            visualDensity: VisualDensity.compact,
                             value: learnReverse,
                             onChanged: (bool value) {
                               setState(() {
@@ -77,7 +78,8 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                           height: 60,
                           child: SwitchListTile(
                             title: const Text('legacy'),
-                            contentPadding: const EdgeInsets.only(left: 16),
+                            contentPadding: const EdgeInsets.only(left: 8),
+                            visualDensity: VisualDensity.compact,
                             value: learnLegacy,
                             onChanged: (bool value) {
                               setState(() {
@@ -88,8 +90,9 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                             //    const Icon(Icons.lightbulb_outline),
                           )),
                     ]),
+                    SizedBox(height: 10),
                     GridView.count(
-                      childAspectRatio: 4,
+                      childAspectRatio: 2.5,
                       shrinkWrap: true,
                       crossAxisCount: 2,
                       mainAxisSpacing: 5,
@@ -113,7 +116,10 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                                   selectedLearnOption = learnOptions[index];
                                 });
                               },
-                              child: Text(learnOptions[index].name),
+                              child: Text(
+                                learnOptions[index].name,
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ));
                       }),
                     ),
