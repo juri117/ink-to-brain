@@ -86,7 +86,7 @@ Future<String> ncDownloadFile() async {
     //print(e.body);
     print(e);
     print(stacktrace);
-    return "failed";
+    return "failed {e}";
   }
   return "OK";
 }

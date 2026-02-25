@@ -47,7 +47,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
     return AlertDialog(
       //title: const Text('start workout...'),
       content: SizedBox(
-          height: 190, //(MediaQuery.of(context).size.height),
+          //height: (MediaQuery.of(context).size.height * 0.8),
           width: 500,
           child: Scrollbar(
               controller: dialogScrollController,
@@ -59,7 +59,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                     Row(children: [
                       SizedBox(
                           width: 140,
-                          height: 60,
+                          height: 40,
                           child: SwitchListTile(
                             title: const Text('reverse'),
                             contentPadding: const EdgeInsets.only(right: 8),
@@ -75,7 +75,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                           )),
                       SizedBox(
                           width: 140,
-                          height: 60,
+                          height: 40,
                           child: SwitchListTile(
                             title: const Text('legacy'),
                             contentPadding: const EdgeInsets.only(left: 8),
@@ -91,17 +91,19 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                           )),
                     ]),
                     SizedBox(height: 10),
-                    GridView.count(
-                      childAspectRatio: 2.5,
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 5,
-                      crossAxisSpacing: 5,
-                      children: List.generate(learnOptions.length, (index) {
-                        return SizedBox(
-                            width: 140,
-                            height: 60,
-                            child: OutlinedButton(
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final cellWidth = (constraints.maxWidth - 5) / 2;
+                        const cellHeight = 60.0;
+                        return GridView.count(
+                          childAspectRatio: cellWidth / cellHeight,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 5,
+                          crossAxisSpacing: 5,
+                          children: List.generate(learnOptions.length, (index) {
+                            return OutlinedButton(
                               style: (learnOptions[index] ==
                                       selectedLearnOption)
                                   ? ButtonStyle(
@@ -120,8 +122,10 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                                 learnOptions[index].name,
                                 style: TextStyle(fontSize: 16),
                               ),
-                            ));
-                      }),
+                            );
+                          }),
+                        );
+                      },
                     ),
                   ])))),
       actions: <Widget>[
