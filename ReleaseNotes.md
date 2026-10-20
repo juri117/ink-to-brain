@@ -7,7 +7,7 @@
 * [ ] compress image files
 * learning statistics
   * [ ] db: log learning sessions
-* [ ] just in time download of tesseract tesserdata
+* [ ] just in time download of tesseract tessdata
 * [ ] check database update state on startup
   * [ ] auto next-cloud sync on startup and after session
 
@@ -23,7 +23,7 @@
 
 **bug-fixes**
 * fix icon on android
-* prevent being send to lockscreen on startup
+* prevent being send to lock-screen on startup
 
 ## 0.00.006
 

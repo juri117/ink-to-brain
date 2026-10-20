@@ -5,15 +5,20 @@
         "ARGB",
         "autocorrect",
         "AUTOINCREMENT",
+        "Cupertino",
         "DATETIME",
         "LTWH",
         "mkcol",
         "nextcloud",
         "prefs",
         "Prefs",
+        "pubspec",
+        "rxdart",
         "sqflite",
         "sqlite",
+        "tessdata",
         "tesseract",
+        "traineddata",
         "webdav"
     ]
 }
