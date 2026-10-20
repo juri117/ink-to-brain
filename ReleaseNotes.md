@@ -13,7 +13,7 @@
 
 **bug-fixes**
 
-## 0.00.007
+## 0.0.7
 
 **new features**
 * upgrade dependencies
