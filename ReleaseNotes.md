@@ -21,6 +21,7 @@
 * settings: configurable practice / primary languages for journal translation
 * journal works on desktop without translation
 * use languages from settings to select corresponding keyboard in text fields
+* add localization for en, vn
 
 ## 0.0.7
 

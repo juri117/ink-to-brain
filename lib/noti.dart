@@ -1,4 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
+import 'package:ink2brain/locale_controller.dart';
 
 import 'package:timezone/timezone.dart' as tz;
 import 'dart:math';
@@ -32,10 +34,12 @@ class Noti {
     //print(date.toString());
     //print(tz.TZDateTime.parse(tz.local, date.toString()).toString());
     try {
+      final l10n =
+          await AppLocalizations.delegate.load(localeController.locale);
       await fln.zonedSchedule(
         id: id,
-        title: "thời gian để học tiếng Việt!",
-        body: "bây giờ, nhanh đi!",
+        title: l10n.notiTitle,
+        body: l10n.notiBody,
         scheduledDate: tz.TZDateTime.parse(tz.local, date.toString()),
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(

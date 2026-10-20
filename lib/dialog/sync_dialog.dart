@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/utils/nextcloud.dart';
 
 class SyncDialog extends StatefulWidget {
@@ -11,6 +12,7 @@ class SyncDialog extends StatefulWidget {
 
 class SyncDialogStat extends State<SyncDialog> {
   String errorMessage = "";
+  bool _busy = false;
 
   @override
   void initState() {
@@ -18,44 +20,51 @@ class SyncDialogStat extends State<SyncDialog> {
   }
 
   Future<void> _uploadDb() async {
+    final l10n = AppLocalizations.of(context);
     setState(() {
-      errorMessage = "loading...";
+      _busy = true;
+      errorMessage = l10n.loading;
     });
     await DatabaseCon().closeCon();
     String res = await ncUploadFile();
     setState(() {
-      errorMessage = "upload: $res";
+      _busy = false;
+      errorMessage = l10n.uploadResult(res);
     });
     await DatabaseCon().openCon();
   }
 
   Future<void> _downloadDb() async {
+    final l10n = AppLocalizations.of(context);
     setState(() {
-      errorMessage = "loading...";
+      _busy = true;
+      errorMessage = l10n.loading;
     });
     await DatabaseCon().closeCon();
     String res = await ncDownloadFile();
     setState(() {
-      errorMessage = "download: $res";
+      _busy = false;
+      errorMessage = l10n.downloadResult(res);
     });
     await DatabaseCon().openCon();
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     Widget doneButton = OutlinedButton(
-        child: const Text("done"),
+        child: Text(l10n.done),
         onPressed: () {
           Navigator.pop(context);
         });
     return AlertDialog(
         actions: [doneButton],
-        title: const Row(children: [
-          Icon(Icons.sync),
-          SizedBox(
+        title: Row(children: [
+          const Icon(Icons.sync),
+          const SizedBox(
             width: 10,
           ),
-          Text("sync. database with nextcloud", style: TextStyle(fontSize: 14))
+          Text(l10n.syncDatabase, style: const TextStyle(fontSize: 14))
         ]),
         content: SizedBox(
             height: (MediaQuery.of(context).size.height),
@@ -69,7 +78,7 @@ class SyncDialogStat extends State<SyncDialog> {
                     label: Container(
                         //width: 150,
                         padding: const EdgeInsets.all(5),
-                        child: const Text('download, overwrite db')),
+                        child: Text(l10n.downloadOverwrite)),
                     onPressed: () {
                       _downloadDb();
                     },
@@ -83,7 +92,7 @@ class SyncDialogStat extends State<SyncDialog> {
                     label: Container(
                         //width: 150,
                         padding: const EdgeInsets.all(5),
-                        child: const Text('upload local db')),
+                        child: Text(l10n.uploadLocalDb)),
                     onPressed: () {
                       _uploadDb();
                     },
@@ -94,8 +103,7 @@ class SyncDialogStat extends State<SyncDialog> {
                 ),
                 Text(errorMessage,
                     style: TextStyle(
-                        color: errorMessage.contains("OK") ||
-                                errorMessage.contains("loading...")
+                        color: _busy || errorMessage.contains("OK")
                             ? Colors.black
                             : Colors.red))
               ],

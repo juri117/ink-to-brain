@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/widgets/painter.dart';
 
 class WriteWidget extends StatefulWidget {
@@ -14,6 +15,7 @@ class WriteWidget extends StatefulWidget {
 class WriteWidgetState extends State<WriteWidget> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
         padding: const EdgeInsets.all(5),
         child: Align(
@@ -38,8 +40,9 @@ class WriteWidgetState extends State<WriteWidget> {
                                     widget.controller.eraseMode ? 1 : 0,
                                 child: IconButton(
                                     icon: const Icon(Icons.create),
-                                    tooltip:
-                                        '${widget.controller.eraseMode ? 'Disable' : 'Enable'} eraser',
+                                    tooltip: widget.controller.eraseMode
+                                        ? l10n.disableEraser
+                                        : l10n.enableEraser,
                                     onPressed: () {
                                       setState(() {
                                         widget.controller.eraseMode =
@@ -53,12 +56,12 @@ class WriteWidgetState extends State<WriteWidget> {
                             IconButton(
                                 splashRadius: 10.0,
                                 icon: const Icon(Icons.undo),
-                                tooltip: 'Undo',
+                                tooltip: l10n.undo,
                                 onPressed: widget.controller.undo),
                             IconButton(
                                 splashRadius: 10.0,
                                 icon: const Icon(Icons.delete),
-                                tooltip: 'Clear',
+                                tooltip: l10n.clear,
                                 onPressed: widget.controller.clear)
                           ])))
                 ]),

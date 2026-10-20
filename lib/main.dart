@@ -10,7 +10,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/journal_edit.dart';
 import 'package:ink2brain/journal_list.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/list.dart';
+import 'package:ink2brain/locale_controller.dart';
 import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
@@ -55,6 +57,7 @@ void main() async {
   }
 
   await DatabaseCon().openCon();
+  await localeController.load();
   // await ncUploadFile();
   if (Platform.isWindows) {
     DesktopWindow.setFullScreen(true);
@@ -72,17 +75,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "ink to brain",
-      home: const MainFrame(),
-      theme: FlexThemeData.light(
-        colors: myFlexScheme.light,
-        //appBarElevation: 0.5,
-      ),
-      darkTheme: FlexThemeData.dark(
-        colors: myFlexScheme.dark,
-      ),
-      themeMode: themeMode,
+    return ListenableBuilder(
+      listenable: localeController,
+      builder: (context, child) {
+        return MaterialApp(
+          title: "ink to brain",
+          locale: localeController.locale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: child,
+          theme: FlexThemeData.light(
+            colors: myFlexScheme.light,
+            //appBarElevation: 0.5,
+          ),
+          darkTheme: FlexThemeData.dark(
+            colors: myFlexScheme.dark,
+          ),
+          themeMode: themeMode,
+        );
+      },
+      child: const MainFrame(),
     );
   }
 }
@@ -126,10 +141,24 @@ class MainFrameState extends State<MainFrame> {
     _loadPrefs();
     _loadData();
     tz.initializeTimeZones();
+    localeController.addListener(_onLocaleChanged);
     if (Platform.isAndroid) {
       Noti.initialize(flutterLocalNotificationsPlugin);
       Noti.zonedScheduleNotification(fln: flutterLocalNotificationsPlugin);
     }
+  }
+
+  void _onLocaleChanged() {
+    if (Platform.isAndroid) {
+      Noti.zonedScheduleNotification(fln: flutterLocalNotificationsPlugin);
+    }
+  }
+
+  @override
+  void dispose() {
+    localeController.removeListener(_onLocaleChanged);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadPrefs() async {
@@ -164,6 +193,7 @@ class MainFrameState extends State<MainFrame> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     List<Widget> badWordWidgetList = [];
     for (final w in badWords) {
       badWordWidgetList.add(Container(
@@ -205,7 +235,7 @@ class MainFrameState extends State<MainFrame> {
         label: Container(
             width: 150,
             padding: const EdgeInsets.all(20),
-            child: const Text('start workout')),
+            child: Text(l10n.startWorkout)),
         onPressed: () {
           _startWorkout();
         },
@@ -218,7 +248,7 @@ class MainFrameState extends State<MainFrame> {
         label: Container(
             padding: const EdgeInsets.all(20),
             width: 150,
-            child: const Text('all questions')),
+            child: Text(l10n.allQuestions)),
         onPressed: () {
           Navigator.push(
             context,
@@ -234,7 +264,7 @@ class MainFrameState extends State<MainFrame> {
         label: Container(
             width: 150,
             padding: const EdgeInsets.all(20),
-            child: const Text('add questions')),
+            child: Text(l10n.addQuestions)),
         onPressed: () {
           Navigator.push(
             context,
@@ -250,7 +280,7 @@ class MainFrameState extends State<MainFrame> {
         label: Container(
             width: 150,
             padding: const EdgeInsets.all(20),
-            child: const Text('write journal')),
+            child: Text(l10n.writeJournal)),
         onPressed: () {
           Navigator.push(
             context,
@@ -266,7 +296,7 @@ class MainFrameState extends State<MainFrame> {
         label: Container(
             width: 150,
             padding: const EdgeInsets.all(20),
-            child: const Text('journal')),
+            child: Text(l10n.journal)),
         onPressed: () {
           Navigator.push(
             context,
@@ -283,7 +313,7 @@ class MainFrameState extends State<MainFrame> {
             child: AppBar(
               title:
                   Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text("ink to brain"),
+                Text(l10n.appTitle),
                 const SizedBox(
                   width: 10,
                 ),
@@ -300,7 +330,7 @@ class MainFrameState extends State<MainFrame> {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.settings),
-                  tooltip: 'settings',
+                  tooltip: l10n.settingsTooltip,
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -310,7 +340,7 @@ class MainFrameState extends State<MainFrame> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.sync),
-                  tooltip: 'sync.',
+                  tooltip: l10n.syncTooltip,
                   onPressed: () {
                     showDialog<bool>(
                         context: context,
@@ -354,39 +384,39 @@ class MainFrameState extends State<MainFrame> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     Column(children: [
-                                      const Text("total"),
+                                      Text(l10n.total),
                                       Text("${stat.totalCount}",
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold)),
                                       const Text("")
                                     ]),
                                     Column(children: [
-                                      const Text("mastered"),
+                                      Text(l10n.mastered),
                                       Text("${stat.learnedCount}",
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold)),
-                                      Text("rev: ${statRev.learnedCount}")
+                                      Text(l10n.revCount(statRev.learnedCount))
                                     ]),
                                     Column(children: [
-                                      const Text("new"),
+                                      Text(l10n.statNew),
                                       Text("${stat.activeCount}",
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold)),
-                                      Text("rev: ${statRev.activeCount}")
+                                      Text(l10n.revCount(statRev.activeCount))
                                     ]),
                                     Column(children: [
-                                      const Text("practiced today"),
+                                      Text(l10n.practicedToday),
                                       Text("${stat.todayCount}",
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold)),
-                                      Text("rev: ${statRev.todayCount}")
+                                      Text(l10n.revCount(statRev.todayCount))
                                     ]),
                                     Column(children: [
-                                      const Text("left for today"),
+                                      Text(l10n.leftForToday),
                                       Text("${stat.leftForToday}",
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold)),
-                                      Text("rev: ${statRev.leftForToday}")
+                                      Text(l10n.revCount(statRev.leftForToday))
                                     ]),
                                   ],
                                 )

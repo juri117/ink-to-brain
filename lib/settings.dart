@@ -1,4 +1,6 @@
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
+import 'package:ink2brain/locale_controller.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +26,7 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
   final nextcloudPwController = TextEditingController();
 
   bool useTextIfExists = false;
+  String appLanguage = 'en';
   String practiceLang = 'vi';
   String primaryLang = 'de';
 
@@ -40,12 +43,13 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
 
   Future<void> _store() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("nextcloud_host", nextcloudHostController.text);
-    prefs.setString("nextcloud_user", nextcloudUserController.text);
-    prefs.setString("nextcloud_pw", nextcloudPwController.text);
-    prefs.setBool("use_text_if_exists", useTextIfExists);
-    prefs.setString("journal_practice_lang", practiceLang);
-    prefs.setString("journal_primary_lang", primaryLang);
+    await prefs.setString("nextcloud_host", nextcloudHostController.text);
+    await prefs.setString("nextcloud_user", nextcloudUserController.text);
+    await prefs.setString("nextcloud_pw", nextcloudPwController.text);
+    await prefs.setBool("use_text_if_exists", useTextIfExists);
+    await prefs.setString("journal_practice_lang", practiceLang);
+    await prefs.setString("journal_primary_lang", primaryLang);
+    await localeController.setLanguage(appLanguage);
   }
 
   @override
@@ -61,6 +65,10 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
       nextcloudUserController.text = prefs.getString('nextcloud_user') ?? "";
       nextcloudPwController.text = prefs.getString('nextcloud_pw') ?? "";
       useTextIfExists = prefs.getBool('use_text_if_exists') ?? false;
+      final savedLanguage =
+          prefs.getString(LocaleController.prefKey) ?? 'en';
+      appLanguage =
+          LocaleController.options.containsKey(savedLanguage) ? savedLanguage : 'en';
       practiceLang = prefs.getString('journal_practice_lang') ?? 'vi';
       primaryLang = prefs.getString('journal_primary_lang') ?? 'de';
     });
@@ -76,11 +84,12 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(35.0), // here the desired height
           child: AppBar(
-            title: const Text("Settings"),
+            title: Text(l10n.settingsTitle),
           )),
       body:
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -88,7 +97,33 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
             child: Card(
                 child: ListView(children: [
           ListTile(
-              title: const Text("nextcloud login"),
+              title: Text(l10n.appLanguage),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: DropdownButtonFormField<String>(
+                  key: ValueKey(appLanguage),
+                  initialValue: appLanguage,
+                  items: LocaleController.options.entries
+                      .map((entry) => DropdownMenuItem<String>(
+                            value: entry.key,
+                            child: Text(entry.value),
+                          ))
+                      .toList(),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary)),
+                  ),
+                  onChanged: (v) {
+                    if (v == null) return;
+                    setState(() {
+                      appLanguage = v;
+                    });
+                  },
+                ),
+              )),
+          ListTile(
+              title: Text(l10n.nextcloudLogin),
               subtitle: Column(
                 children: [
                   Wrap(
@@ -108,8 +143,8 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .secondary)),
-                                hintText: 'host.url',
-                                labelText: 'host-url/ip',
+                                hintText: l10n.hostHint,
+                                labelText: l10n.hostLabel,
                               ))),
                       Container(
                           padding: const EdgeInsets.all(8),
@@ -126,8 +161,8 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .secondary)),
-                                hintText: 'user',
-                                labelText: 'username',
+                                hintText: l10n.userHint,
+                                labelText: l10n.username,
                               ))),
                       Container(
                           padding: const EdgeInsets.all(8),
@@ -147,15 +182,15 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .secondary)),
-                                hintText: 'pw',
-                                labelText: 'password',
+                                hintText: l10n.pwHint,
+                                labelText: l10n.password,
                               ))),
                     ],
                   ),
                 ],
               )),
           ListTile(
-              title: const Text("journal languages"),
+              title: Text(l10n.journalLanguages),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -164,7 +199,7 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                     initialValue: practiceLang,
                     items: _langItems,
                     decoration: InputDecoration(
-                      labelText: 'practice language',
+                      labelText: l10n.practiceLanguage,
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).colorScheme.secondary)),
@@ -181,7 +216,7 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                     initialValue: primaryLang,
                     items: _langItems,
                     decoration: InputDecoration(
-                      labelText: 'primary language (translation)',
+                      labelText: l10n.primaryLanguage,
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).colorScheme.secondary)),
@@ -195,15 +230,15 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Offline translation uses Android ML Kit. Language models download on demand when you open the journal.',
+                    l10n.offlineTranslationNote,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               )),
           ListTile(
-              title: const Text("misc."),
+              title: Text(l10n.misc),
               subtitle: CheckboxListTile(
-                  title: const Text("use text if existing (not the doodle)"),
+                  title: Text(l10n.useTextIfExisting),
                   value: useTextIfExists,
                   onChanged: (bool? value) {
                     if (!mounted) return;
@@ -215,7 +250,7 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: _store,
-        tooltip: 'store settings',
+        tooltip: l10n.storeSettings,
         child: const Icon(Icons.save),
       ),
     );

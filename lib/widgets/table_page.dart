@@ -1,3 +1,4 @@
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 const String tag = "TablePage";
@@ -21,13 +22,14 @@ class TablePageState extends State<TablePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SizedBox(
       width: double.infinity,
       child: SingleChildScrollView(
         child: (widget.tableRow.rowCount <= 0)
             ? Center(
                 child: Column(children: [
-                const Text("loading..."),
+                Text(l10n.loading),
                 const SizedBox(height: 10),
                 CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.tertiary,
@@ -39,7 +41,7 @@ class TablePageState extends State<TablePage> {
                   header: widget.title,
                   actions: [
                     Tooltip(
-                        message: "reload",
+                        message: l10n.reload,
                         waitDuration: const Duration(seconds: 1),
                         child: ElevatedButton(
                           child: const Icon(Icons.refresh),

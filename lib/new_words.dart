@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/widgets/painter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -193,6 +194,7 @@ class NewWordPageState extends State<NewWordPage>
 */
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     Widget buttons =
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       widget.editId == null
@@ -202,14 +204,14 @@ class NewWordPageState extends State<NewWordPage>
                   foregroundColor: Colors.red,
                   backgroundColor: const Color(0xFFFFE4E4)),
               icon: const Icon(Icons.delete),
-              label: const Text('delete'),
+              label: Text(l10n.delete),
               onPressed: () {
                 _delete(context);
               },
             ),
       OutlinedButton.icon(
         icon: const Icon(Icons.save),
-        label: Text(widget.editId == null ? 'save' : 'edit'),
+        label: Text(widget.editId == null ? l10n.save : l10n.edit),
         onPressed: () {
           _save(context);
           if (mounted) Navigator.pop(context);
@@ -221,7 +223,7 @@ class NewWordPageState extends State<NewWordPage>
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(35.0),
           child: AppBar(
-            title: const Text("add questions"),
+            title: Text(l10n.addQuestions),
           )),
       body: Column(
         children: [
@@ -242,7 +244,7 @@ class NewWordPageState extends State<NewWordPage>
                                   color:
                                       Theme.of(context).colorScheme.secondary)),
                           hintText: '...',
-                          labelText: 'Question Note',
+                          labelText: l10n.questionNote,
                         ))),
                 const SizedBox(
                   width: 10,
@@ -264,7 +266,7 @@ class NewWordPageState extends State<NewWordPage>
                                   color:
                                       Theme.of(context).colorScheme.secondary)),
                           hintText: '...',
-                          labelText: 'Answer Note',
+                          labelText: l10n.answerNote,
                         ))),
                 const SizedBox(
                   width: 10,

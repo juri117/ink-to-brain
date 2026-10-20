@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
 import 'package:ink2brain/widgets/table_page.dart';
@@ -66,12 +67,14 @@ class ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    tableRow.l10n = l10n;
     return Scaffold(
         appBar: PreferredSize(
             preferredSize:
                 const Size.fromHeight(35.0), // here the desired height
             child: AppBar(
-              title: const Text("list"),
+              title: Text(l10n.listTitle),
             )),
         body: TablePage(
             //Text("Questions"),
@@ -99,7 +102,7 @@ class ListPageState extends State<ListPage> {
                                         .colorScheme
                                         .secondary)),
                             hintText: '...',
-                            labelText: 'search',
+                            labelText: l10n.search,
                             suffixIcon: IconButton(
                               // Icon to
                               icon: const Icon(Icons.clear,
@@ -126,29 +129,29 @@ class ListPageState extends State<ListPage> {
                 ]),
             <DataColumn>[
               DataColumn(
-                label: const Text('added'),
+                label: Text(l10n.added),
                 onSort: (int columnIndex, bool ascending) => _sort<DateTime>(
                     (Word d) => d.insertTs, columnIndex, ascending),
               ),
               //const DataColumn(label: Text('question')),
               DataColumn(
-                label: const Text('question'),
+                label: Text(l10n.question),
                 onSort: (int columnIndex, bool ascending) => _sort<String>(
                     (Word d) => d.questionTxt, columnIndex, ascending),
               ),
               //const DataColumn(label: Text('answer')),
               DataColumn(
-                label: const Text('answer'),
+                label: Text(l10n.answer),
                 onSort: (int columnIndex, bool ascending) => _sort<String>(
                     (Word d) => d.answerTxt, columnIndex, ascending),
               ),
               DataColumn(
-                label: const Text('correct'),
+                label: Text(l10n.correct),
                 onSort: (int columnIndex, bool ascending) => _sort<num>(
                     (Word d) => d.correctCount, columnIndex, ascending),
               ),
               DataColumn(
-                label: const Text('asked'),
+                label: Text(l10n.asked),
                 onSort: (int columnIndex, bool ascending) => _sort<DateTime>(
                     (Word d) =>
                         d.lastAskedTs ?? DateTime.fromMicrosecondsSinceEpoch(0),
@@ -170,6 +173,7 @@ class WordTableRow extends DataTableSource {
   final Function? resetWordScore;
   final Function? forceStart;
   final Function? editWord;
+  AppLocalizations? l10n;
 
   WordTableRow(this.data, this.resetWordScore, this.forceStart, this.editWord) {
     filteredData = data;
@@ -213,11 +217,13 @@ class WordTableRow extends DataTableSource {
       ])),
       //DataCell(Text(filteredData[index].answerTxt)),
       DataCell(Text("${filteredData[index].correctCount}")),
-      DataCell(Text(filteredData[index].getLastAskedDateStr())),
+      DataCell(Text(filteredData[index].lastAskedTs == null
+          ? (l10n?.never ?? 'never')
+          : filteredData[index].getLastAskedDateStr())),
       DataCell(Row(children: [
         IconButton(
           icon: const Icon(Icons.restore_page_outlined),
-          tooltip: 'reset score',
+          tooltip: l10n?.resetScore ?? 'reset score',
           onPressed: () {
             if (resetWordScore != null) {
               resetWordScore!(filteredData[index]);
@@ -226,7 +232,7 @@ class WordTableRow extends DataTableSource {
         ),
         IconButton(
           icon: const Icon(Icons.new_label_outlined),
-          tooltip: 'force start learning',
+          tooltip: l10n?.forceStartLearning ?? 'force start learning',
           onPressed: () {
             if (forceStart != null) {
               forceStart!(filteredData[index]);
@@ -235,7 +241,7 @@ class WordTableRow extends DataTableSource {
         ),
         IconButton(
           icon: const Icon(Icons.edit),
-          tooltip: 'edit',
+          tooltip: l10n?.edit ?? 'edit',
           onPressed: () {
             if (editWord != null) {
               editWord!(filteredData[index]);

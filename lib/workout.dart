@@ -5,6 +5,7 @@ import 'package:flutter_device_type/flutter_device_type.dart';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/widgets/word_display.dart';
 import 'package:ink2brain/widgets/write_widget.dart';
@@ -183,17 +184,18 @@ class WorkoutPageState extends State<WorkoutPage> {
   }
 
   void _showCompletedDialog() {
+    final l10n = AppLocalizations.of(context);
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Yeah, you are done!'),
+            title: Text(l10n.yeahDone),
             content: SizedBox(
                 height: 150,
                 child: Column(children: [
-                  Text('correct: $correctCount'),
-                  Text("mistakes: $wrongCount"),
-                  Text("skipped: $skipCount")
+                  Text(l10n.correctStat(correctCount)),
+                  Text(l10n.mistakesStat(wrongCount)),
+                  Text(l10n.skippedStat(skipCount))
                 ])),
             actions: <Widget>[
               TextButton(
@@ -201,13 +203,13 @@ class WorkoutPageState extends State<WorkoutPage> {
                     Navigator.pop(context);
                     _loadWords();
                   },
-                  child: const Text('another round')),
+                  child: Text(l10n.anotherRound)),
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                child: const Text('I am done'),
+                child: Text(l10n.iAmDone),
               )
             ],
           );
@@ -216,6 +218,7 @@ class WorkoutPageState extends State<WorkoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     Widget questionCont = Expanded(
         flex: 2,
         child: Padding(
@@ -267,11 +270,11 @@ class WorkoutPageState extends State<WorkoutPage> {
                     Container(
                         padding: const EdgeInsets.all(5),
                         child: Column(children: [
-                          Text("${words.length} left"),
+                          Text(l10n.wordsLeft(words.length)),
                           const Divider(
                             height: 5,
                           ),
-                          Text("score: ${currentWord.getCorrectCount()}",
+                          Text(l10n.scoreLabel(currentWord.getCorrectCount()),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   // fontSize: 18,
@@ -348,7 +351,7 @@ class WorkoutPageState extends State<WorkoutPage> {
             preferredSize:
                 const Size.fromHeight(35.0), // here the desired height
             child: AppBar(
-              title: const Text("Workout"),
+              title: Text(l10n.workoutTitle),
             )),
         body: Flex(
           direction: Axis.vertical,
@@ -361,20 +364,21 @@ class WorkoutPageState extends State<WorkoutPage> {
   }
 
   Widget generateButtonBar(WorkoutState state) {
+    final l10n = AppLocalizations.of(context);
     List<Widget> buttons = [];
     switch (state) {
       case WorkoutState.ask:
         buttons = [
           OutlinedButton.icon(
             icon: const Icon(Icons.skip_next_outlined),
-            label: const Text('skip'),
+            label: Text(l10n.skip),
             onPressed: () {
               _skip(currentWord);
             },
           ),
           OutlinedButton.icon(
             icon: const Icon(Icons.help_outline),
-            label: const Text('solution'),
+            label: Text(l10n.solution),
             //style: OutlinedButton.styleFrom(
             //primary: Colors.green,
             //backgroundColor: const Color(0xFFE4FFE6)),
@@ -409,7 +413,7 @@ class WorkoutPageState extends State<WorkoutPage> {
               Icons.sentiment_very_dissatisfied,
               color: Colors.red,
             ),
-            label: const Text('wrong'),
+            label: Text(l10n.wrong),
             style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.red,
                 backgroundColor: const Color(0xFFFFE4E4)),
@@ -422,7 +426,7 @@ class WorkoutPageState extends State<WorkoutPage> {
               Icons.sentiment_satisfied_alt,
               color: Colors.green,
             ),
-            label: const Text('correct'),
+            label: Text(l10n.correct),
             style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.green,
                 backgroundColor: const Color(0xFFE4FFE6)),

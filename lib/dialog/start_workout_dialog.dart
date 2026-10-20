@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/workout.dart';
 
 import 'dart:io';
@@ -44,6 +45,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AlertDialog(
       //title: const Text('start workout...'),
       content: SizedBox(
@@ -61,7 +63,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                           width: 140,
                           height: 40,
                           child: SwitchListTile(
-                            title: const Text('reverse'),
+                            title: Text(l10n.reverse),
                             contentPadding: const EdgeInsets.only(right: 8),
                             visualDensity: VisualDensity.compact,
                             value: learnReverse,
@@ -77,7 +79,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                           width: 140,
                           height: 40,
                           child: SwitchListTile(
-                            title: const Text('legacy'),
+                            title: Text(l10n.legacy),
                             contentPadding: const EdgeInsets.only(left: 8),
                             visualDensity: VisualDensity.compact,
                             value: learnLegacy,
@@ -119,8 +121,10 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                                 });
                               },
                               child: Text(
-                                learnOptions[index].name,
-                                style: TextStyle(fontSize: 16),
+                                learnOptions[index].count >= 9999
+                                    ? l10n.all
+                                    : learnOptions[index].name,
+                                style: const TextStyle(fontSize: 16),
                               ),
                             );
                           }),
@@ -133,7 +137,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('cancel'),
+          child: Text(l10n.cancel),
         ),
         TextButton(
           onPressed: selectedLearnOption == null
@@ -143,7 +147,7 @@ class StartWorkoutDialogStat extends State<StartWorkoutDialog> {
                   _navigateToWorkout(selectedLearnOption?.count ?? 5,
                       learnReverse, learnLegacy);
                 },
-          child: const Text('GO'),
+          child: Text(l10n.go),
         )
       ],
     );

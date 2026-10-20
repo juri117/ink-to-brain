@@ -1,0 +1,158 @@
+{
+  "@@locale": "en",
+  "appTitle": "ink to brain",
+  "startWorkout": "start workout",
+  "allQuestions": "all questions",
+  "addQuestions": "add questions",
+  "writeJournal": "write journal",
+  "journal": "journal",
+  "settingsTooltip": "settings",
+  "syncTooltip": "sync.",
+  "total": "total",
+  "mastered": "mastered",
+  "statNew": "new",
+  "practicedToday": "practiced today",
+  "leftForToday": "left for today",
+  "revCount": "rev: {count}",
+  "@revCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "yeahDone": "Yeah, you are done!",
+  "correctStat": "correct: {count}",
+  "@correctStat": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "mistakesStat": "mistakes: {count}",
+  "@mistakesStat": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "skippedStat": "skipped: {count}",
+  "@skippedStat": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "anotherRound": "another round",
+  "iAmDone": "I am done",
+  "wordsLeft": "{count} left",
+  "@wordsLeft": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "scoreLabel": "score: {count}",
+  "@scoreLabel": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "workoutTitle": "Workout",
+  "skip": "skip",
+  "solution": "solution",
+  "wrong": "wrong",
+  "correct": "correct",
+  "listTitle": "list",
+  "search": "search",
+  "added": "added",
+  "question": "question",
+  "answer": "answer",
+  "asked": "asked",
+  "resetScore": "reset score",
+  "forceStartLearning": "force start learning",
+  "edit": "edit",
+  "never": "never",
+  "delete": "delete",
+  "save": "save",
+  "translationUnavailable": "translation unavailable on this platform",
+  "downloadingLanguageModels": "downloading language models…",
+  "editJournal": "edit journal",
+  "journalField": "journal ({lang})",
+  "@journalField": {
+    "placeholders": {
+      "lang": {"type": "String"}
+    }
+  },
+  "translationField": "translation ({lang})",
+  "@translationField": {
+    "placeholders": {
+      "lang": {"type": "String"}
+    }
+  },
+  "lookupField": "lookup ({from} → {to})",
+  "@lookupField": {
+    "placeholders": {
+      "from": {"type": "String"},
+      "to": {"type": "String"}
+    }
+  },
+  "translationSetupFailed": "translation setup failed: {error}",
+  "@translationSetupFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "translateFailed": "translate failed: {error}",
+  "@translateFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "refresh": "refresh",
+  "noJournalEntries": "no journal entries yet",
+  "settingsTitle": "Settings",
+  "appLanguage": "App language",
+  "nextcloudLogin": "nextcloud login",
+  "hostHint": "host.url",
+  "hostLabel": "host-url/ip",
+  "userHint": "user",
+  "username": "username",
+  "pwHint": "pw",
+  "password": "password",
+  "journalLanguages": "journal languages",
+  "practiceLanguage": "practice language",
+  "primaryLanguage": "primary language (translation)",
+  "offlineTranslationNote": "Offline translation uses Android ML Kit. Language models download on demand when you open the journal.",
+  "misc": "misc.",
+  "useTextIfExisting": "use text if existing (not the doodle)",
+  "storeSettings": "store settings",
+  "questionNote": "Question Note",
+  "answerNote": "Answer Note",
+  "next": "next",
+  "back": "back",
+  "reverse": "reverse",
+  "legacy": "legacy",
+  "all": "all",
+  "cancel": "cancel",
+  "go": "GO",
+  "done": "done",
+  "syncDatabase": "sync. database with nextcloud",
+  "downloadOverwrite": "download, overwrite db",
+  "uploadLocalDb": "upload local db",
+  "loading": "loading...",
+  "uploadResult": "upload: {result}",
+  "@uploadResult": {
+    "placeholders": {
+      "result": {"type": "String"}
+    }
+  },
+  "downloadResult": "download: {result}",
+  "@downloadResult": {
+    "placeholders": {
+      "result": {"type": "String"}
+    }
+  },
+  "empty": "empty",
+  "disableEraser": "Disable eraser",
+  "enableEraser": "Enable eraser",
+  "undo": "Undo",
+  "clear": "Clear",
+  "reload": "reload",
+  "notiTitle": "Time to study!",
+  "notiBody": "Do it now!"
+}

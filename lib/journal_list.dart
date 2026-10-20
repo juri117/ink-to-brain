@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/journal_edit.dart';
 import 'package:ink2brain/models/journal_entry.dart';
 
@@ -53,26 +54,27 @@ class JournalListPageState extends State<JournalListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(35.0),
           child: AppBar(
-            title: const Text('journal'),
+            title: Text(l10n.journal),
             actions: [
               IconButton(
                 icon: const Icon(Icons.add),
-                tooltip: 'write journal',
+                tooltip: l10n.writeJournal,
                 onPressed: _newEntry,
               ),
               IconButton(
                 icon: const Icon(Icons.refresh),
-                tooltip: 'refresh',
+                tooltip: l10n.refresh,
                 onPressed: _loadEntries,
               ),
             ],
           )),
       body: _entries.isEmpty
-          ? const Center(child: Text('no journal entries yet'))
+          ? Center(child: Text(l10n.noJournalEntries))
           : Scrollbar(
               controller: _scrollController,
               thumbVisibility:

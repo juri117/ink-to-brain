@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:ink2brain/models/journal_entry.dart';
 import 'package:ink2brain/utils/translator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,6 +68,7 @@ class JournalEditPageState extends State<JournalEditPage> {
   }
 
   Future<void> _prepareTranslator() async {
+    if (!mounted) return;
     if (!JournalTranslator.isAvailable) {
       if (!mounted) return;
       setState(() {
@@ -81,6 +83,7 @@ class JournalEditPageState extends State<JournalEditPage> {
       _translatorError = null;
     });
 
+    final l10n = AppLocalizations.of(context);
     try {
       await _translator.ensureReady(
         practiceBcp: _practiceLang,
@@ -97,7 +100,7 @@ class JournalEditPageState extends State<JournalEditPage> {
       setState(() {
         _translatorReady = false;
         _translatorBusy = false;
-        _translatorError = 'translation setup failed: $e';
+        _translatorError = l10n.translationSetupFailed('$e');
       });
     }
   }
@@ -117,7 +120,8 @@ class JournalEditPageState extends State<JournalEditPage> {
   }
 
   Future<void> _runPracticeTranslate() async {
-    if (!_translatorReady) return;
+    if (!_translatorReady || !mounted) return;
+    final l10n = AppLocalizations.of(context);
     final text = _practiceControl.text;
     try {
       final result = await _translator.translatePracticeToPrimary(text);
@@ -129,7 +133,7 @@ class JournalEditPageState extends State<JournalEditPage> {
       if (!mounted) return;
       setState(() {
         _translation = '';
-        _translatorError = 'translate failed: $e';
+        _translatorError = l10n.translateFailed('$e');
       });
     }
   }
@@ -200,6 +204,7 @@ class JournalEditPageState extends State<JournalEditPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final buttons =
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       widget.editId == null
@@ -209,14 +214,14 @@ class JournalEditPageState extends State<JournalEditPage> {
                   foregroundColor: Colors.red,
                   backgroundColor: const Color(0xFFFFE4E4)),
               icon: const Icon(Icons.delete),
-              label: const Text('delete'),
+              label: Text(l10n.delete),
               onPressed: () {
                 _delete(context);
               },
             ),
       OutlinedButton.icon(
         icon: const Icon(Icons.save),
-        label: Text(widget.editId == null ? 'save' : 'edit'),
+        label: Text(widget.editId == null ? l10n.save : l10n.edit),
         onPressed: () {
           _save(context);
         },
@@ -226,19 +231,19 @@ class JournalEditPageState extends State<JournalEditPage> {
     Widget translationPanel;
     if (!JournalTranslator.isAvailable) {
       translationPanel = Text(
-        'translation unavailable on this platform',
+        l10n.translationUnavailable,
         style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             fontStyle: FontStyle.italic),
       );
     } else if (_translatorBusy) {
-      translationPanel = const Row(children: [
-        SizedBox(
+      translationPanel = Row(children: [
+        const SizedBox(
             width: 16,
             height: 16,
             child: CircularProgressIndicator(strokeWidth: 2)),
-        SizedBox(width: 8),
-        Text('downloading language models…'),
+        const SizedBox(width: 8),
+        Text(l10n.downloadingLanguageModels),
       ]);
     } else if (_translatorError != null && !_translatorReady) {
       translationPanel = Text(
@@ -257,7 +262,7 @@ class JournalEditPageState extends State<JournalEditPage> {
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(35.0),
           child: AppBar(
-            title: Text(widget.editId == null ? 'write journal' : 'edit journal'),
+            title: Text(widget.editId == null ? l10n.writeJournal : l10n.editJournal),
           )),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -273,7 +278,7 @@ class JournalEditPageState extends State<JournalEditPage> {
                 minLines: null,
                 textAlignVertical: TextAlignVertical.top,
                 hintLocales: [Locale(_practiceLang)],
-                decoration: _fieldDecoration('journal ($_practiceLang)'),
+                decoration: _fieldDecoration(l10n.journalField(_practiceLang)),
               ),
             ),
             const SizedBox(height: 8),
@@ -288,7 +293,7 @@ class JournalEditPageState extends State<JournalEditPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'translation ($_primaryLang)',
+                    l10n.translationField(_primaryLang),
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                   const SizedBox(height: 4),
@@ -306,7 +311,8 @@ class JournalEditPageState extends State<JournalEditPage> {
                     minLines: 1,
                     maxLines: 2,
                     hintLocales: [Locale(_primaryLang)],
-                    decoration: _fieldDecoration('lookup ($_primaryLang → $_practiceLang)'),
+                    decoration: _fieldDecoration(
+                        l10n.lookupField(_primaryLang, _practiceLang)),
                   ),
                 ),
                 const SizedBox(width: 8),

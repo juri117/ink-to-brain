@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:ink2brain/l10n/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
 const String tag = "TablePage";
@@ -17,6 +18,7 @@ class WordDisplay extends StatefulWidget {
 class WordDisplayState extends State<WordDisplay> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Align(
         alignment: Alignment.center,
         child: AspectRatio(
@@ -42,7 +44,7 @@ class WordDisplayState extends State<WordDisplay> {
                                       widget.wordTxt,
                                       style: const TextStyle(fontSize: 25),
                                     ))
-                                : const Text("loading..."))
-                        : const Text("empty")));
+                                : Text(l10n.loading))
+                        : Text(l10n.empty)));
   }
 }
