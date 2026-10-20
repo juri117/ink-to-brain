@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/widgets/painter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:google_ml_kit/google_ml_kit.dart';
 
 class NewWordPage extends StatefulWidget {
@@ -26,6 +27,9 @@ class NewWordPageState extends State<NewWordPage>
 
   //final ScrollController _scrollControl = ScrollController();
   //final ScrollController _scrollControl2 = ScrollController();
+
+  String _practiceLang = 'vi';
+  String _primaryLang = 'de';
 
   Word editWord = Word(
       id: -1,
@@ -57,6 +61,13 @@ class NewWordPageState extends State<NewWordPage>
   }
 
   Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      _practiceLang = prefs.getString('journal_practice_lang') ?? 'vi';
+      _primaryLang = prefs.getString('journal_primary_lang') ?? 'de';
+    });
+
     if (widget.editId != null) {
       List<Word> newWords =
           await DatabaseCon().words(where: "id = ${widget.editId}");
@@ -224,6 +235,7 @@ class NewWordPageState extends State<NewWordPage>
                         minLines: 1, //Normal textInputField will be displayed
                         maxLines:
                             1, // when user presses enter it will adapt to it
+                        hintLocales: [Locale(_primaryLang)],
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -245,6 +257,7 @@ class NewWordPageState extends State<NewWordPage>
                         controller: _answTxtControl,
                         minLines: 1,
                         maxLines: 1,
+                        hintLocales: [Locale(_practiceLang)],
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
