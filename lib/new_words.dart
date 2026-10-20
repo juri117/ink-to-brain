@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
@@ -8,7 +8,7 @@ import 'package:ink2brain/widgets/painter.dart';
 class NewWordPage extends StatefulWidget {
   final int? editId;
 
-  const NewWordPage({this.editId, Key? key}) : super(key: key);
+  const NewWordPage({this.editId, super.key});
 
   @override
   NewWordPageState createState() => NewWordPageState();

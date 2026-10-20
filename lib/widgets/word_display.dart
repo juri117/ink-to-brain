@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 const String tag = "TablePage";
 
@@ -9,8 +9,7 @@ class WordDisplay extends StatefulWidget {
   final bool showTxtIfPresent;
   final bool isVisible;
   const WordDisplay(this.wordPix, this.wordTxt, this.showTxtIfPresent,
-      {this.isVisible = false, Key? key})
-      : super(key: key);
+      {this.isVisible = false, super.key});
   @override
   WordDisplayState createState() => WordDisplayState();
 }

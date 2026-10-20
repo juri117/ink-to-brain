@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/widgets/word_display.dart';
@@ -21,8 +21,7 @@ class WorkoutPage extends StatefulWidget {
       {this.limit = 9999999,
       this.reverse = false,
       this.legacy = false,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   @override
   WorkoutPageState createState() => WorkoutPageState();

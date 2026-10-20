@@ -7,11 +7,13 @@
         "AUTOINCREMENT",
         "DATETIME",
         "LTWH",
+        "mkcol",
         "nextcloud",
         "prefs",
         "Prefs",
         "sqflite",
         "sqlite",
-        "tesseract"
+        "tesseract",
+        "webdav"
     ]
 }

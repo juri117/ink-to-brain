@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/new_words.dart';
@@ -7,7 +7,7 @@ import 'package:ink2brain/widgets/table_page.dart';
 // const String TAG = "list_page";
 
 class ListPage extends StatefulWidget {
-  const ListPage({Key? key}) : super(key: key);
+  const ListPage({super.key});
   @override
   ListPageState createState() => ListPageState();
 }

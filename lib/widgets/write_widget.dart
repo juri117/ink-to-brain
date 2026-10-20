@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/widgets/painter.dart';
 
 class WriteWidget extends StatefulWidget {
   final PainterController controller;
   final bool pen;
 
-  const WriteWidget(this.controller, {this.pen = false, Key? key})
-      : super(key: key);
+  const WriteWidget(this.controller, {this.pen = false, super.key});
 
   @override
   WriteWidgetState createState() => WriteWidgetState();

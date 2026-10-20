@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatelessWidget {
-  const Settings({Key? key}) : super(key: key);
+  const Settings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class Settings extends StatelessWidget {
 }
 
 class SharedPreferencesScreen extends StatefulWidget {
-  const SharedPreferencesScreen({Key? key}) : super(key: key);
+  const SharedPreferencesScreen({super.key});
 
   @override
   SharedPreferencesScreenState createState() => SharedPreferencesScreenState();

@@ -10,7 +10,8 @@ class Noti {
         const AndroidInitializationSettings('mipmap/ic_launcher');
     var initializationsSettings =
         InitializationSettings(android: androidInitialize);
-    await flutterLocalNotificationsPlugin.initialize(initializationsSettings);
+    await flutterLocalNotificationsPlugin.initialize(
+        settings: initializationsSettings);
   }
 
   static Future zonedScheduleNotification(
@@ -28,15 +29,15 @@ class Noti {
       addHours = (9 - DateTime.now().hour);
     }
     DateTime date = DateTime.now().add(Duration(hours: addHours));
-    print(date.toString());
+    //print(date.toString());
     //print(tz.TZDateTime.parse(tz.local, date.toString()).toString());
     try {
       await fln.zonedSchedule(
-        id,
-        "thời gian để học tiếng Việt!",
-        "bây giờ, nhanh đi!",
-        tz.TZDateTime.parse(tz.local, date.toString()),
-        const NotificationDetails(
+        id: id,
+        title: "thời gian để học tiếng Việt!",
+        body: "bây giờ, nhanh đi!",
+        scheduledDate: tz.TZDateTime.parse(tz.local, date.toString()),
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             'your channel id', 'your channel name',
             channelDescription: 'your channel description',
@@ -47,15 +48,13 @@ class Noti {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
       );
       return id;
     } catch (e) {
-      print("Error at zonedScheduleNotification----------------------------$e");
+      //print("Error at zonedScheduleNotification----------------------------$e");
       if (e ==
           "Invalid argument (scheduledDate): Must be a date in the future: Instance of 'TZDateTime'") {
-        print("Select future date");
+        //print("Select future date");
       }
       return -1;
     }

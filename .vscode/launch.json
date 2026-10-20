@@ -16,6 +16,16 @@
             "flutterMode": "profile"
         },
         {
+            "name": "Flutter linux",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "linux"
+            ],
+        },
+        {
             "name": "Flutter win",
             "request": "launch",
             "type": "dart",

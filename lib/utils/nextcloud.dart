@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:nextcloud/webdav.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,7 +44,7 @@ Future<String> ncUploadFile() async {
     try {
       await client.webdav.mkcol(PathUri.parse('/$nextCloudDir'));
     } catch (e, stacktrace) {
-      print(stacktrace);
+      debugPrint('$stacktrace');
     }
 
     try {
@@ -51,15 +52,15 @@ Future<String> ncUploadFile() async {
       await client.webdav.copy(PathUri.parse('/$nextCloudDir/words.db'),
           PathUri.parse('/$nextCloudDir/words_old_$date.db'));
     } catch (e, stacktrace) {
-      print(stacktrace);
+      debugPrint('$stacktrace');
     }
     await client.webdav.put(File(dbPath).readAsBytesSync(),
         PathUri.parse('/$nextCloudDir/words.db'));
-  } on Exception catch (e, stacktrace) {
+  } on Exception catch (e) {
     //print(e.statusCode);
     //print(e.body);
-    print(e);
-    print(stacktrace);
+    // print(e);
+    // print(stacktrace);
     return "failed: $e";
   }
   return "OK";
@@ -69,13 +70,13 @@ Future<String> ncDownloadFile() async {
   try {
     final String? dbPath = await getDbPath();
     if (dbPath == null) {
-      print("could not find db file path");
+      debugPrint("could not find db file path");
       return "could not find db file path";
     }
 
     final client = await ncGetClient();
     if (client == null) {
-      print("no nextcloud host defined");
+      debugPrint("no nextcloud host defined");
       return "no nextcloud host defined";
     }
 
@@ -84,9 +85,9 @@ Future<String> ncDownloadFile() async {
   } on Exception catch (e, stacktrace) {
     //print(e.statusCode);
     //print(e.body);
-    print(e);
-    print(stacktrace);
-    return "failed {e}";
+    debugPrint('$e');
+    debugPrint('$stacktrace');
+    return "failed: $e";
   }
   return "OK";
 }

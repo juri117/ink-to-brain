@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 const String tag = "TablePage";
 
@@ -11,8 +11,7 @@ class TablePage extends StatefulWidget {
   final bool sortAsc;
   const TablePage(this.title, this.columns, this.tableRow, this.refresh,
       this.sortIndex, this.sortAsc,
-      {Key? key})
-      : super(key: key);
+      {super.key});
   @override
   TablePageState createState() => TablePageState();
 }

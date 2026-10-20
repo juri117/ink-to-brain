@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 //import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:image/image.dart' as img;
 import 'package:ink2brain/database_con.dart';
@@ -17,7 +17,7 @@ import 'package:path_provider/path_provider.dart';
 class NewWordPage extends StatefulWidget {
   final int? editId;
 
-  const NewWordPage({this.editId, Key? key}) : super(key: key);
+  const NewWordPage({this.editId, super.key});
 
   @override
   NewWordPageState createState() => NewWordPageState();

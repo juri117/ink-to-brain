@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-void showInfo(context, String title, String message) {
+void showInfo(BuildContext context, String title, String message) {
   showDialog(
       context: context,
       builder: (context) =>

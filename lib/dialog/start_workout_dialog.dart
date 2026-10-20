@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/workout.dart';
 
 import 'dart:io';
 
 class StartWorkoutDialog extends StatefulWidget {
   final Function refreshMain;
-  const StartWorkoutDialog(this.refreshMain, {Key? key}) : super(key: key);
+  const StartWorkoutDialog(this.refreshMain, {super.key});
 
   @override
   StartWorkoutDialogStat createState() => StartWorkoutDialogStat();

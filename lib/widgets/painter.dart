@@ -1,12 +1,12 @@
 /// Provides a widget and an associated controller for simple painting using touch.
-library painter;
+library;
 
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
 //import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' hide Image;
+import 'package:material_ui/material_ui.dart' hide Image;
 //import 'package:flutter/widgets.dart' hide Image;
 
 /// A very simple widget that supports drawing using touch.
@@ -139,7 +139,7 @@ class PainterState extends State<Painter> {
 class _PainterPainter extends CustomPainter {
   final _PathHistory _path;
 
-  _PainterPainter(this._path, {Listenable? repaint}) : super(repaint: repaint);
+  _PainterPainter(this._path, {super.repaint});
 
   @override
   void paint(Canvas canvas, Size size) {

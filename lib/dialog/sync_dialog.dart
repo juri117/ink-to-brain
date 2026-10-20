@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/utils/nextcloud.dart';
 
 class SyncDialog extends StatefulWidget {
-  const SyncDialog({Key? key}) : super(key: key);
+  const SyncDialog({super.key});
 
   @override
   SyncDialogStat createState() => SyncDialogStat();

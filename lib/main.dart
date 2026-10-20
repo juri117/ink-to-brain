@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ink2brain/database_con.dart';
 import 'package:ink2brain/list.dart';
@@ -66,7 +66,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MainFrame extends StatefulWidget {
-  const MainFrame({Key? key}) : super(key: key);
+  const MainFrame({super.key});
 
   @override
   MainFrameState createState() => MainFrameState();
