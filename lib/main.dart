@@ -8,6 +8,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ink2brain/database_con.dart';
+import 'package:ink2brain/journal_edit.dart';
+import 'package:ink2brain/journal_list.dart';
 import 'package:ink2brain/list.dart';
 import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/models/word.dart';
@@ -238,6 +240,38 @@ class MainFrameState extends State<MainFrame> {
             context,
             MaterialPageRoute(builder: (context) => const NewWordPage()),
           ).then((value) => _loadData());
+        },
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      OutlinedButton.icon(
+        icon: const Icon(Icons.edit_note),
+        label: Container(
+            width: 150,
+            padding: const EdgeInsets.all(20),
+            child: const Text('write journal')),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const JournalEditPage()),
+          );
+        },
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      OutlinedButton.icon(
+        icon: const Icon(Icons.menu_book_outlined),
+        label: Container(
+            width: 150,
+            padding: const EdgeInsets.all(20),
+            child: const Text('journal')),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const JournalListPage()),
+          );
         },
       ),
     ];

@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:ink2brain/models/journal_entry.dart';
 import 'package:ink2brain/models/stat.dart';
 import 'package:ink2brain/models/word.dart';
 import 'package:ink2brain/utils/file_utils.dart';
@@ -8,7 +9,7 @@ import 'dart:typed_data';
 class DatabaseCon {
   static final DatabaseCon _dbCon = DatabaseCon._internal();
 
-  final String dbCreateQue = ("CREATE TABLE words ("
+  final String dbCreateWords = ("CREATE TABLE words ("
       "id	INTEGER UNIQUE NOT NULL,	"
       "insertTs DATETIME DEFAULT (CURRENT_TIMESTAMP), "
       "questionPix	BLOB, "
@@ -19,6 +20,13 @@ class DatabaseCon {
       "correctCountRev	NUMERIC NOT NULL, "
       "lastAskedTs DATETIME, "
       "lastAskedRevTs DATETIME, "
+      "PRIMARY KEY(id AUTOINCREMENT));");
+
+  final String dbCreateJournal = ("CREATE TABLE journal_entries ("
+      "id	INTEGER UNIQUE NOT NULL,	"
+      "insertTs DATETIME DEFAULT (CURRENT_TIMESTAMP), "
+      "updateTs DATETIME, "
+      "practiceTxt	TEXT, "
       "PRIMARY KEY(id AUTOINCREMENT));");
 
   factory DatabaseCon() {
@@ -43,10 +51,16 @@ class DatabaseCon {
 
     con = await databaseFactory.openDatabase(dbPath,
         options: OpenDatabaseOptions(
-          onCreate: (db, version) {
-            return db.execute(dbCreateQue);
+          onCreate: (db, version) async {
+            await db.execute(dbCreateWords);
+            await db.execute(dbCreateJournal);
           },
-          version: 1,
+          onUpgrade: (db, oldVersion, newVersion) async {
+            if (oldVersion < 2) {
+              await db.execute(dbCreateJournal);
+            }
+          },
+          version: 2,
         ));
   }
 
@@ -160,5 +174,53 @@ class DatabaseCon {
 
   Future<void> deleteWord(int id) async {
     await con?.delete('words', where: 'id = $id');
+  }
+
+  Future<void> insertJournalEntry(JournalEntry entry) async {
+    Map<String, dynamic> map = entry.toMap();
+    map.remove('id');
+    map.remove('insertTs');
+    await con?.insert(
+      'journal_entries',
+      map,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<JournalEntry>> journalEntries(
+      {String? where, String? orderBy, int? limit}) async {
+    final List<Map<String, dynamic>> maps = await con?.query('journal_entries',
+            where: where,
+            orderBy: orderBy ?? 'insertTs DESC',
+            limit: limit) ??
+        [];
+
+    return List.generate(maps.length, (i) {
+      DateTime? updateTs;
+      if (maps[i]['updateTs'] != null) {
+        updateTs = DateTime.parse(maps[i]['updateTs']);
+      }
+      return JournalEntry(
+        id: maps[i]['id'],
+        insertTs: DateTime.parse(maps[i]['insertTs']),
+        updateTs: updateTs,
+        practiceTxt: maps[i]['practiceTxt'] ?? '',
+      );
+    });
+  }
+
+  Future<void> updateJournalEntry(JournalEntry entry) async {
+    Map<String, dynamic> map = entry.toMap();
+    map['updateTs'] = DateTime.now().toString();
+    await con?.update(
+      'journal_entries',
+      map,
+      where: 'id = ?',
+      whereArgs: [entry.id],
+    );
+  }
+
+  Future<void> deleteJournalEntry(int id) async {
+    await con?.delete('journal_entries', where: 'id = ?', whereArgs: [id]);
   }
 }

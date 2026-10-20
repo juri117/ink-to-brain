@@ -55,6 +55,7 @@ dependencies:
   rxdart: ^0.28.0
   package_info_plus: ^10.2.2
   icons_launcher: ^3.0.0
+  google_mlkit_translation: ^0.13.0
 
 flutter_launcher_icons:
   # flutter pub run flutter_launcher_icons

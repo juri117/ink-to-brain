@@ -13,6 +13,14 @@
 
 **bug-fixes**
 
+## 0.0.8
+
+**new features**
+* journal: write practice-language entries with live Android offline translation (ML Kit)
+* journal list + edit of past entries
+* settings: configurable practice / primary languages for journal translation
+* journal works on desktop without translation
+
 ## 0.0.7
 
 **new features**

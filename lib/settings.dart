@@ -1,5 +1,5 @@
+import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 import 'package:material_ui/material_ui.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatelessWidget {
@@ -24,6 +24,19 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
   final nextcloudPwController = TextEditingController();
 
   bool useTextIfExists = false;
+  String practiceLang = 'vi';
+  String primaryLang = 'de';
+
+  List<DropdownMenuItem<String>> get _langItems {
+    final langs = List<TranslateLanguage>.from(TranslateLanguage.values)
+      ..sort((a, b) => a.name.compareTo(b.name));
+    return langs
+        .map((l) => DropdownMenuItem<String>(
+              value: l.bcpCode,
+              child: Text('${l.name} (${l.bcpCode})'),
+            ))
+        .toList();
+  }
 
   Future<void> _store() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -31,6 +44,8 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
     prefs.setString("nextcloud_user", nextcloudUserController.text);
     prefs.setString("nextcloud_pw", nextcloudPwController.text);
     prefs.setBool("use_text_if_exists", useTextIfExists);
+    prefs.setString("journal_practice_lang", practiceLang);
+    prefs.setString("journal_primary_lang", primaryLang);
   }
 
   @override
@@ -41,17 +56,21 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
 
   Future<void> _loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Future<SharedPreferences> prefs = SharedPreferences.getInstance();
     setState(() {
       nextcloudHostController.text = prefs.getString('nextcloud_host') ?? "";
       nextcloudUserController.text = prefs.getString('nextcloud_user') ?? "";
       nextcloudPwController.text = prefs.getString('nextcloud_pw') ?? "";
       useTextIfExists = prefs.getBool('use_text_if_exists') ?? false;
+      practiceLang = prefs.getString('journal_practice_lang') ?? 'vi';
+      primaryLang = prefs.getString('journal_primary_lang') ?? 'de';
     });
   }
 
   @override
   void dispose() {
+    nextcloudHostController.dispose();
+    nextcloudUserController.dispose();
+    nextcloudPwController.dispose();
     super.dispose();
   }
 
@@ -67,7 +86,7 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Expanded(
             child: Card(
-                child: Column(children: [
+                child: ListView(children: [
           ListTile(
               title: const Text("nextcloud login"),
               subtitle: Column(
@@ -132,6 +151,52 @@ class SharedPreferencesScreenState extends State<SharedPreferencesScreen> {
                                 labelText: 'password',
                               ))),
                     ],
+                  ),
+                ],
+              )),
+          ListTile(
+              title: const Text("journal languages"),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    initialValue: practiceLang,
+                    items: _langItems,
+                    decoration: InputDecoration(
+                      labelText: 'practice language',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary)),
+                    ),
+                    onChanged: (v) {
+                      if (v == null) return;
+                      setState(() {
+                        practiceLang = v;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    initialValue: primaryLang,
+                    items: _langItems,
+                    decoration: InputDecoration(
+                      labelText: 'primary language (translation)',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary)),
+                    ),
+                    onChanged: (v) {
+                      if (v == null) return;
+                      setState(() {
+                        primaryLang = v;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Offline translation uses Android ML Kit. Language models download on demand when you open the journal.',
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               )),
